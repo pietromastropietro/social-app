@@ -1,1 +1,8 @@
-
+#root {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(236, 236, 236);
+}
+.App {
+    width: 80%;
+}
