@@ -5,17 +5,22 @@ import SideMenu from './SideMenu';
 import Header from '../Header'
 import PostInput from './PostInput';
 import Feed from './Feed';
+import styled from 'styled-components';
+import LeftSidebar from './LeftSidebar';
+import RightSideBar from './RightSideBar';
+
+const StyledHome = styled.div`
+    display: flex;
+    justify-content: space-between;
+`
 
 const Home = () => {
     return (
-        <div>
-            <Header />
-            <SideMenu />
-            <PostInput />
+        <StyledHome>
+            <LeftSidebar />
             <Feed />
-            <Requests />
-            <Contacts />
-        </div>
+            <RightSideBar />
+        </StyledHome>
     )
 }
 

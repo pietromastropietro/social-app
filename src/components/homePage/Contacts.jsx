@@ -16,6 +16,7 @@ const Contacts = () => {
 
     return (
         <div>
+            <p>Contacts</p>
             {contacts.map(item => <Contact info={item} key={item.id}/>)}
         </div>
     )

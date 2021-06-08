@@ -15,6 +15,7 @@ const Requests = () => {
     ]
     return (
         <div>
+            <p>Requests</p>
             {requests.map(item => <Request person={item}/>)}
         </div>
     )
