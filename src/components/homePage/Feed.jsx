@@ -8,8 +8,7 @@ const StyledFeed = styled.div`
 `
 
 const Feed = () => {
-    // all posts in a single database, 
-    // or a single person dabatase with all his info (posts, name etc)?
+    // all posts in a single database
 
     return (
         <StyledFeed>
