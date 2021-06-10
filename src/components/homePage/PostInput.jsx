@@ -14,6 +14,7 @@ const StyledPostInput = styled.div`
 `
 
 const Input = styled.input`
+    width: 100%;
     height: 10px;
     padding: 10px 20px;
     outline: none;
