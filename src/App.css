@@ -1,17 +1,18 @@
 body {
     font-family: 'Lato', sans-serif;
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
     background-color: #eef0f5;
     margin: 0;
     padding: 0;
     border: 0;
 }
 #root {
-    background-color: #f9fafb
-    ;
+    /* background-color: #f9fafb;
     width: 80%;
-    padding: 0 20px;
+    padding: 0 20px; */
+    display: flex;
+    flex-direction: column;
 }
 p {
     margin: 0;

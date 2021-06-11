@@ -4,10 +4,14 @@ import styled from 'styled-components'
 const StyledHeader = styled.header`
     background-color: #ffffff;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items:center;
     height: 50px;
-    border-bottom: 2px solid rgb(216, 216, 216);
+    /* border-bottom: 2px solid rgb(216, 216, 216); */
+    -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
 `;
 
 const HeaderInput = styled.input`

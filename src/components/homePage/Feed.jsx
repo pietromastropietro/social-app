@@ -4,7 +4,7 @@ import Post from './Post'
 import styled from 'styled-components'
 
 const StyledFeed = styled.div`
-    margin: 10px 20px;
+    margin: 0 20px;
 `
 
 const Feed = () => {

@@ -16,18 +16,38 @@ const StyledMenu = styled.nav`
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 `
 
+const Ul = styled.ul`
+    list-style-type: none;
+    border: 0;
+    margin: 0;
+    padding: 0;
+`
+const Li = styled.li`
+    border: 0;
+    margin: 0;
+    padding: 0;
+    margin: 10px 0;
+`
+
 const NavLink = styled(Link)`
     text-decoration: none;
     color: black;
-    margin: 10px 0;
 `;
 
 const SideMenu = () => {
     return (
         <StyledMenu>
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
-            <a href="">Settings</a>
+            <Ul>
+                <Li>
+                    <NavLink to="/">Home</NavLink>
+                </Li>
+                <Li>
+                    <NavLink to="/profile">Profile</NavLink>
+                </Li>
+                <Li>
+                    <p>Settings</p>
+                </Li>
+            </Ul>
         </StyledMenu>
     )
 }

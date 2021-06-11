@@ -1,5 +1,13 @@
 import React from 'react'
+import styled from 'styled-components'
 import Request from './Request'
+
+const Ul = styled.ul`
+    list-style-type: none;
+    border: 0;
+    margin: 0;
+    padding: 0;
+`
 
 const Requests = () => {
     const requests = [{
@@ -16,7 +24,9 @@ const Requests = () => {
     return (
         <div>
             <p>Requests</p>
-            {requests.map(item => <Request person={item}/>)}
+            <Ul>
+                {requests.map(item => <Request person={item}/>)}
+            </Ul>
         </div>
     )
 }

@@ -2,22 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 import Image from '../Image'
 
-const StyledContact = styled.div`
+const StyledContact = styled.li`
     display: flex;
     align-items: center;
-    background-color: white;
-    border-radius: 20px;
-    padding: 1px 10px;
-    margin: 10px 0;
-    -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+`
+
+const Name = styled.p`
+    margin-left: 10px;
 `
 
 const Contact = ({ info }) => {
     return (
         <StyledContact>
             <Image />            
-            <p>{info.name}, {info.surname}</p>
+            <Name>{info.name} {info.surname}</Name>
         </StyledContact>
     )
 }
