@@ -4,6 +4,7 @@ import Post from './Post'
 import styled from 'styled-components'
 
 const StyledFeed = styled.div`
+    width: 58%;
     margin: 0 20px;
 `
 

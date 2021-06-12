@@ -8,7 +8,7 @@ const StyledMenu = styled.nav`
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    width: 170px;
+    /* width: 170px; */
     /* height: 250px; */
     padding: 10px;
     border-radius: 10px;

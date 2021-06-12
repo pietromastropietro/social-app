@@ -2,11 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import Image from '../Image'
 import PostImage from '../PostImage'
+import Comments from '../Comments'
 
 const StyledPost = styled.div`
     background-color: white;
     border-radius: 20px;
-    padding: 20px;
+    padding: 12px;
     margin: 15px 0;
     -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
             box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
@@ -27,6 +28,14 @@ const PostFooter = styled.div`
     margin-top: 10px;
 `
 
+const Likes = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > :last-child {
+        font-size: 12px;
+    }
+`
 const Post = () => {
     return (
         <StyledPost>
@@ -41,11 +50,13 @@ const Post = () => {
             <PostImage />
             <PostFooter>
                 <div>Heart</div>
-                <div>34
-                    <div>Likes</div>
-                </div>
+                <Likes>
+                    <p><strong>28</strong></p>
+                    <p>Likes</p>
+                </Likes>
                 <div>Comment</div>
             </PostFooter>
+            <Comments />
         </StyledPost>
     )
 }
