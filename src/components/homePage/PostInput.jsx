@@ -2,10 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import Image from '../Image'
+import { radius, color } from '../../style'
 
 const StyledPostInput = styled.div`
     background-color: white;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     padding: 10px 20px;
     -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);

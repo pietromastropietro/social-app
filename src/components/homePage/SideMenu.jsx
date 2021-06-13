@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Home from './Home';
 import Profile from '../profilePage/Profile';
+import { boxShadow, radius } from '../../style'
+
 
 const StyledMenu = styled.nav`
     background-color: #ffffff;
@@ -11,9 +13,10 @@ const StyledMenu = styled.nav`
     /* width: 170px; */
     /* height: 250px; */
     padding: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: ${radius.primary};
+    /* -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); */
+    ${boxShadow.primary}
 `
 
 const Ul = styled.ul`
