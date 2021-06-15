@@ -21,7 +21,7 @@ const LogoContainer = styled.div`
     }
 `
 
-const InputContainer = styled.div`
+const InputFieldset = styled.fieldset`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -33,11 +33,19 @@ const InputContainer = styled.div`
     }
 `
 
-const ButtonContainer = styled.div`
+const ButtonFieldset = styled.fieldset`
     width: 160px;
     display: flex;
-    justify-content: space-between;
-    
+    justify-content: space-between; 
+`
+
+const Label = styled.label`
+    /* display: flex; */
+`
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
 
 const Login = () => {
@@ -46,18 +54,26 @@ const Login = () => {
             <LogoContainer>
                 <p>Welcome to (Name TBD)</p>
             </LogoContainer>
-            <InputContainer>
-                <Input type={"email"} placeholder={"E-mail"} />
-                <Input type={"text"} placeholder={"Password"} />
-                <p>Forgot password?</p>
-            </InputContainer>
 
-            <ButtonContainer>
-                <Link to="/">
-                    <Button text={'Login'} />
-                </Link>
-                <Button text={'Sign up'} />
-            </ButtonContainer>
+            <Form action="">
+                <InputFieldset>
+                    <Label htmlFor="email">User email</Label>
+                    <Input type={"email"} placeholder={"E-mail"} id={"email"} />
+
+                    <Label htmlFor="password">Password</Label>
+                    <Input type={"password"} placeholder={"Password"} id="password" />
+
+                    <p>Forgot password?</p>
+                </InputFieldset>
+
+                <ButtonFieldset>
+                    <Link to="/">
+                        <Button text={'Login'} />
+                    </Link>
+                    <Button text={'Sign up'} />
+                </ButtonFieldset>
+            </Form>
+
 
         </StyledLogin>
     )

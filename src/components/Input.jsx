@@ -10,11 +10,12 @@ const StyledInput = styled.input`
     border-radius: 20px;
 `;
 
-const Input = ({ type, placeholder }) => {
+const Input = ({ type, placeholder, id }) => {
     return (
         <StyledInput
             type={type}
             placeholder={placeholder}
+            id={id}
         />
     )
 }
