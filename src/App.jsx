@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Profile from './components/profilePage/Profile';
 import Header from './components/Header';
 import styled, { createGlobalStyle } from 'styled-components';
+import Login from './components/loginPage/Login';
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -49,6 +50,9 @@ function App() {
                     </Route>
                     <Route path="/profile">
                         <Profile />
+                    </Route>
+                    <Route path="/login">
+                        <Login />
                     </Route>
                 </Switch>
             </MainContainer>
