@@ -58,19 +58,19 @@ const Login = () => {
             <Form action="">
                 <InputFieldset>
                     <Label htmlFor="email">User email</Label>
-                    <Input type={"email"} placeholder={"E-mail"} id={"email"} />
+                    <Input type="email" placeholder="E-mail" id="email" />
 
                     <Label htmlFor="password">Password</Label>
-                    <Input type={"password"} placeholder={"Password"} id="password" />
+                    <Input type="password" placeholder="Password" id="password" />
 
                     <p>Forgot password?</p>
                 </InputFieldset>
 
                 <ButtonFieldset>
                     <Link to="/">
-                        <Button text={'Login'} />
+                        <Button>Login</Button>
                     </Link>
-                    <Button text={'Sign up'} />
+                    <Button>Sign up</Button>
                 </ButtonFieldset>
             </Form>
 

@@ -4,6 +4,8 @@ import Image from '../Image'
 import PostImage from '../PostImage'
 import Comments from '../Comments'
 import { radius, color } from '../../style'
+import tempImage from '../../assets/images/temp2.jpg'
+
 
 
 const StyledPost = styled.div`
@@ -49,7 +51,7 @@ const Post = () => {
                 </PostTitleDate>
             </PostHeader>
             <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText>
-            <PostImage />
+            <PostImage src={tempImage} alt=""/>
             <PostFooter>
                 <div>Heart</div>
                 <Likes>

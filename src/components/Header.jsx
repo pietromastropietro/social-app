@@ -22,10 +22,10 @@ const Header = () => {
     return (
         <StyledHeader>
             <p>Social App</p>
-            <Input type={"text"} placeholder={"Search"} />
+            <Input type="text" placeholder="Search" />
             <div>
                 <Link to="/login">
-                    <Button text={"Login"} />
+                    <Button>Login</Button>
                 </Link>
                 placeholder</div>
         </StyledHeader>

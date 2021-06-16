@@ -36,8 +36,8 @@ const Request = ({ person }) => {
                 <Name><strong>{person.name} {person.surname}</strong> wants to add you to friends.</Name>
             </RequestHeader>
             <Buttons>
-                <Button text={'Accept'} />
-                <Button text={'Decline'} />
+                <Button>Accept</Button>
+                <Button>Decline</Button>
             </Buttons>
         </StyledRequest>
     )

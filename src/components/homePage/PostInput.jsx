@@ -27,7 +27,7 @@ const PostInput = () => {
         <StyledPostInput>
             <Image />
             <Input type="text" placeholder="What's on your mind?"/>
-            <Button text={'Post'} />
+            <Button>Post</Button>
         </StyledPostInput>
     )
 }
