@@ -7,7 +7,9 @@ const UserSchema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     birthDate: { type: Date, required: true },
-    // posts: [{ type: Schema.ObjectId, ref: 'Post'}]
+    friends: [{ type: Schema.ObjectId, ref: 'User'}],
+    friendsReqReceived: [{ type: Schema.ObjectId, ref: 'User'}]
+    //friendReqSent: [{ type: Schema.ObjectId, ref: 'User'}]  // do i need this?
 });
 
 // Virtual for this user URL

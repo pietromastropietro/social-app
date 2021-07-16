@@ -4,11 +4,11 @@ const User = require('../models/User');
 
 exports.index = async (req, res, next) => {
     try {
-        // TODO i have to get the user's friends
-        const user = await User.findById(req.params.id)
-        const posts = await Post.find({ author: user }).populate('comments');
+        // TODO get logged user info
+        const posts = await Post.find().populate('comments');
+        const users = await User.find();
 
-        res.json({ user, posts });
+        res.json({ posts, users });
     } catch (err) {
         return next(err);
     }
