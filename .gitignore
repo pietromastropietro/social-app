@@ -5,6 +5,7 @@
 /api/popdb.js
 /.pnp
 .pnp.js
+/client/src/api
 
 # testing
 /coverage

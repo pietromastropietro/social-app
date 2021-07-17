@@ -8,12 +8,13 @@ const StyledComments = styled.div`
     padding-top: 10px;
 `
 
-const Comments = () => {
+const Comments = ({ data }) => {
     return (
         <StyledComments>
-            <p>Show all 5 comments</p>
+            {/* <p>Show all 5 comments</p>
             <Comment />
-            <Comment />
+            <Comment /> */}
+            {data.map(comment => <Comment info={comment} key={comment._id} />)}
         </StyledComments>
     )
 }

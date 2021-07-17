@@ -18,18 +18,20 @@ const CommentWriter = styled.div`
 const CommentText = styled.div`
 `
 
-const Comment = () => {
+const Comment = ({ info }) => {
     return (
         <StyledComment>
             <Image />
             <Container>
                 <CommentWriter>
-                    <p><strong>John Smith</strong></p>
+                    {/* <p><strong>John Smith</strong></p> */}
+                    <p><strong>{info.author.firstName}</strong></p>
                     <p>2 hours ago</p>
                 </CommentWriter>
                 <CommentText>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
-                    </p>
+                    {/* <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+                    </p> */}
+                    <p>{info.body}</p>
                 </CommentText>
             </Container>
         </StyledComment>

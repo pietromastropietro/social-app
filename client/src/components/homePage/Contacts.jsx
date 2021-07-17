@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import Contact from './Contact'
 import { radius, color } from '../../style'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const Ul = styled.ul`
     list-style-type: none;
@@ -18,26 +20,47 @@ const Ul = styled.ul`
 `
 
 const Contacts = () => {
-    const contacts = [{
-        name: 'John',
-        surname: 'Smith',
-        id: 1
-    },
-    {
-        name: 'Katy',
-        surname: 'Fitch',
-        id: 2
-    }
-    ]
+    const [contacts, setContacts] = useState([]);
+    // const [error, setError] = useState(null);
 
-    return (
-        <div>
-            <p>Contacts</p>
-            <Ul>
-                {contacts.map(item => <Contact info={item} key={item.id} />)}
-            </Ul>
-        </div>
-    )
+    // const contacts = [{
+    //     firstName: 'John',
+    //     lastName: 'Smith',
+    //     _id: 1
+    // },
+    // {
+    //     firstName: 'Katy',
+    //     lastName: 'Fitch',
+    //     _id: 2
+    // }
+    // ]
+
+    const getContacts = async () => {
+        try {
+            const response = await axios.get('http://localhost:4000/');
+            setContacts(response.data.users);
+        } catch (error) {
+            console.error(error);
+            //setError(error)
+        }
+    };
+
+    useEffect(() => {
+        getContacts();
+    }, []);
+
+    //if (error) {
+    //    return <div>Error: {error.message}</div>;
+    //} else {
+        return (
+            <div>
+                <p>Contacts</p>
+                <Ul>
+                    {contacts.map(item => <Contact info={item} key={item._id} />)}
+                </Ul>
+            </div>
+        )
+    //}
 }
 
 export default Contacts
