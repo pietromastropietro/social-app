@@ -9,4 +9,6 @@ router.get('/', indexController.index);
 
 router.get('/users/:id', userController.index);
 
+router.post('/login', indexController.login);
+
 module.exports = router;

@@ -2,7 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import axios from 'axios';
+import { useState, useEffect } from 'react'
 
 const StyledLogin = styled.div`
     display: flex;
@@ -13,14 +15,12 @@ const StyledLogin = styled.div`
     }
     height: 700px;
 `
-
 const LogoContainer = styled.div`
     margin: 120px 0 40px 0;
     & > p {
         font-size: 25px;
     }
 `
-
 const InputFieldset = styled.fieldset`
     display: flex;
     flex-direction: column;
@@ -32,13 +32,11 @@ const InputFieldset = styled.fieldset`
         margin-left: 22px;
     }
 `
-
 const ButtonFieldset = styled.fieldset`
     width: 160px;
     display: flex;
     justify-content: space-between; 
 `
-
 const Label = styled.label`
     /* display: flex; */
 `
@@ -49,31 +47,61 @@ const Form = styled.form`
 `
 
 const Login = () => {
+    const history = useHistory();
+
+    const [user, setUser] = useState({
+        email: '',
+        password: ''
+    })
+
+    const handleInputChange = e => {
+        const { id, value } = e.target;
+        setUser({
+            ...user, [id]: value
+        });
+    };
+
+    const login = async () => {
+        try {
+            const response = await axios.post('http://localhost:4000/login', {
+                username: user.email,
+                password: user.password
+            });
+
+            //console.log('response:', response);
+
+            if (response.data === 'successful auth') {
+                history.push("/");
+            };
+        } catch (err) {
+            console.log('error:', err);
+        };
+    };
+
     return (
         <StyledLogin>
             <LogoContainer>
                 <p>Welcome to (Name TBD)</p>
             </LogoContainer>
 
-            <Form action="">
+            <Form action="/login" method="POST">
                 <InputFieldset>
                     <Label htmlFor="email">User email</Label>
-                    <Input type="email" placeholder="E-mail" id="email" />
+                    <Input type="email" placeholder="E-mail" id="email" onChange={handleInputChange} value={user.email} />
 
                     <Label htmlFor="password">Password</Label>
-                    <Input type="password" placeholder="Password" id="password" />
+                    <Input type="password" placeholder="Password" id="password" onChange={handleInputChange} value={user.password} />
 
                     <p>Forgot password?</p>
                 </InputFieldset>
 
                 <ButtonFieldset>
-                    <Link to="/">
-                        <Button>Login</Button>
+                    <Link to="/login">
+                        <Button onClick={login} >Login</Button>
                     </Link>
                     <Button>Sign up</Button>
                 </ButtonFieldset>
             </Form>
-
 
         </StyledLogin>
     )
