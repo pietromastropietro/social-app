@@ -7,11 +7,11 @@ const StyledRightSidebar = styled.div`
     width: 22%;
 `
 
-const RightSideBar = () => {
+const RightSideBar = ({ users }) => {
     return (
         <StyledRightSidebar>
             <Requests />
-            <Contacts />
+            <Contacts users={users} />
         </StyledRightSidebar>
     )
 }

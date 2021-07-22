@@ -19,8 +19,8 @@ const Ul = styled.ul`
             box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 `
 
-const Contacts = () => {
-    const [contacts, setContacts] = useState([]);
+const Contacts = ({ users }) => {
+    // const [contacts, setContacts] = useState([]);
     // const [error, setError] = useState(null);
 
     // const contacts = [{
@@ -35,20 +35,6 @@ const Contacts = () => {
     // }
     // ]
 
-    const getContacts = async () => {
-        try {
-            const response = await axios.get('http://localhost:4000/');
-            setContacts(response.data.users);
-        } catch (error) {
-            console.error(error);
-            //setError(error)
-        }
-    };
-
-    useEffect(() => {
-        getContacts();
-    }, []);
-
     //if (error) {
     //    return <div>Error: {error.message}</div>;
     //} else {
@@ -56,7 +42,7 @@ const Contacts = () => {
             <div>
                 <p>Contacts</p>
                 <Ul>
-                    {contacts.map(item => <Contact info={item} key={item._id} />)}
+                    {users.map(user => <Contact user={user} key={user._id} />)}
                 </Ul>
             </div>
         )

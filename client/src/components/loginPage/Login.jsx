@@ -62,6 +62,7 @@ const Login = () => {
     };
 
     const login = async () => {
+        console.log('API call from Login comp');
         try {
             const response = await axios.post('http://localhost:4000/login', {
                 username: user.email,

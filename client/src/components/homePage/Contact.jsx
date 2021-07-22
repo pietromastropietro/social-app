@@ -14,11 +14,11 @@ const Name = styled.p`
     margin-left: 10px;
 `
 
-const Contact = ({ info }) => {
+const Contact = ({ user }) => {
     return (
         <StyledContact>
             <Image />            
-            <Name>{info.firstName} {info.lastName}</Name>
+            <Name>{user.firstName} {user.lastName}</Name>
         </StyledContact>
     )
 }

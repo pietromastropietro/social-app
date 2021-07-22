@@ -38,28 +38,28 @@ const Likes = styled.div`
         font-size: 12px;
     }
 `
-const Post = ({ info }) => {
+const Post = ({ post }) => {
     return (
         <StyledPost>
             <PostHeader>
                 <Image />
                 <PostTitleDate>
-                    <p>{info.author.firstName}</p>
+                    <p>{post.author.firstName}</p>
                     <p>12 hours ago</p>
                 </PostTitleDate>
             </PostHeader>
             {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
-            <PostText>{info.body}</PostText>
+            <PostText>{post.body}</PostText>
             <PostImage src={tempImage} alt=""/>
             <PostFooter>
                 <div>Heart</div>
                 <Likes>
-                    <p><strong>{info.likes.length}</strong></p>
+                    <p><strong>{post.likes.length}</strong></p>
                     <p>Likes</p>
                 </Likes>
                 <div>Comment</div>
             </PostFooter>
-            <Comments data={info.comments} />
+            <Comments data={post.comments} />
         </StyledPost>
     )
 }
