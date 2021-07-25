@@ -14,7 +14,9 @@ exports.index = async (req, res, next) => {
             .populate({ path: 'comments', populate: { path: 'author' } })
             .populate('likes');
 
-        const users = await User.find();
+        const users = await User
+            .find()
+            .populate('friendsReqReceived');
 
         res.json({ posts, users });
     } catch (err) {

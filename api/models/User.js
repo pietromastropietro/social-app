@@ -7,9 +7,12 @@ const UserSchema = new Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     birthDate: { type: Date, required: true },
-    friends: [{ type: Schema.ObjectId, ref: 'User'}],
-    friendsReqReceived: [{ type: Schema.ObjectId, ref: 'User'}]
+    friends: [{ type: Schema.ObjectId, ref: 'User' }],
+    friendsReqReceived: [{ type: Schema.ObjectId, ref: 'User' }]
     //friendReqSent: [{ type: Schema.ObjectId, ref: 'User'}]  // do i need this?
+}, {
+    toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+    toObject: { virtuals: true } // So `toObject()` output includes virtuals
 });
 
 // Virtual for this user URL

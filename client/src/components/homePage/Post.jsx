@@ -44,7 +44,7 @@ const Post = ({ post }) => {
             <PostHeader>
                 <Image />
                 <PostTitleDate>
-                    <p>{post.author.firstName}</p>
+                    <p><strong>{post.author.fullName}</strong></p>
                     <p>12 hours ago</p>
                 </PostTitleDate>
             </PostHeader>
@@ -59,7 +59,7 @@ const Post = ({ post }) => {
                 </Likes>
                 <div>Comment</div>
             </PostFooter>
-            <Comments data={post.comments} />
+            <Comments comments={post.comments} />
         </StyledPost>
     )
 }
