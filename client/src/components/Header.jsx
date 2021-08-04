@@ -19,15 +19,20 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
+    // TEMP
+    const logout = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
     return (
         <StyledHeader>
             <p>Social App</p>
             <Input type="text" placeholder="Search" />
             <div>
-                <Link to="/login">
-                    <Button>Login</Button>
-                </Link>
-                placeholder</div>
+                <Button onClick={logout}>Logout</Button>
+                {/* placeholder */}
+            </div>
         </StyledHeader>
     )
 }

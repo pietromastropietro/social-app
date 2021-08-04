@@ -13,8 +13,8 @@ const Profile = () => {
     return (
         <StyledProfile>
             <Left />
-            <Feed />
-            <Right />
+            {/* <Feed /> */}
+            {/* <Right /> */}
         </StyledProfile>
     )
 }

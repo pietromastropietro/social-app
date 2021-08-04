@@ -6,6 +6,7 @@ import Header from './components/Header';
 import styled from 'styled-components';
 import Login from './components/loginPage/Login';
 import GlobalStyle from './GlobalStyle';
+import useToken from './useToken';
 
 const MainContainer = styled.div`
     align-self: center;
@@ -15,10 +16,17 @@ const MainContainer = styled.div`
 `
 
 const App = () => {
+
+    const { token, saveToken } = useToken();
+
+    if (!token) {
+        return <Login setToken={saveToken} />;
+    }
+
     return (
         <>
-        <GlobalStyle />
-        <Router>
+            <GlobalStyle />
+            {/* <Router> */}
             <Header />
             <MainContainer>
                 <Switch>
@@ -28,12 +36,12 @@ const App = () => {
                     <Route path="/profile">
                         <Profile />
                     </Route>
-                    <Route path="/login">
-                        <Login />
-                    </Route>
+                    {/* <Route path="/login">
+                        <Login setToken={setToken} />
+                    </Route> */}
                 </Switch>
             </MainContainer>
-        </Router>
+            {/* </Router> */}
         </>
     );
 }

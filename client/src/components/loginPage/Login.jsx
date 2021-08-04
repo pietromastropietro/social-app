@@ -46,8 +46,8 @@ const Form = styled.form`
     align-items: center;
 `
 
-const Login = () => {
-    const history = useHistory();
+const Login = ({ setToken }) => {
+    // const history = useHistory();
 
     const [user, setUser] = useState({
         email: '',
@@ -61,8 +61,10 @@ const Login = () => {
         });
     };
 
-    const login = async () => {
+    const login = async (e) => {
         console.log('API call from Login comp');
+        e.preventDefault();
+
         try {
             const response = await axios.post('http://localhost:4000/login', {
                 username: user.email,
@@ -72,7 +74,10 @@ const Login = () => {
             //console.log('response:', response);
 
             if (response.data === 'successful auth') {
-                history.push("/");
+                // history.push("/");
+
+                // TODO i have to get the token from server and pass it to setToken. this is temp:
+                setToken(true);
             };
         } catch (err) {
             console.log('error:', err);
@@ -85,7 +90,7 @@ const Login = () => {
                 <p>Welcome to (Name TBD)</p>
             </LogoContainer>
 
-            <Form action="/login" method="POST">
+            <Form onSubmit={login}>
                 <InputFieldset>
                     <Label htmlFor="email">User email</Label>
                     <Input type="email" placeholder="E-mail" id="email" onChange={handleInputChange} value={user.email} />
@@ -93,17 +98,14 @@ const Login = () => {
                     <Label htmlFor="password">Password</Label>
                     <Input type="password" placeholder="Password" id="password" onChange={handleInputChange} value={user.password} />
 
-                    <p>Forgot password?</p>
+                    {/* <p>Forgot password?</p> */}
                 </InputFieldset>
 
                 <ButtonFieldset>
-                    <Link to="/login">
-                        <Button onClick={login} >Login</Button>
-                    </Link>
+                    <Button type="submit">Login</Button>
                     <Button>Sign up</Button>
                 </ButtonFieldset>
             </Form>
-
         </StyledLogin>
     )
 }
