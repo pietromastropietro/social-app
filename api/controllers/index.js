@@ -1,42 +1,53 @@
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
-
-const passport = require("passport");
-require('../passport')(passport);
+const jwt = require('jsonwebtoken');
 
 exports.index = async (req, res, next) => {
+    jwt.verify(req.token, 'secretkey', async (err) => {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            try {
+                // TODO get logged user info
+                const posts = await Post
+                    .find()
+                    .populate('author')
+                    .populate({ path: 'comments', populate: { path: 'author' } })
+                    .populate('likes');
+
+                const users = await User
+                    .find()
+                    .populate('friendsReqReceived');
+
+                res.json({ posts, users });
+            } catch (err) {
+                return next(err);
+            }
+        }
+    })
+};
+
+exports.login = async (req, res, next) => {
     try {
-        // TODO get logged user info
-        const posts = await Post
-            .find()
-            .populate('author')
-            .populate({ path: 'comments', populate: { path: 'author' } })
-            .populate('likes');
+        const user = await User.findOne({ email: req.body.username });
 
-        const users = await User
-            .find()
-            .populate('friendsReqReceived');
+        if (!user) {
+            console.log('User not found');
+            
+            res.json({ message: 'User not found' });
+        } else if (user.password != req.body.password) {
+            console.log('incorrect password');
 
-        res.json({ posts, users });
+            res.json({ message: 'Incorrect password' });
+        } else {
+            console.log('user found');
+
+            jwt.sign({ user }, 'secretkey', { expiresIn: '7d'}, (err, token) => {
+                res.json({ message: 'Successful login', token });
+            });
+        }
     } catch (err) {
         return next(err);
     }
-};
-
-exports.login = (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.send('user not found');
-        }
-        req.logIn(user, (err) => {
-            if (err) {
-                return next(err);
-            }
-            return res.send('successful auth');
-        });
-    })(req, res, next);
 };

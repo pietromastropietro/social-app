@@ -73,11 +73,12 @@ const Login = ({ setToken }) => {
 
             //console.log('response:', response);
 
-            if (response.data === 'successful auth') {
+            if (response.data.message === 'Successful login') {
+                //console.log('token:', response.data.token);
                 // history.push("/");
 
-                // TODO i have to get the token from server and pass it to setToken. this is temp:
-                setToken(true);
+                // Set the token sent from the server in localStorage
+                setToken(response.data.token);
             };
         } catch (err) {
             console.log('error:', err);

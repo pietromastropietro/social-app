@@ -4,8 +4,10 @@ const router = express.Router();
 const indexController = require('../controllers/index');
 const userController = require('../controllers/userController')
 
+const verifyToken = require('../token');
+
 /* GET home page. */
-router.get('/', indexController.index);
+router.get('/', verifyToken, indexController.index);
 
 router.get('/users/:id', userController.index);
 

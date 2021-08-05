@@ -25,7 +25,11 @@ const Home = () => {
     const getHomepageData = async () => {
         console.log('API call from Home component');
         try {
-            const response = await axios.get('http://localhost:4000/');
+            const response = await axios.get('http://localhost:4000/', {
+                headers: {
+                    Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+                }
+            });
 
             setHomepageData({
                 users: response.data.users,

@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const session = require("express-session");
-const passport = require("passport");
-require('dotenv').config()
 
 const indexRouter = require('./routes/index');
 
@@ -28,8 +26,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
