@@ -5,25 +5,11 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const session = require("express-session");
+require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 
 const app = express();
-
-/// MongoDB/Mongoose setup ///
-
-//Import the mongoose module
-const mongoose = require('mongoose');
-
-//Set up default mongoose connection
-const mongoDB = process.env.MONGODBURL;
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-
-//Get the default connection
-const db = mongoose.connection;
-
-//Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 
@@ -34,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
