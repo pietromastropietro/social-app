@@ -19,7 +19,7 @@ const App = () => {
 
     const { token, saveToken } = useToken();
 
-    if (!token) {
+    if (token) {
         return <Login setToken={saveToken} />;
     }
 

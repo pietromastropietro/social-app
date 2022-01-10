@@ -18,7 +18,8 @@ const Contact = ({ user }) => {
     return (
         <StyledContact>
             <Image />            
-            <Name>{user.fullName}</Name>
+            {/* <Name>{user.fullName}</Name> */}
+            <Name>{user.name}</Name>
         </StyledContact>
     )
 }

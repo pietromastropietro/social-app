@@ -42,7 +42,8 @@ const Contacts = ({ users }) => {
             <div>
                 <p>Contacts</p>
                 <Ul>
-                    {users.map(user => <Contact user={user} key={user._id} />)}
+                    {/* {users.map(user => <Contact user={user} key={user._id} />)} */}
+                    {users.map(user => <Contact user={user} key={user.id} />)}
                 </Ul>
             </div>
         )

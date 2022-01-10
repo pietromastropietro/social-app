@@ -38,29 +38,53 @@ const Likes = styled.div`
         font-size: 12px;
     }
 `
-const Post = ({ post }) => {
+const Post = ({ post, images }) => {
+    const randomImg = images[Math.floor(Math.random() * 29)].download_url;
+    
     return (
         <StyledPost>
             <PostHeader>
                 <Image />
                 <PostTitleDate>
-                    <p><strong>{post.author.fullName}</strong></p>
+                    <p><strong>User n.{post.userId}</strong></p>
                     <p>12 hours ago</p>
                 </PostTitleDate>
             </PostHeader>
             {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
             <PostText>{post.body}</PostText>
-            <PostImage src={tempImage} alt=""/>
+            <PostImage src={randomImg} alt=""/>
             <PostFooter>
                 <div>Heart</div>
                 <Likes>
-                    <p><strong>{post.likes.length}</strong></p>
+                    <p><strong>5</strong></p>
                     <p>Likes</p>
                 </Likes>
                 <div>Comment</div>
             </PostFooter>
-            <Comments comments={post.comments} />
+            {/* <Comments comments={post.comments} /> */}
         </StyledPost>
+
+        // <StyledPost>
+        //     <PostHeader>
+        //         <Image />
+        //         <PostTitleDate>
+        //             <p><strong>{post.author.fullName}</strong></p>
+        //             <p>12 hours ago</p>
+        //         </PostTitleDate>
+        //     </PostHeader>
+        //     {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
+        //     <PostText>{post.body}</PostText>
+        //     <PostImage src={tempImage} alt=""/>
+        //     <PostFooter>
+        //         <div>Heart</div>
+        //         <Likes>
+        //             <p><strong>{post.likes.length}</strong></p>
+        //             <p>Likes</p>
+        //         </Likes>
+        //         <div>Comment</div>
+        //     </PostFooter>
+        //     <Comments comments={post.comments} />
+        // </StyledPost>
     )
 }
 

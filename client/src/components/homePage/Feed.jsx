@@ -10,11 +10,12 @@ const StyledFeed = styled.div`
     margin: 0 20px;
 `
 
-const Feed = ({ posts }) => {
+const Feed = ({ posts, images }) => {
     return (
         <StyledFeed>
             <PostInput />
-            {posts.map(post => <Post post={post} key={post._id} />)}
+            {/* {posts.map(post => <Post post={post} key={post._id} />)} */}
+            {posts.map(post => <Post post={post} images={images} key={post.id} />)}
         </StyledFeed>
     )
 }
