@@ -33,7 +33,7 @@ const createUser = async (req, res, next)  => {
 
 const updateUser = async (req, res, next)  => {
     try {
-        await userService.updateUser(req.body);
+        await userService.updateUser(req.params.id, req.body);
 
         res.json({ message: 'User updated'});
     } catch (err) {
@@ -42,7 +42,7 @@ const updateUser = async (req, res, next)  => {
 };
 const deleteUser = async (req, res, next)  => {
     try {
-        await userService.deleteUser();
+        await userService.deleteUser(req.params.id);
 
         res.json({ message: 'User deleted'});
     } catch (err) {
