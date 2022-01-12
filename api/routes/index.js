@@ -5,6 +5,7 @@ const router = express.Router();
 const userController = require('../controllers/userController')
 const postController = require('../controllers/postController')
 const commentController = require('../controllers/commentController')
+const likeController = require('../controllers/likeController')
 
 /* USER ROUTES */
 
@@ -55,5 +56,17 @@ router.put('/comments/:id', commentController.updateComment);
 
 // delete comment
 router.delete('/comments/:id', commentController.deleteComment);
+
+/* LIKES ROUTES */
+
+// get post or comment likes
+router.get('/likes/content/:id', likeController.getContentLikes);
+
+// create new like
+router.post('/likes', likeController.createLike);
+
+// delete like
+router.delete('/likes/:id', likeController.deleteLike);
+
 
 module.exports = router;

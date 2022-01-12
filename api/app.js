@@ -24,7 +24,10 @@ app.use(cookieParser());
 // Open routes for registration/login
 app.use('/api', authRouter);
 // Restricted routes
-app.use('/api', verifyToken, indexRouter);
+// app.use('/api', verifyToken, indexRouter);
+
+//temp for testing
+app.use('/api', indexRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -32,6 +35,7 @@ app.use((req, res, next) => {
 	err.status = 404;
 	next(err);
 });
+
 // app.use(function (req, res, next) {
 //   next(createError(404));
 // });

@@ -11,9 +11,9 @@ const getUsers = async () => {
 };
 
 const getUser = async (userId) => {
-    const query = 'SELECT * FROM users WHERE id = $1';
-
     try {
+        const query = 'SELECT * FROM users WHERE id = $1';
+        
         const user = await db.query(query, [userId]);
 
         if (!user.length) {

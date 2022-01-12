@@ -51,10 +51,8 @@ const createPost = async (postData)  => {
 };
 
 const updatePost = async (postId, postData)  => {
-    const query =
-    `UPDATE posts 
-    SET text = $2, image_url = $3
-    WHERE id = $1`
+    const query = 
+    `UPDATE posts SET text = $2, image_url = $3 WHERE id = $1`;
 
     try {
         // retrieve post data from db
