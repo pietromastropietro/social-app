@@ -26,20 +26,6 @@ const getUser = async (userId) => {
     }
 };
 
-const createUser = async (userData) => {
-    const query =
-    `INSERT INTO users (first_name, last_name, dob, email, password_hash, bio, username) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7)`
-
-    const params = Object.values(userData);
-
-    try {
-        return await db.query(query, params);
-    } catch (err) {
-        throw new Error(err.message)
-    }
-};
-
 const updateUser = async (userId, userData) => {
     const query =
     `UPDATE users 
@@ -77,7 +63,6 @@ const deleteUser = async (userId) => {
 module.exports = {
     getUsers,
     getUser,
-    createUser,
     updateUser,
     deleteUser
 }

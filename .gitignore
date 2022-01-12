@@ -2,7 +2,6 @@
 /api/node_modules
 /client/node_modules
 /api/.env
-/api/popdb.js
 /.pnp
 .pnp.js
 /client/src/api

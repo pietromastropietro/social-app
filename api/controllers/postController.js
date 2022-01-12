@@ -32,7 +32,7 @@ const createPost = async (req, res, next)  => {
 
 const updatePost = async (req, res, next)  => {
     try {
-        await postService.updatePost(req.body);
+        await postService.updatePost(req.params.id, req.body);
 
         res.json({ message: 'Post updated'});
     } catch (err) {
@@ -41,7 +41,7 @@ const updatePost = async (req, res, next)  => {
 };
 const deletePost = async (req, res, next)  => {
     try {
-        await postService.deletePost();
+        await postService.deletePost(req.params.id);
 
         res.json({ message: 'Post deleted'});
     } catch (err) {

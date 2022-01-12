@@ -21,16 +21,6 @@ const getUser = async (req, res, next)  => {
     }
 };
 
-const createUser = async (req, res, next)  => {
-    try {
-        await userService.createUser(req.body);
-
-        res.json({ message: 'User created'});
-    } catch (err) {
-        return next(err);
-    }
-};
-
 const updateUser = async (req, res, next)  => {
     try {
         await userService.updateUser(req.params.id, req.body);
@@ -53,19 +43,6 @@ const deleteUser = async (req, res, next)  => {
 module.exports = {
     getUsers,
     getUser,
-    createUser,
     updateUser,
     deleteUser
 };
-
-// exports.index = async (req, res, next) => {
-//     try {
-//         // TODO i have to get the user's friends
-//         const user = await User.findById(req.params.id)
-//         const posts = await Post.find({ author: user }).populate('comments');
-
-//         res.json({ user, posts });
-//     } catch (err) {
-//         return next(err);
-//     }
-// };

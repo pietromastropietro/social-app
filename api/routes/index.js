@@ -2,13 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 // Controllers import
-const indexController = require('../controllers/index');
 const userController = require('../controllers/userController')
 const postController = require('../controllers/postController')
-
-// Utils import
-const verifyToken = require('../token');
-
+const commentController = require('../controllers/commentController')
 
 /* USER ROUTES */
 
@@ -17,9 +13,6 @@ router.get('/users', userController.getUsers);
 
 // get single user by id
 router.get('/users/:id', userController.getUser);
-
-// create new user
-router.post('/users', userController.createUser);
 
 // update user
 router.put('/users/:id', userController.updateUser);
@@ -46,9 +39,21 @@ router.put('/posts/:id', postController.updatePost);
 router.delete('/posts/:id', postController.deletePost);
 
 
-/* GET home page. */
-// router.get('/', verifyToken, indexController.index);
-// router.get('/users/:id', userController.index);
-// router.post('/login', indexController.login);
+/* COMMENT ROUTES */
+
+// get all comments
+router.get('/comments', commentController.getComments);
+
+// get single comment by id
+router.get('/comments/:id', commentController.getComment);
+
+// create new comment
+router.post('/comments', commentController.createComment);
+
+// update comment
+router.put('/comments/:id', commentController.updateComment);
+
+// delete comment
+router.delete('/comments/:id', commentController.deleteComment);
 
 module.exports = router;
