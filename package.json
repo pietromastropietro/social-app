@@ -1,0 +1,10 @@
+{
+    "name": "socially",
+    "version": "1.0.0",
+    "author": "Pietro Mastropietro",
+    "license": "MIT",
+    "scripts": {
+      "install-dependencies": "npm install && cd api && npm install && cd ../client && npm install"
+    },
+    "dependencies": {}
+}
