@@ -2,7 +2,7 @@ const db = require('../db/db');
 
 const getPosts = async ()  => {
     try {
-        const posts = await db.query('SELECT * from posts');
+        const posts = await db.query('SELECT * FROM posts ORDER BY id DESC');
 
         return posts;
     } catch (err) {
@@ -26,26 +26,26 @@ const getPost = async (postId)  => {
     }
 };
 
-const createPost = async (postData)  => {
-    let query = 'INSERT INTO posts (user_id, text'
-    
-    // get logged in user id
-    // const userId = getLoggedUserId();
-    // temp for testing
-    const userId = 1;
-    
-    const params = [userId, postData.text];
+const createPost = async ({ userId, postData })  => {
+    let query = 
+    'INSERT INTO posts (id, user_id, text, image_url, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)';
 
-    if (postData.hasOwnProperty('image_url')) {
-        query += ', image_url) VALUES ($1, $2, $3)';
-        params.push(postData.image_url);
-    } else {
-        query += ') VALUES ($1, $2)';
-    }
+    let post = {
+        id: 5, // temp
+        userId: userId,
+        text: postData.text,
+        imgUrl: postData.imgUrl,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    };
+
+    const params = Object.values(post);
 
     try {
+        // return await db.query(query, params);
         return await db.query(query, params);
     } catch (err) {
+        console.log(err.message);
         throw new Error(err.message)
     }
 };

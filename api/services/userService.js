@@ -2,7 +2,7 @@ const db = require('../db/db');
 
 const getUsers = async () => {
     try {
-        const users = await db.query('SELECT * from users');
+        const users = await db.query('SELECT * FROM users');
 
         return users;
     } catch (err) {

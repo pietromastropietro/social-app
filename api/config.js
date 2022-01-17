@@ -4,9 +4,9 @@ const config = {
     db: {
         host: env.DB_HOST,
         port: env.DB_PORT,
-        user: env.DB_USER,
+        user: env.DB_USERNAME,
         password: env.DB_PASSWORD,
-        database: env.DB_NAME,
+        database: env.DB_DATABASE,
     }
 };
 

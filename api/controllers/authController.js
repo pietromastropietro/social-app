@@ -9,20 +9,24 @@ const login = async (req, res, next) => {
 
         let query = 'SELECT * FROM users WHERE email = $1';
 
-        const user = await db.query(query, [email]);
+        const user = (await db.query(query, [email]))[0];
 
-        if (user[0] && password === user[0].password_hash) {
+        if (user && password === user.password_hash) {
             jwt.sign({ user: user }, process.env.JWT_KEY, { expiresIn: '1h' }, (err, token) => {
                 if (err) {
                     console.log(err.message);
                     return res.json({ message: "JWT error"});
                 }
-                res.json({ message: 'Successful login', token });
+
+                // remove password before sending user data to frontend
+                delete user.password_hash;
+                res.json({ message: 'Successful login', token, user: user });
             });
         } else {
             res.json({ message: "Incorrect/missing username or password" });
         }
     } catch (err) {
+        console.log(err.message);
         return next(err);
     }
 };
