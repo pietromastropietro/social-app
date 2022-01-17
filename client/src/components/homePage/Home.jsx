@@ -31,7 +31,8 @@ const Home = () => {
             //         Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             //     }
             // });
-            const postRes = await axios.get("https://jsonplaceholder.typicode.com/posts");
+            // const postRes = await axios.get("https://jsonplaceholder.typicode.com/posts");
+            const postRes = await axios.get('http://localhost:4000/api/posts');
             const userRes = await axios.get("https://jsonplaceholder.typicode.com/users");
             const imgRes = await axios.get("https://picsum.photos/v2/list");
 

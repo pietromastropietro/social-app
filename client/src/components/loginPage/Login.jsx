@@ -66,20 +66,20 @@ const Login = ({ setToken }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:4000/login', {
-                username: user.email,
+            const response = await axios.post('http://localhost:4000/api/login', {
+                email: user.email,
                 password: user.password
             });
 
-            //console.log('response:', response);
-
             if (response.data.message === 'Successful login') {
-                //console.log('token:', response.data.token);
-                // history.push("/");
+                // save user data in local storage
+                localStorage.setItem('user', JSON.stringify(response.data.user))
 
                 // Set the token sent from the server in localStorage
                 setToken(response.data.token);
-            };
+            } else {
+                console.log(response.data.message);
+            }
         } catch (err) {
             console.log('error:', err);
         };

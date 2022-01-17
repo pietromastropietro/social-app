@@ -25,7 +25,7 @@ const Requests = () => {
         <div>
             <p>Requests</p>
             <Ul>
-                {requests.map(item => <Request person={item}/>)}
+                {requests.map(item => <Request key={item.id} person={item}/>)}
             </Ul>
         </div>
     )

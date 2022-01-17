@@ -51,7 +51,8 @@ const Post = ({ post, images }) => {
                 </PostTitleDate>
             </PostHeader>
             {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
-            <PostText>{post.body}</PostText>
+            {/* <PostText>{post.body}</PostText> */}
+            <PostText>{post.text}</PostText>
             <PostImage src={randomImg} alt=""/>
             <PostFooter>
                 <div>Heart</div>

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Button from '../Button'
 import Image from '../Image'
 import { radius, color } from '../../style'
+import { useState } from 'react'
+import axios from 'axios'
 
 const StyledPostInput = styled.div`
     background-color: white;
@@ -23,11 +25,44 @@ const Input = styled.input`
 `;
 
 const PostInput = () => {
+    let user = JSON.parse(localStorage.getItem('user')) || undefined;
+
+    const [post, setPost] = useState({
+        text: "",
+        imgUrl: undefined
+    });
+
+    const handleInput = (e) => {
+        const { name, value } = e.target;
+
+        setPost({
+            ...post,
+            [name]: value
+        })
+    };
+
+    const createPost = async () => {
+        try {
+            const res = await axios.post('http://localhost:4000/api/posts', {
+                userId: user.id,
+                postData: post
+            });
+
+            if (res.data.message === 'Post created') {
+                window.location.reload();
+                console.log(res.data.message); // temp
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <StyledPostInput>
             <Image />
-            <Input type="text" placeholder="What's on your mind?"/>
-            <Button>Post</Button>
+            <Input type="text" name="text" onChange={handleInput} placeholder="What's on your mind?"/>
+            <Button onClick={createPost}>Post</Button>
         </StyledPostInput>
     )
 }

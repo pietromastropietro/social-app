@@ -4,7 +4,6 @@ import Button from './Button';
 import Input from './Input';
 import { Link } from "react-router-dom";
 
-
 const StyledHeader = styled.header`
     background-color: #ffffff;
     display: flex;
@@ -19,6 +18,8 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
+    let user = JSON.parse(localStorage.getItem('user')) || undefined;
+    
     // TEMP
     const logout = () => {
         localStorage.clear();
@@ -27,11 +28,11 @@ const Header = () => {
 
     return (
         <StyledHeader>
-            <p>Social App</p>
+            <p>sociALLy</p>
             <Input type="text" placeholder="Search" />
             <div>
+                <p>Welcome back, {user.first_name}</p>
                 <Button onClick={logout}>Logout</Button>
-                {/* placeholder */}
             </div>
         </StyledHeader>
     )
