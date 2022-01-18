@@ -10,6 +10,16 @@ const getPosts = async (req, res, next)  => {
     }
 };
 
+const getUserPosts = async (req, res, next)  => {
+    try {
+        const posts = await postService.getUserPosts(req.params.id);
+
+        res.json(posts);
+    } catch (err) {
+        return next(err);
+    }
+};
+
 const getPost = async (req, res, next)  => {
     try {
         const post = await postService.getPost(req.params.id);
@@ -22,9 +32,9 @@ const getPost = async (req, res, next)  => {
 
 const createPost = async (req, res, next)  => {
     try {
-        await postService.createPost(req.body);
+        const post = await postService.createPost(req.body);
 
-        res.json({ message: 'Post created'});
+        res.json({ message: 'Post created', post: post});
     } catch (err) {
         return next(err);
     }
@@ -42,7 +52,7 @@ const updatePost = async (req, res, next)  => {
 const deletePost = async (req, res, next)  => {
     try {
         await postService.deletePost(req.params.id);
-
+        
         res.json({ message: 'Post deleted'});
     } catch (err) {
         return next(err);
@@ -51,6 +61,7 @@ const deletePost = async (req, res, next)  => {
 
 module.exports = {
     getPosts,
+    getUserPosts,
     getPost,
     createPost,
     updatePost,

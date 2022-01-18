@@ -27,6 +27,9 @@ router.delete('/users/:id', userController.deleteUser);
 // get all posts
 router.get('/posts', postController.getPosts);
 
+// get all user's posts 
+router.get('/posts/user/:id', postController.getUserPosts);
+
 // get single post by id
 router.get('/posts/:id', postController.getPost);
 

@@ -15,7 +15,7 @@ const login = async (req, res, next) => {
             jwt.sign({ user: user }, process.env.JWT_KEY, { expiresIn: '1h' }, (err, token) => {
                 if (err) {
                     console.log(err.message);
-                    return res.json({ message: "JWT error"});
+                    return res.json({ message: "JWT error" });
                 }
 
                 // remove password before sending user data to frontend
@@ -35,32 +35,25 @@ const register = async (req, res, next) => {
     try {
         const user = req.body;
 
+        // verify if user exists by email
         let query = 'SELECT * FROM users WHERE email = $1';
-
         const oldUser = await db.query(query, [user.email]);
 
         if (oldUser.length) {
             return res.json({ message: "User already exists. Please login" });
         }
 
+        // create new user
         query =
-            'INSERT INTO users (first_name, last_name, dob, email, password_hash, username'
+            `INSERT INTO users (first_name, last_name, username, bio, dob, email, password_hash, id) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
 
-        const params = [
-            user.first_name,
-            user.last_name,
-            user.dob,
-            user.email,
-            user.password_hash,
-            user.username
-        ];
+        // temp
+        const date = new Date();
+        const tempId = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+        user.id = tempId;
 
-        if (user.hasOwnProperty('bio')) {
-            query += ',bio) VALUES ($1, $2, $3, $4, $5, $6, $7)';
-            params.push(user.bio);
-        } else {
-            query += ') VALUES ($1, $2, $3, $4, $5, $6)';
-        }
+        const params = Object.values(user);
 
         // TODO encrypt user password
 
@@ -68,6 +61,7 @@ const register = async (req, res, next) => {
 
         res.json({ message: 'New user created' });
     } catch (err) {
+        console.log(err.message);
         return next(err);
     }
 };

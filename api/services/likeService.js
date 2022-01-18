@@ -13,23 +13,33 @@ const getContentLikes = async (contentId) => {
 
 const createLike = async (likeData) => {
     try {
-        let query = 'INSERT INTO likes (user_id'
-        const params = [likeData.user_id];
+        const query =
+        `INSERT INTO likes (user_id, post_id, comment_id, created_at, id)
+        VALUES ($1, $2, $3, $4, $5)`;
 
-        if (likeData.hasOwnProperty('post_id')) {
-            query += ', post_id)';
-            params.push(likeData.post_id);
-            updateContentLikes('posts', '+', likeData.post_id);
+        const date = new Date(); // temp
+
+        const like = {
+            ...likeData,
+            createdAt: new Date(),
+            id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
+        }
+
+        const params = Object.values(like);
+
+        // return await db.query(query, params);
+
+        await db.query(query, params);
+
+        if (like.postId) {
+            updateContentLikes('posts', '+', like.postId);
         } else {
-            query += ', comment_id)';
-            updateContentLikes('comments', '+', likeData.comment_id);
-            params.push(likeData.comment_id);
-        };
+            updateContentLikes('comments', '+', like.commentId);
+        }
 
-        query += 'VALUES ($1, $2)';
-
-        return await db.query(query, params);
+        return;
     } catch (err) {
+        console.log(err.message);
         throw new Error(err.message)
     }
 };
@@ -37,13 +47,13 @@ const createLike = async (likeData) => {
 const deleteLike = async (likeId) => {
     try {
         const like = await getLike(likeId);
-        
+
         if (like.post_id !== null) {
             updateContentLikes('posts', '-', like.post_id);
         } else {
             updateContentLikes('comments', '-', like.comment_id);
         };
-        
+
         const query = 'DELETE FROM likes WHERE id = $1'
 
         return await db.query(query, [likeId]);
@@ -55,7 +65,7 @@ const deleteLike = async (likeId) => {
 const updateContentLikes = async (table, operation, id) => {
     try {
         const query = `UPDATE ${table} SET likes = likes ${operation} 1 WHERE id = $1`
-        
+
         return await db.query(query, [id]);
     } catch (err) {
         throw new Error(err.message)
