@@ -24,12 +24,12 @@ const Input = styled.input`
     border: none;
 `;
 
-const PostInput = () => {
+const PostInput = ({ createPost }) => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
 
     const [post, setPost] = useState({
         text: "",
-        imgUrl: undefined
+        image_url: undefined
     });
 
     const handleInput = (e) => {
@@ -41,28 +41,21 @@ const PostInput = () => {
         })
     };
 
-    const createPost = async () => {
-        try {
-            const res = await axios.post('http://localhost:4000/api/posts', {
-                userId: user.id,
-                postData: post
-            });
+    const handleSubmit = (post) => {
+        createPost(post);
 
-            if (res.data.message === 'Post created') {
-                window.location.reload();
-                console.log(res.data.message); // temp
-            }
-
-        } catch (err) {
-            console.log(err);
-        }
-    };
+        // reset input fields
+        setPost({
+            text: "",
+            image_url: undefined
+        });
+    }
 
     return (
         <StyledPostInput>
             <Image />
-            <Input type="text" name="text" onChange={handleInput} placeholder="What's on your mind?"/>
-            <Button onClick={createPost}>Post</Button>
+            <Input type="text" name="text" value={post.text} onChange={handleInput} placeholder="What's on your mind?"/>
+            <Button onClick={() => handleSubmit(post)}>Post</Button>
         </StyledPostInput>
     )
 }

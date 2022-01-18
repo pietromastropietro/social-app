@@ -15,11 +15,13 @@ const Name = styled.p`
 `
 
 const Contact = ({ user }) => {
+    const fullName = `${user.first_name} ${user.last_name}`
+    
     return (
         <StyledContact>
             <Image />            
             {/* <Name>{user.fullName}</Name> */}
-            <Name>{user.name}</Name>
+            <Name>{fullName}</Name>
         </StyledContact>
     )
 }

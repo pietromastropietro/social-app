@@ -10,9 +10,11 @@ const StyledLogin = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
     & > p {
         font-size: 12px;
     }
+
     height: 700px;
 `
 const LogoContainer = styled.div`
@@ -25,7 +27,7 @@ const InputFieldset = styled.fieldset`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 90px;
+    /* height: 100px; */
     margin-bottom: 15px;
     & > p {
         font-size: 12px;
@@ -44,26 +46,49 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    > fieldset {
+        border: none;
+    }
 `
 
 const Login = ({ setToken }) => {
     // const history = useHistory();
+    const [login, setLogin] = useState(true);
 
     const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        username: '',
+        bio: '',
+        dob: '',
         email: '',
         password: ''
-    })
+    });
 
-    const handleInputChange = e => {
-        const { id, value } = e.target;
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
         setUser({
-            ...user, [id]: value
+            ...user,
+            [name]: value
         });
     };
 
-    const login = async (e) => {
-        console.log('API call from Login comp');
-        e.preventDefault();
+    const guestLogin = () => {
+        console.log("guest login");
+        setUser({
+            ...user,
+            email: "freddie@gmail.com",
+            password: "kwbeibcvfwsbc"
+        });
+
+        handleLogin();
+    }
+
+    const handleLogin = async (e) => {
+        console.log("login");
+        if (e) { e.preventDefault() }
 
         try {
             const response = await axios.post('http://localhost:4000/api/login', {
@@ -85,28 +110,91 @@ const Login = ({ setToken }) => {
         };
     };
 
+    const register = async (e) => {
+        console.log("register");
+        e.preventDefault();
+
+        // todo: validate user data
+
+        try {
+            const res = await axios.post('http://localhost:4000/api/register', user);
+
+            alert(res.data.message);
+
+            // reset user fields
+            setUser({
+                ...user,
+                firstName: '',
+                lastName: '',
+                username: '',
+                bio: '',
+                dob: '',
+                password: ''
+            });
+
+            // go back to login
+            setLogin(true);
+        } catch (err) {
+            console.log('error:', err);
+        };
+    };
+
     return (
         <StyledLogin>
             <LogoContainer>
-                <p>Welcome to (Name TBD)</p>
+                <p>Welcome to sociALLy!</p>
             </LogoContainer>
+            {login ?
+                <Form onSubmit={handleLogin}>
+                    <InputFieldset>
+                        <Label htmlFor="email">Email</Label>
+                        <Input type="email" name="email" onChange={handleInputChange} value={user.email} />
 
-            <Form onSubmit={login}>
-                <InputFieldset>
-                    <Label htmlFor="email">User email</Label>
-                    <Input type="email" placeholder="E-mail" id="email" onChange={handleInputChange} value={user.email} />
+                        <Label htmlFor="password">Password</Label>
+                        <Input type="password" name="password" onChange={handleInputChange} value={user.password} />
 
-                    <Label htmlFor="password">Password</Label>
-                    <Input type="password" placeholder="Password" id="password" onChange={handleInputChange} value={user.password} />
+                        {/* <p>Forgot password?</p> */}
+                    </InputFieldset>
 
-                    {/* <p>Forgot password?</p> */}
-                </InputFieldset>
+                    <ButtonFieldset>
+                        <Button type="submit">Login</Button>
+                        <Button onClick={() => setLogin(false)}>Sign up</Button>
+                        <Button onClick={guestLogin}>Login as Guest</Button>
+                    </ButtonFieldset>
+                </Form>
+                :
+                <Form onSubmit={register}>
+                    <InputFieldset>
+                        <Label htmlFor="firstName">First Name *</Label>
+                        <Input type="text" name="firstName" onChange={handleInputChange} value={user.firstName} />
 
-                <ButtonFieldset>
-                    <Button type="submit">Login</Button>
-                    <Button>Sign up</Button>
-                </ButtonFieldset>
-            </Form>
+                        <Label htmlFor="lastName">Last Name *</Label>
+                        <Input type="text" name="lastName" onChange={handleInputChange} value={user.lastName} />
+
+                        <Label htmlFor="username">Username *</Label>
+                        <Input type="text" name="username" onChange={handleInputChange} value={user.username} />
+
+                        <Label htmlFor="bio">Bio</Label>
+                        <textarea name="bio" placeholder='Tell us something about you!' onChange={handleInputChange} value={user.bio}></textarea>
+
+                        <Label htmlFor="dob">Date of birth *</Label>
+                        <Input type="date" name="dob" onChange={handleInputChange} value={user.dob} />
+
+                        <Label htmlFor="email">Email *</Label>
+                        <Input type="email" name="email" onChange={handleInputChange} value={user.email} />
+
+                        <Label htmlFor="password">Password *</Label>
+                        <Input type="password" name="password" onChange={handleInputChange} value={user.password} />
+
+                        {/* <p>Forgot password?</p> */}
+                    </InputFieldset>
+
+                    <ButtonFieldset>
+                        <Button type="submit">Register</Button>
+                        <Button onClick={() => setLogin(true)}>Back to log in</Button>
+                    </ButtonFieldset>
+                </Form>
+            }
         </StyledLogin>
     )
 }
