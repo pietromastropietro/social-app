@@ -115,14 +115,6 @@ const Feed = ({ userId }) => {
         }
     };
 
-    const likePost = (postId) => {
-        try {
-            
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     useEffect(() => {
         getPosts();
     }, []);

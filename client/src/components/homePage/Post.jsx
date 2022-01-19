@@ -9,6 +9,7 @@ import { useState } from 'react'
 import Input from '../Input'
 import Button from '../Button'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 const StyledPost = styled.div`
     background-color: white;
@@ -52,10 +53,47 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
     // const randomImg = images[Math.floor(Math.random() * 29)].download_url;
 
     const [editable, setEditable] = useState(false);
+    const [commentInputVisibility, setCommentInputVisibility] = useState(false);
 
     // console.log(JSON.stringify(post, null ,2));
 
     const [postData, setPostData] = useState(post);
+    const [postLikes, setPostLikes] = useState([]);
+    // const [comment, setComment] = useState({
+    //     userId: user.id,
+    //     postId: post.id,
+    //     text: "",
+    //     parentId: null
+    // })
+
+    const getCommentsAndLikes = async () => {
+        try {
+            const likesRes = await axios.get(`http://localhost:4000/api/likes/content/${post.id}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
+
+            // const commentsRes = await axios.get(`http://localhost:4000/api/likes/content/${post.id}`, {
+            //     headers: {
+            //         Authorization: (localStorage.getItem('token'))
+            //     }
+            // });
+
+            setPostLikes(likesRes.data);
+
+            // setPostComments(commentsRes.data);
+
+            // console.log(JSON.stringify(likesRes.data, null, 2));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    // useffect to fecth comments and likes
+    useEffect(() => {
+        getCommentsAndLikes();
+    }, []);
 
 
     const handleInput = (e) => {
@@ -67,14 +105,75 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
         });
     }
 
-    const handleLike = () => {
-        
+
+
+    const handleLike = async () => {
+        // copy state array to add/remove like because state array can't be manipulated directly
+        let newPostLikes = [...postLikes];
+        let likeId;
+
+        // non mi convince molto perchè affido un controllo importante a un array di stato, secondo me dovrei
+        // fare un api call per vedere se il like è presente o meno. nel caso la tengo toglila da qui
+        const hasUserLikedPost = postLikes.some(like => {
+            // check if user liked a content
+            if (like.user_id == user.id || like.userId == user.id) {
+
+                // check if content liked by user is this post
+                if (like.post_id == post.id || like.postId == post.id) {
+                    // save like id
+                    likeId = like.id;
+                    return true;
+                };
+            }
+        });
+
+        if (hasUserLikedPost) {
+            // user already liked the post, so remove the like
+            const res = await removeLike(likeId);
+
+            if (res.err) {
+                return console.log(res.err.message);
+            }
+
+            // remove (filter) like element from likes array
+            newPostLikes = newPostLikes.filter(like => like.id != likeId);
+
+        } else {
+            // user neved liked the post, so create new like
+            const res = await createLike(user.id, post.id, 'post');
+
+            if (res.err) {
+                return console.log(res.err.message);
+            }
+
+            // add (push) new like into likes array
+            newPostLikes.push(res.data);
+        }
+
+        // set the updated likes array as state array to trigger component update 
+        setPostLikes(newPostLikes);
+    };
+
+
+    // this function has to be in its own file because i will need it for comments too
+    const removeLike = async (contentId) => {
+        try {
+            const res = await axios.delete(`http://localhost:4000/api/likes/${contentId}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
+
+            return { message: res.data.message }
+        } catch (err) {
+            return { err: err }
+        }
     };
 
     // this function has to be in its own file because i will need it for comments too
     const createLike = async (userId, contentId, contentType) => {
         const like = {
-            userId: userId,
+            userId: user.id,
             postId: null,
             commentId: null
         }
@@ -92,19 +191,41 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                 }
             });
 
-            console.log(res.data.message);
+            return { data: res.data.like, message: res.data.message };
         } catch (err) {
-            console.log(err);
+            return { err: err }
         }
-    }
-
-
-
+    };
 
     const submitEdit = (postData) => {
         setEditable(false);
         updatePost(postData);
     }
+
+    // const handleCommentInput = (e) => {
+    //     setComment({
+    //         ...comment,
+    //         text: e.target.value
+    //     });
+    // }
+
+
+    // const createComment = async () => {
+    //     setCommentInputVisibility(false);
+    //     try {
+    //         // console.log(JSON.stringify(comment,null,2));
+
+    //         const res = await axios.post(`http://localhost:4000/api/comments`, comment, {
+    //             headers: {
+    //                 Authorization: (localStorage.getItem('token'))
+    //             }
+    //         });
+
+    //         // console.log(JSON.stringify(res.data.comment,null,2));
+    //     } catch (err) {
+    //         console.log(err.message);
+    //     }
+    // };
 
     return (
         <StyledPost>
@@ -124,11 +245,12 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
             </PostHeader>
             {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
             {/* <PostText>{post.body}</PostText> */}
+
             {editable ?
-                <>
+                <form>
                     <Input type="text" value={postData.text} name="text" onChange={handleInput} />
-                    <Button onClick={() => submitEdit(postData)}>Confirm</Button>
-                </>
+                    <Button type='button' onClick={() => submitEdit(postData)}>Confirm</Button>
+                </form>
                 :
                 <PostText>{post.text}</PostText>
             }
@@ -139,12 +261,28 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                 {/* <div onClick={() => likePost(post.id)}>Heart</div> */}
                 <div onClick={handleLike}>Heart</div>
                 <Likes>
-                    <p><strong>{post.likes}</strong></p>
+                    <p><strong>{postLikes.length}</strong></p>
                     <p>Likes</p>
                 </Likes>
-                <div>Comment</div>
+                <div onClick={() => setCommentInputVisibility(true)}>Comment</div>
             </PostFooter>
-            {/* <Comments comments={post.comments} /> */}
+            {/* {commentInputVisibility ?
+                <div>
+                    <form>
+                        <Input type="text" placeholder='Write your comment here...' value={comment.text} onChange={handleCommentInput} />
+                        <Button type="button" onClick={createComment}>Confirm</Button>
+                    </form>
+                </div>
+                :
+                undefined
+            } */}
+
+            <Comments
+                postId={post.id}
+                commentInputVisibility={commentInputVisibility}
+                setCommentInputVisibility={setCommentInputVisibility}
+            />
+
         </StyledPost>
 
         // <StyledPost>
