@@ -27,17 +27,9 @@ const createLike = async (likeData) => {
 
         const params = Object.values(like);
 
-        // return await db.query(query, params);
-
         await db.query(query, params);
 
-        if (like.postId) {
-            updateContentLikes('posts', '+', like.postId);
-        } else {
-            updateContentLikes('comments', '+', like.commentId);
-        }
-
-        return;
+        return like;
     } catch (err) {
         console.log(err.message);
         throw new Error(err.message)
@@ -48,25 +40,9 @@ const deleteLike = async (likeId) => {
     try {
         const like = await getLike(likeId);
 
-        if (like.post_id !== null) {
-            updateContentLikes('posts', '-', like.post_id);
-        } else {
-            updateContentLikes('comments', '-', like.comment_id);
-        };
-
         const query = 'DELETE FROM likes WHERE id = $1'
 
         return await db.query(query, [likeId]);
-    } catch (err) {
-        throw new Error(err.message)
-    }
-};
-
-const updateContentLikes = async (table, operation, id) => {
-    try {
-        const query = `UPDATE ${table} SET likes = likes ${operation} 1 WHERE id = $1`
-
-        return await db.query(query, [id]);
     } catch (err) {
         throw new Error(err.message)
     }

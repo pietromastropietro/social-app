@@ -12,9 +12,9 @@ const getContentLikes = async (req, res, next)  => {
 
 const createLike = async (req, res, next)  => {
     try {
-        await likeService.createLike(req.body);
-        
-        res.json({ message: 'Like created'});
+        const like = await likeService.createLike(req.body);
+
+        res.json({ message: 'Like created', like: like });
     } catch (err) {
         return next(err);
     }

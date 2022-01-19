@@ -48,6 +48,9 @@ router.delete('/posts/:id', postController.deletePost);
 // get all comments
 router.get('/comments', commentController.getComments);
 
+// get a post comments
+router.get('/comments/post/:id', commentController.getPostComments);
+
 // get single comment by id
 router.get('/comments/:id', commentController.getComment);
 

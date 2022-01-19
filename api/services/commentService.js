@@ -10,6 +10,23 @@ const getComments = async ()  => {
     }
 };
 
+const getPostComments = async (postId)  => {
+    try {
+        const query = 
+        `SELECT comments.*, users.first_name, users.last_name 
+        FROM comments 
+        JOIN users ON comments.user_id = users.id 
+        WHERE post_id = $1
+        ORDER BY created_at ASC`
+
+        const comments = await db.query(query, [postId]);
+
+        return comments;
+    } catch (err) {
+        throw new Error(err.message)
+    }
+};
+
 const getComment = async (commentId)  => {
     const query = 'SELECT * FROM comments WHERE id = $1';
     
@@ -27,25 +44,28 @@ const getComment = async (commentId)  => {
 };
 
 const createComment = async (commentData)  => {
-    let query = 'INSERT INTO comments (user_id, post_id, text'
-    
-    // get logged in user id and post id
-    // temp for testing
-    const userId = 1;
-    const postId = 1;
-    
-    const params = [userId, postId, commentData.text];
+    const query = 
+    'INSERT INTO comments (user_id, post_id, text, parent_id, created_at, updated_at, id) VALUES ($1, $2, $3, $4, $5, $6, $7)';
 
-    if (commentData.hasOwnProperty('parent_id')) {
-        query += ', parent_id) VALUES ($1, $2, $3, $4)';
-        params.push(commentData.parent_id);
-    } else {
-        query += ') VALUES ($1, $2, $3)';
-    }
+    const date = new Date(); // temp
+
+    const comment = {
+        ...commentData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
+    };
+    
+    const params = Object.values(comment);
+
+    console.log(JSON.stringify(params,null,2));
 
     try {
-        return await db.query(query, params);
+        await db.query(query, params);
+
+        return comment;
     } catch (err) {
+        console.log(err.message);
         throw new Error(err.message)
     }
 };
@@ -77,6 +97,7 @@ const deleteComment = async (commentId)  => {
 
 module.exports = {
     getComments,
+    getPostComments,
     getComment,
     createComment,
     updateComment,
