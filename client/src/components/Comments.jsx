@@ -24,7 +24,7 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
         userId: user.id,
         postId: postId,
         text: "",
-        parentId: null
+        parent_id: null
     })
     // const [commentInputVisibility, setCommentInputVisibility] = useState(false);
 
@@ -134,7 +134,7 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                 res.data.comment.last_name = user.last_name;
 
                 // console.log(JSON.stringify(res.data.comment,null,2));
-                if (!res.data.comment.parentId) {
+                if (!res.data.comment.parent_id) {
                     console.log("this was a comment");
 
                     // copy state array and unshift (add to the beginning) the new comment
@@ -160,7 +160,7 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                     console.log("this was a reply");
 
                     // find index of parent comment
-                    let index = comments.findIndex(comment => comment.id == res.data.comment.parentId)
+                    let index = comments.findIndex(comment => comment.id == res.data.comment.parent_id)
 
                     // copy state array 
                     let newComments = [...comments];
@@ -226,11 +226,10 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
             });
 
             if (res.data.message === "Comment updated") {
-                console.log("reply");
-                console.log(JSON.stringify(comment, null, 2));
+                // console.log("reply");
+                // console.log(JSON.stringify(comment, null, 2));
                 
-                
-                if ((!comment.parent_id || !comment.parentId)) { // temp, i will normalize property names
+                if (!comment.parent_id) {
                     console.log("this was a comment update");
 
                     // copy state array and find index of the edited comment
@@ -247,15 +246,24 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
 
                     // find index of parent comment
                     let commentIndex = comments.findIndex(comm => comm.id == comment.parent_id)
+
+                    // console.log("comment index: " + commentIndex);
                     
                     // copy state array 
                     let newComments = [...comments];
 
+                    // console.log(JSON.stringify(newComments, null, 2));
+                    
                     // find index of reply
                     let replyIndex = newComments[commentIndex].replies.findIndex(reply => reply.id == comment.id)
-    
+                    // console.log("reply index: " + replyIndex);
+                    
+                    
+                    
                     // update edited reply
                     newComments[commentIndex].replies[replyIndex] = comment;
+                    
+                    // console.log(JSON.stringify(newComments, null, 2));
 
                     // set the updated array as state array to trigger component update 
                     setComments(newComments);

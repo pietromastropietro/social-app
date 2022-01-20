@@ -63,7 +63,7 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
     //     userId: user.id,
     //     postId: post.id,
     //     text: "",
-    //     parentId: null
+    //     parent_id: null
     // })
 
     const getCommentsAndLikes = async () => {

@@ -40,7 +40,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         userId: user.id,
         postId: comment.postId || comment.post_id,
         text: "",
-        parentId: comment.id
+        parent_id: comment.id
     });
 
     const lastUpdate = new Date(comment.updated_at || comment.updatedAt).toDateString(); // temp, i need to normalize property names
@@ -140,7 +140,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                     <div>
                         <p>Like</p>
                         {/* // temp, i will normalize property names */}
-                        {!comment.parent_id ? !comment.parentId ? <p onClick={() => setReplyInputVisibility(true)}>Reply</p> : undefined : undefined}
+                        {!comment.parent_id ? <p onClick={() => setReplyInputVisibility(true)}>Reply</p> : undefined}
                     </div>
                 </Container>
 
