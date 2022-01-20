@@ -26,7 +26,6 @@ const Home = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     const getHomepageData = async () => {
-        console.log('API call from Home component');
         try {
             // const response = await axios.get('http://localhost:4000/', {
             //     headers: {
