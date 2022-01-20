@@ -17,7 +17,7 @@ const getPostComments = async (postId)  => {
         FROM comments 
         JOIN users ON comments.user_id = users.id 
         WHERE post_id = $1
-        ORDER BY created_at ASC`
+        ORDER BY created_at DESC`
 
         const comments = await db.query(query, [postId]);
 
