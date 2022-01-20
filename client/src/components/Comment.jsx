@@ -119,7 +119,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                         {user.id == comment.user_id || user.id == comment.userId ? // temp, i need to normalize property names
                             <>
                                 <div onClick={() => setEditable(true)}>Edit</div>
-                                <div onClick={() => deleteComment(comment.id)}>Delete</div>
+                                <div onClick={() => deleteComment(comment)}>Delete</div>
                             </>
                             : undefined
                         }

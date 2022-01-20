@@ -156,6 +156,11 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                         ...comment,
                         text: ""
                     });
+
+                    // reset show/hide more comments button text
+                    if (newComments.length <= 5) {
+                        setCommentsToShow(4)
+                    }
                 } else {
                     console.log("this was a reply");
 
@@ -188,23 +193,43 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
         }
     };
 
-    const deleteComment = async (commentId) => {
+    const deleteComment = async (comment) => {
         if (window.confirm("Are you sure you want to delete this comment?")) { // temp
             try {
-                const res = await axios.delete(`http://localhost:4000/api/comments/${commentId}`, {
+                const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
                     headers: {
                         Authorization: (localStorage.getItem('token'))
                     }
                 });
 
                 if (res.data.message === "Comment deleted") {
-                    // copy state array and filter (remove) deleted comment
-                    let newComments = [...comments].filter(comment => comment.id != commentId);
+                    if (!comment.parent_id) {
+                        console.log("deleting comment");
 
-                    // set the updated comments array as state array to trigger component update 
-                    setComments(newComments);
+                        // copy state array and filter (remove) deleted comment
+                        let newComments = [...comments].filter(element => element.id != comment.id);
 
-                    console.log(res.data.message); // temp
+                        // set the updated comments array as state array to trigger component update 
+                        setComments(newComments);
+
+                        // console.log(JSON.stringify(newComments, null, 2));
+                    } else {
+                        console.log("deleting reply");
+
+                        // copy state array 
+                        let newComments = [...comments];
+
+                        // find index of parent comment
+                        let index = newComments.findIndex(element => element.id == comment.parent_id)
+
+                        newComments[index].replies = newComments[index].replies.filter(element => element.id != comment.id)
+
+                        // set the updated array as state array to trigger component update 
+                        setComments(newComments);
+
+                        // console.log(JSON.stringify(newComments, null, 2));
+                    }
+
                 }
             } catch (err) {
                 console.log(err);
@@ -228,17 +253,17 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
             if (res.data.message === "Comment updated") {
                 // console.log("reply");
                 // console.log(JSON.stringify(comment, null, 2));
-                
+
                 if (!comment.parent_id) {
                     console.log("this was a comment update");
 
                     // copy state array and find index of the edited comment
                     let newComments = [...comments];
                     let index = newComments.findIndex(item => item.id === comment.id);
-                                        
+
                     // update comment
                     newComments[index] = comment;
-                    
+
                     // set the updated comments array as state array to trigger component update 
                     setComments(newComments);
                 } else {
@@ -248,21 +273,21 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                     let commentIndex = comments.findIndex(comm => comm.id == comment.parent_id)
 
                     // console.log("comment index: " + commentIndex);
-                    
+
                     // copy state array 
                     let newComments = [...comments];
 
                     // console.log(JSON.stringify(newComments, null, 2));
-                    
+
                     // find index of reply
                     let replyIndex = newComments[commentIndex].replies.findIndex(reply => reply.id == comment.id)
                     // console.log("reply index: " + replyIndex);
-                    
-                    
-                    
+
+
+
                     // update edited reply
                     newComments[commentIndex].replies[replyIndex] = comment;
-                    
+
                     // console.log(JSON.stringify(newComments, null, 2));
 
                     // set the updated array as state array to trigger component update 
@@ -283,9 +308,18 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
         });
     };
 
-    const showAllComments = () => {
-        setCommentsToShow(comments.length);
+    const toggleAllComments = () => {
+        if (commentsToShow === 4) {
+            setCommentsToShow(comments.length);
+        } else {
+            setCommentsToShow(4);
+        }
     }
+
+    
+    useEffect(() => {
+        console.log("comments to show: " + commentsToShow);
+    })
 
     return (
         <StyledComments>
@@ -300,8 +334,6 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                 undefined
             }
 
-            <p onClick={showAllComments}>Show all {comments.length} comments</p>
-
             {comments.map((commentt, index) => {
                 if (index < commentsToShow) {
                     return <Comment
@@ -311,20 +343,12 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                         updateComment={updateComment}
                         createComment={createComment}
                     />
-
-                    // // filter replies array to send only replies to this comment
-                    // let commentReplies = replies.filter(replyy => replyy.parent_id == commentt.id);
-
-                    // return <Comment
-                    //     comment={commentt}
-                    //     commentReplies={commentReplies}
-                    //     key={commentt.id}
-                    //     deleteComment={deleteComment}
-                    //     updateComment={updateComment}
-                    //     createComment={createComment}
-                    // />
                 }
             })}
+            <p onClick={toggleAllComments}>
+                {comments.length > 4 ? commentsToShow === 4 ? `Show all ${comments.length} comments` : "Hide comments" : undefined}
+            </p>
+
         </StyledComments>
     )
 };
