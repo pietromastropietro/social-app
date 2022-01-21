@@ -1,8 +1,18 @@
 const likeService = require('../services/likeService')
 
-const getContentLikes = async (req, res, next)  => {
+const getPostLikes = async (req, res, next)  => {
     try {
-        const likes = await likeService.getContentLikes(req.params.id);
+        const likes = await likeService.getPostLikes(req.params.id);
+
+        res.json(likes);
+    } catch (err) {
+        return next(err);
+    }
+};
+
+const getCommentLikes = async (req, res, next)  => {
+    try {
+        const likes = await likeService.getCommentLikes(req.params.id);
 
         res.json(likes);
     } catch (err) {
@@ -31,7 +41,8 @@ const deleteLike = async (req, res, next)  => {
 };
 
 module.exports = {
-    getContentLikes,
+    getPostLikes,
+    getCommentLikes,
     createLike,
     deleteLike
 };

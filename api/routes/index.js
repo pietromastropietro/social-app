@@ -65,8 +65,11 @@ router.delete('/comments/:id', commentController.deleteComment);
 
 /* LIKES ROUTES */
 
-// get post or comment likes
-router.get('/likes/content/:id', likeController.getContentLikes);
+// get post likes
+router.get('/likes/post/:id', likeController.getPostLikes);
+
+// get comment likes
+router.get('/likes/comment/:id', likeController.getCommentLikes);
 
 // create new like
 router.post('/likes', likeController.createLike);

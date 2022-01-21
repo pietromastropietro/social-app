@@ -1,9 +1,20 @@
 const db = require('../db/db');
 
-const getContentLikes = async (contentId) => {
+const getPostLikes = async (postId) => {
     try {
-        const query = 'SELECT * FROM likes WHERE post_id = $1 OR comment_id = $1';
-        const likes = await db.query(query, [contentId]);
+        const query = 'SELECT * FROM likes WHERE post_id = $1';
+        const likes = await db.query(query, [postId]);
+
+        return likes;
+    } catch (err) {
+        throw new Error(err.message)
+    }
+};
+
+const getCommentLikes = async (commentId) => {
+    try {
+        const query = 'SELECT * FROM likes WHERE comment_id = $1';
+        const likes = await db.query(query, [commentId]);
 
         return likes;
     } catch (err) {
@@ -65,7 +76,8 @@ const getLike = async (likeId) => {
 };
 
 module.exports = {
-    getContentLikes,
+    getPostLikes,
+    getCommentLikes,
     createLike,
     deleteLike
 };
