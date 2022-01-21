@@ -26,6 +26,9 @@ const CommentText = styled.div`
 const ReplyContainer = styled.div`
     margin-left: 40px;
 `
+const LikesContainer = styled.div`
+
+`
 
 const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     // const Comment = ({ comment, commentReplies, createComment, deleteComment, updateComment }) => {
@@ -34,6 +37,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     const [commentData, setCommentData] = useState(comment); // TODO rename this to commentUpdates, and use ONLY for things related to comment edits
     const [editable, setEditable] = useState(false);
     const [replyInputVisibility, setReplyInputVisibility] = useState(false)
+    const [likesVisibility, setLikesVisibility] = useState(false);
     const replies = comment.replies || [];
     // const [replies, setReplies] = useState(comment.replies || []);
 
@@ -104,6 +108,10 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                 return console.log(res.err.message);
             }
 
+            // add current user's full name
+            res.data.first_name = user.first_name;
+            res.data.last_name = user.last_name;
+
             // add (push) new like into likes array
             newCommentLikes.push(res.data);
         }
@@ -111,6 +119,12 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         // set the updated likes array as state array to trigger component update 
         setCommentLikes(newCommentLikes);
     };
+
+    const toggleLikes = () => {
+        setLikesVisibility(!likesVisibility)
+        // console.log(JSON.stringify(commentLikes, null, 2));
+
+    }
 
 
 
@@ -124,39 +138,11 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         setReplyInputVisibility(false);
         await createComment(reply);
 
-        // const replyy = createComment(reply);
-
-        // try {
-        //     const res = await axios.post(`http://localhost:4000/api/comments`, reply, {
-        //         headers: {
-        //             Authorization: (localStorage.getItem('token'))
-        //         }
-        //     });
-
-        //     if (res.data.message === 'Comment created') {
-        //         // // add user full name to new reply
-        //         res.data.comment.first_name = user.first_name;
-        //         res.data.comment.last_name = user.last_name;
-
-        //         // copy state array and push (add) the new reply
-        //         let newReplies = [...replies];
-        //         newReplies.push(res.data.comment);
-
-        //         // set the updated replies array as state array to trigger component update 
-        //         setReplies(newReplies);
-
-
         // reset reply text
         setReply({
             ...reply,
             text: ""
         });
-
-        //         console.log(res.data.message); // temp
-        //     }
-        // } catch (err) {
-        //     console.log(err.message);
-        // }
     };
 
     const handleInput = (e) => {
@@ -191,7 +177,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                             </>
                             : undefined
                         }
-                        <p>-{commentLikes.length}</p>
+                        <p onClick={toggleLikes}>-{commentLikes.length}</p>
                     </CommentWriter>
 
                     {editable ?
@@ -216,6 +202,22 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
                 {/* TODO: i will add a comment input here for comments reply, and then make api call adding comment id as parent_id */}
             </StyledComment>
+
+            {likesVisibility ?
+                <LikesContainer>
+                    <p>likes</p>
+                    <ul>
+                        {commentLikes.map(like =>
+                            <li key={like.id}>
+                                {like.first_name} {like.last_name}
+                            </li>
+                        )}
+
+                    </ul>
+                </LikesContainer>
+                : undefined
+            }
+
 
             <ReplyContainer>
                 {replyInputVisibility ?

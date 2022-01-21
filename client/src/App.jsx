@@ -1,6 +1,6 @@
 import Button from './components/Button';
 import Home from './components/homePage/Home';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import Profile from './components/profilePage/Profile';
 import Header from './components/Header';
 import styled from 'styled-components';
@@ -36,17 +36,14 @@ const App = () => {
             {/* <Router> */}
             <Header />
             <MainContainer>
-                <Switch>
-                    <Route exact path="/">
-                        <Home />
-                    </Route>
-                    <Route path="/profile">
-                        <Profile />
-                    </Route>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/users/:username" element={<Profile />} />
+                   
                     {/* <Route path="/login">
                         <Login setToken={setToken} />
                     </Route> */}
-                </Switch>
+                </Routes>
             </MainContainer>
             {/* </Router> */}
 

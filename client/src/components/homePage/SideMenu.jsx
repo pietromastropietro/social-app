@@ -38,6 +38,9 @@ const NavLink = styled(Link)`
 `;
 
 const SideMenu = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const path = `${user.first_name}${user.last_name}-${user.id}`
+
     return (
         <StyledMenu>
             <Ul>
@@ -45,7 +48,7 @@ const SideMenu = () => {
                     <NavLink to="/">Home</NavLink>
                 </Li>
                 <Li>
-                    <NavLink to="/profile">Profile</NavLink>
+                    <NavLink to={`users/${path}`}>Profile</NavLink>
                 </Li>
                 <Li>
                     <p>Settings</p>

@@ -20,24 +20,8 @@ const Ul = styled.ul`
 `
 
 const Contacts = ({ users }) => {
-    // const [contacts, setContacts] = useState([]);
-    // const [error, setError] = useState(null);
+    // console.log("users: ",JSON.stringify(users, null ,2));
 
-    // const contacts = [{
-    //     firstName: 'John',
-    //     lastName: 'Smith',
-    //     _id: 1
-    // },
-    // {
-    //     firstName: 'Katy',
-    //     lastName: 'Fitch',
-    //     _id: 2
-    // }
-    // ]
-
-    //if (error) {
-    //    return <div>Error: {error.message}</div>;
-    //} else {
         return (
             <div>
                 <p>Contacts</p>

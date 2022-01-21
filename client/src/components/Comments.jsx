@@ -37,19 +37,8 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                     Authorization: (localStorage.getItem('token'))
                 }
             });
-
-            // const cmm = formatCommentsData(res.data)
-
+            
             setComments(formatCommentsData(res.data));
-
-
-
-
-            // // save only replies and not comments (replies have parent_id field with the id of the parent comment)
-            // setReplies(res.data.filter(item => item.parent_id));
-
-            // // save only comments and not replies
-            // setComments(res.data.filter(comment => !comment.parent_id))
 
             // console.log(JSON.stringify(res.data, null, 2));
         } catch (err) {
@@ -83,34 +72,6 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
             }
         };
 
-        // console.log(JSON.stringify(comments, null, 2));
-
-
-        // // add only comments to array
-        // rawCommentsData.forEach(element => {
-        //     // if it's a comment, parent_id field is null
-        //     if (!element.parent_id) {
-        //         comments.push(element);
-        //     }
-        // });
-
-        // // add replies to their parent comment
-        // rawCommentsData.forEach(element => {
-        //     // if it's a reply, parent_id field will contain parent comment's id
-        //     if (element.parent_id) {
-        //         // get index of parent comment
-        //         index = comments.findIndex(comment => comment.id == element.parent_id);
-
-        //         // create replies array field if it doesn't exists
-        //         if (!comments[index].replies) {
-        //             comments[index].replies = [];
-        //         }
-
-        //         // push reply into replies array field
-        //         comments[index].replies.push(element);
-        //     }
-        // });
-
         return comments;
     }
 
@@ -140,10 +101,6 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
                     // copy state array and unshift (add to the beginning) the new comment
                     let newComments = [...comments];
                     newComments.unshift(res.data.comment);
-
-                    // // copy state array and push (add) the new comment
-                    // let newComments = [...comments];
-                    // newComments.push(res.data.comment);
 
                     // set the updated comments array as state array to trigger component update 
                     setComments(newComments);
@@ -315,11 +272,6 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
             setCommentsToShow(4);
         }
     }
-
-    
-    useEffect(() => {
-        console.log("comments to show: " + commentsToShow);
-    })
 
     return (
         <StyledComments>

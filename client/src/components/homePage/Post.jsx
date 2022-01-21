@@ -56,17 +56,12 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
 
     const [editable, setEditable] = useState(false);
     const [commentInputVisibility, setCommentInputVisibility] = useState(false);
+    const [likesVisibility, setLikesVisibility] = useState(false);
 
     // console.log(JSON.stringify(post, null ,2));
 
     const [postData, setPostData] = useState(post);
     const [postLikes, setPostLikes] = useState([]);
-    // const [comment, setComment] = useState({
-    //     userId: user.id,
-    //     postId: post.id,
-    //     text: "",
-    //     parent_id: null
-    // })
 
     const getPostLikes = async () => {
         try {
@@ -98,8 +93,6 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
             [name]: value
         });
     }
-
-
 
     const handleLike = async () => {
         // copy state array to add/remove like because state array can't be manipulated directly
@@ -134,6 +127,10 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                 return console.log(res.err.message);
             }
 
+            // add current user's full name
+            res.data.first_name = user.first_name;
+            res.data.last_name = user.last_name;
+            
             // add (push) new like into likes array
             newPostLikes.push(res.data);
         }
@@ -148,30 +145,9 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
         updatePost(postData);
     }
 
-    // const handleCommentInput = (e) => {
-    //     setComment({
-    //         ...comment,
-    //         text: e.target.value
-    //     });
-    // }
-
-
-    // const createComment = async () => {
-    //     setCommentInputVisibility(false);
-    //     try {
-    //         // console.log(JSON.stringify(comment,null,2));
-
-    //         const res = await axios.post(`http://localhost:4000/api/comments`, comment, {
-    //             headers: {
-    //                 Authorization: (localStorage.getItem('token'))
-    //             }
-    //         });
-
-    //         // console.log(JSON.stringify(res.data.comment,null,2));
-    //     } catch (err) {
-    //         console.log(err.message);
-    //     }
-    // };
+    const toggleLikes = () => {
+        setLikesVisibility(!likesVisibility)
+    }
 
     return (
         <StyledPost>
@@ -189,8 +165,6 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                     : undefined
                 }
             </PostHeader>
-            {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
-            {/* <PostText>{post.body}</PostText> */}
 
             {editable ?
                 <form>
@@ -206,7 +180,7 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
             <PostFooter>
                 {/* <div onClick={() => likePost(post.id)}>Heart</div> */}
                 <div onClick={handleLike}>Heart</div>
-                <Likes>
+                <Likes onClick={toggleLikes}>
                     <p><strong>{postLikes.length}</strong></p>
                     <p>Likes</p>
                 </Likes>
@@ -223,6 +197,21 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                 undefined
             } */}
 
+            {likesVisibility ?
+                <div>
+                    <p>likes</p>
+                    <ul>
+                        {postLikes.map(like =>
+                            <li key={like.id}>
+                                {like.first_name} {like.last_name}
+                            </li>
+                        )}
+
+                    </ul>
+                </div>
+                : undefined
+            }
+
             <Comments
                 postId={post.id}
                 commentInputVisibility={commentInputVisibility}
@@ -230,28 +219,6 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
             />
 
         </StyledPost>
-
-        // <StyledPost>
-        //     <PostHeader>
-        //         <Image />
-        //         <PostTitleDate>
-        //             <p><strong>{post.author.fullName}</strong></p>
-        //             <p>12 hours ago</p>
-        //         </PostTitleDate>
-        //     </PostHeader>
-        //     {/* <PostText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</PostText> */}
-        //     <PostText>{post.body}</PostText>
-        //     <PostImage src={tempImage} alt=""/>
-        //     <PostFooter>
-        //         <div>Heart</div>
-        //         <Likes>
-        //             <p><strong>{post.likes.length}</strong></p>
-        //             <p>Likes</p>
-        //         </Likes>
-        //         <div>Comment</div>
-        //     </PostFooter>
-        //     <Comments comments={post.comments} />
-        // </StyledPost>
     )
 }
 

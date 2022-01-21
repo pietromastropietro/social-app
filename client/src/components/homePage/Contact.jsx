@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Image from '../Image'
 
@@ -16,12 +17,15 @@ const Name = styled.p`
 
 const Contact = ({ user }) => {
     const fullName = `${user.first_name} ${user.last_name}`
-    
+    const path = `${user.first_name}${user.last_name}-${user.id}`
+
     return (
         <StyledContact>
-            <Image />            
+            <Image />
             {/* <Name>{user.fullName}</Name> */}
-            <Name>{fullName}</Name>
+            <Link to={`users/${path}`}>
+                <Name>{fullName}</Name>
+            </Link>
         </StyledContact>
     )
 }

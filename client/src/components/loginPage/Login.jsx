@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Button from '../Button'
 import Input from '../Input'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react'
 
@@ -53,7 +53,7 @@ const Form = styled.form`
 `
 
 const Login = ({ setToken }) => {
-    // const history = useHistory();
+    // const navigate = useNavigate();
     const [login, setLogin] = useState(true);
 
     const [user, setUser] = useState({

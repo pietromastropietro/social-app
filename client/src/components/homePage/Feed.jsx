@@ -4,6 +4,7 @@ import PostInput from './PostInput'
 import Post from './Post'
 import styled from 'styled-components'
 import axios from 'axios'
+import { useParams } from 'react-router-dom'
 
 const StyledFeed = styled.div`
     width: 58%;
@@ -104,7 +105,7 @@ const Feed = ({ userId }) => {
 
                 // update post
                 newPosts[index] = post;
-                
+
                 // set the updated posts array as state array to trigger component update 
                 setPosts(newPosts);
 
@@ -119,11 +120,22 @@ const Feed = ({ userId }) => {
         getPosts();
     }, []);
 
+
+    let params = useParams();
+    // console.log(JSON.stringify(params, null, 2));
+
+    const userIdParam = params?.username?.split('-')[1] || undefined;
+
     return (
         <StyledFeed>
-            <PostInput createPost={createPost} />
-            {/* {posts.map(post => <Post post={post} key={post._id} />)} */}
-            {/* {posts.map(post => <Post post={post} images={images} key={post.id} />)} */}
+            {/* 
+            if userIdParam is undefined it means we're on homepage, so user can add a post. 
+            if userIdParam equals logged user_id we're on homepage or logged user profile, so user can add a post
+            */}
+            {!userIdParam || (userIdParam == user.id) ?
+                <PostInput createPost={createPost} />
+                : undefined
+            }
             {posts.map(post =>
                 <Post
                     post={post}
