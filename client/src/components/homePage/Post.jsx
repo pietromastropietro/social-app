@@ -10,6 +10,7 @@ import Input from '../Input'
 import Button from '../Button'
 import axios from 'axios'
 import { useEffect } from 'react'
+import { createLike, removeLike } from '../../likeUtil'
 
 const StyledPost = styled.div`
     background-color: white;
@@ -45,6 +46,7 @@ const Likes = styled.div`
 `
 const Post = ({ post, images, deletePost, updatePost, likePost }) => {
     const user = JSON.parse(localStorage.getItem('user'));
+
     const author = `${post.first_name} ${post.last_name}`
 
     const dateObj = new Date(post.created_at); // temp
@@ -66,33 +68,25 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
     //     parent_id: null
     // })
 
-    const getCommentsAndLikes = async () => {
+    const getPostLikes = async () => {
         try {
-            const likesRes = await axios.get(`http://localhost:4000/api/likes/content/${post.id}`, {
+            const res = await axios.get(`http://localhost:4000/api/likes/post/${post.id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
 
-            // const commentsRes = await axios.get(`http://localhost:4000/api/likes/content/${post.id}`, {
-            //     headers: {
-            //         Authorization: (localStorage.getItem('token'))
-            //     }
-            // });
+            setPostLikes(res.data);
 
-            setPostLikes(likesRes.data);
-
-            // setPostComments(commentsRes.data);
-
-            // console.log(JSON.stringify(likesRes.data, null, 2));
+            // console.log(JSON.stringify(res.data, null, 2));
         } catch (err) {
             console.log(err);
         }
     };
 
-    // useffect to fecth comments and likes
+    //fetch post likes
     useEffect(() => {
-        getCommentsAndLikes();
+        getPostLikes();
     }, []);
 
 
@@ -112,19 +106,13 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
         let newPostLikes = [...postLikes];
         let likeId;
 
-        // non mi convince molto perchè affido un controllo importante a un array di stato, secondo me dovrei
-        // fare un api call per vedere se il like è presente o meno. nel caso la tengo toglila da qui
+        // check if postLikes contains a like with user_id matching the id of logged in user
         const hasUserLikedPost = postLikes.some(like => {
-            // check if user liked a content
-            if (like.user_id == user.id || like.userId == user.id) {
-
-                // check if content liked by user is this post
-                if (like.post_id == post.id || like.postId == post.id) {
-                    // save like id
-                    likeId = like.id;
-                    return true;
-                };
-            }
+            if (like.user_id == user.id || like.userId == user.id) { // temp, will normalize properties name and remove later
+                // user already liked this post, so save the like id to remove it later
+                likeId = like.id;
+                return true;
+            };
         });
 
         if (hasUserLikedPost) {
@@ -154,48 +142,6 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
         setPostLikes(newPostLikes);
     };
 
-
-    // this function has to be in its own file because i will need it for comments too
-    const removeLike = async (contentId) => {
-        try {
-            const res = await axios.delete(`http://localhost:4000/api/likes/${contentId}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            return { message: res.data.message }
-        } catch (err) {
-            return { err: err }
-        }
-    };
-
-    // this function has to be in its own file because i will need it for comments too
-    const createLike = async (userId, contentId, contentType) => {
-        const like = {
-            userId: user.id,
-            postId: null,
-            commentId: null
-        }
-
-        if (contentType === 'post') {
-            like.postId = contentId;
-        } else {
-            like.commentId = contentId;
-        }
-
-        try {
-            const res = await axios.post(`http://localhost:4000/api/likes`, like, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            return { data: res.data.like, message: res.data.message };
-        } catch (err) {
-            return { err: err }
-        }
-    };
 
     const submitEdit = (postData) => {
         setEditable(false);
@@ -235,7 +181,7 @@ const Post = ({ post, images, deletePost, updatePost, likePost }) => {
                     <p><strong>{author}</strong></p>
                     <p>{date}</p>
                 </PostTitleDate>
-                {user.id === post.user_id ?
+                {user.id == post.user_id ?
                     <>
                         <div onClick={() => setEditable(true)}>Edit</div>
                         <div onClick={() => deletePost(post.id)}>Delete</div>
