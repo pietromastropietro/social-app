@@ -2,7 +2,13 @@ const db = require('../db/db');
 
 const getPostLikes = async (postId) => {
     try {
-        const query = 'SELECT * FROM likes WHERE post_id = $1';
+        const query = 
+        `SELECT likes.*, users.first_name, users.last_name
+        FROM likes
+        JOIN users on likes.user_id = users.id
+        WHERE post_id = $1
+        ORDER BY created_at DESC`;
+
         const likes = await db.query(query, [postId]);
 
         return likes;
@@ -13,7 +19,13 @@ const getPostLikes = async (postId) => {
 
 const getCommentLikes = async (commentId) => {
     try {
-        const query = 'SELECT * FROM likes WHERE comment_id = $1';
+        const query = 
+        `SELECT likes.*, users.first_name, users.last_name
+        FROM likes
+        JOIN users on likes.user_id = users.id
+        WHERE comment_id = $1
+        ORDER BY created_at DESC`;
+
         const likes = await db.query(query, [commentId]);
 
         return likes;
@@ -32,7 +44,7 @@ const createLike = async (likeData) => {
 
         const like = {
             ...likeData,
-            createdAt: new Date(),
+            created_at: new Date(),
             id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
         }
 
