@@ -19,23 +19,29 @@ const Feed = ({ userId }) => {
         let path;
 
         if (userId) {
+            // I'm on the user's profile so show only user's posts
             path = `http://localhost:4000/api/posts/user/${userId}`
         } else {
+            // I'm on the homepage so show all user's post and also friend's ones
             path = `http://localhost:4000/api/posts`
         };
 
         try {
-            const postsReq = await axios.get(path, {
+            const res = await axios.get(path, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
 
-            setPosts(postsReq.data);
+            setPosts(res.data);
         } catch (err) {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        getPosts();
+    }, []);
 
     const createPost = async (post) => {
         try {
@@ -45,12 +51,8 @@ const Feed = ({ userId }) => {
             });
 
             if (res.data.message === 'Post created') {
-                // copy state array and unshift (add to the beginning) the new post
-                let newPosts = [...posts];
-                newPosts.unshift(res.data.post);
-
-                // set the updated posts array as state array to trigger component update 
-                setPosts(newPosts);
+                // copy posts state array, add new post at the beginning and update the state array
+                setPosts(oldPosts => [res.data.post, ...oldPosts])
 
                 console.log(res.data.message); // temp
             }
@@ -60,7 +62,7 @@ const Feed = ({ userId }) => {
     };
 
     const deletePost = async (postId) => {
-        if (window.confirm("Are you sure you want to delete this post?")) {
+        if (window.confirm("Are you sure you want to delete this post?")) { // temp
             try {
                 const res = await axios.delete(`http://localhost:4000/api/posts/${postId}`, {
                     headers: {
@@ -69,11 +71,8 @@ const Feed = ({ userId }) => {
                 });
 
                 if (res.data.message === "Post deleted") {
-                    // copy state array and filter (remove) deleted post
-                    let newPosts = [...posts].filter(post => post.id != postId);
-
-                    // set the updated posts array as state array to trigger component update 
-                    setPosts(newPosts);
+                    // copy posts state array and remove deleted post
+                    setPosts(oldPosts => [...oldPosts].filter(post => post.id != postId))
 
                     console.log(res.data.message); // temp
                 }
@@ -86,7 +85,7 @@ const Feed = ({ userId }) => {
     const updatePost = async (post) => {
         const updatedPost = {
             text: post.text,
-            likes: post.likes,
+            likes: post.likes, // temp, will remove 'likes' field from db table
             image_url: post.image_url,
             updated_at: new Date()
         };
@@ -99,11 +98,9 @@ const Feed = ({ userId }) => {
             });
 
             if (res.data.message === "Post updated") {
-                // copy state array and find index of the edited post
+                // copy state array, find index of the edited post and update it
                 let newPosts = [...posts];
-                let index = newPosts.findIndex(item => item.id === post.id);
-
-                // update post
+                const index = newPosts.findIndex(editedPost => editedPost.id === post.id);
                 newPosts[index] = post;
 
                 // set the updated posts array as state array to trigger component update 
@@ -116,11 +113,6 @@ const Feed = ({ userId }) => {
         }
     };
 
-    useEffect(() => {
-        getPosts();
-    }, []);
-
-
     let params = useParams();
     // console.log(JSON.stringify(params, null, 2));
 
@@ -129,8 +121,8 @@ const Feed = ({ userId }) => {
     return (
         <StyledFeed>
             {/* 
-            if userIdParam is undefined it means we're on homepage, so user can add a post. 
-            if userIdParam equals logged user_id we're on homepage or logged user profile, so user can add a post
+            Logged in user can create a post only on the homepage or on its personal profile, not on other users' profiles.
+            If userIdParam is undefined, user is on the homepage, if it equals logged in user's id, he's on its own profile.
             */}
             {!userIdParam || (userIdParam == user.id) ?
                 <PostInput createPost={createPost} />
@@ -138,8 +130,8 @@ const Feed = ({ userId }) => {
             }
             {posts.map(post =>
                 <Post
-                    post={post}
                     key={post.id}
+                    postContent={post}
                     deletePost={deletePost}
                     updatePost={updatePost}
                 />)

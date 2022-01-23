@@ -53,12 +53,11 @@ const Form = styled.form`
 `
 
 const Login = ({ setToken }) => {
-    // const navigate = useNavigate();
     const [login, setLogin] = useState(true);
 
     const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         username: '',
         bio: '',
         dob: '',
@@ -66,7 +65,7 @@ const Login = ({ setToken }) => {
         password: ''
     });
 
-    const handleInputChange = (e) => {
+    const handleInput = (e) => {
         const { name, value } = e.target;
 
         setUser({
@@ -76,7 +75,6 @@ const Login = ({ setToken }) => {
     };
 
     const guestLogin = () => {
-        console.log("guest login");
         setUser({
             ...user,
             email: "freddie@gmail.com",
@@ -87,31 +85,31 @@ const Login = ({ setToken }) => {
     }
 
     const handleLogin = async (e) => {
-        console.log("login");
-        if (e) { e.preventDefault() }
+        if (e) { 
+            e.preventDefault();
+        }
 
         try {
-            const response = await axios.post('http://localhost:4000/api/login', {
+            const res = await axios.post('http://localhost:4000/api/login', {
                 email: user.email,
                 password: user.password
             });
 
-            if (response.data.message === 'Successful login') {
-                // save user data in local storage
-                localStorage.setItem('user', JSON.stringify(response.data.user))
+            if (res.data.message === 'Successful login') {
+                // save user's data in local storage
+                localStorage.setItem('user', JSON.stringify(res.data.user))
 
                 // Set the token sent from the server in localStorage
-                setToken(response.data.token);
+                setToken(res.data.token);
             } else {
-                console.log(response.data.message);
+                console.log(res.data.message); // temp
             }
         } catch (err) {
-            console.log('error:', err);
+            console.log(err);
         };
     };
 
     const register = async (e) => {
-        console.log("register");
         e.preventDefault();
 
         // todo: validate user data
@@ -119,13 +117,13 @@ const Login = ({ setToken }) => {
         try {
             const res = await axios.post('http://localhost:4000/api/register', user);
 
-            alert(res.data.message);
+            alert(res.data.message); // temp
 
-            // reset user fields
+            // reset all user fields except email
             setUser({
                 ...user,
-                firstName: '',
-                lastName: '',
+                first_name: '',
+                last_name: '',
                 username: '',
                 bio: '',
                 dob: '',
@@ -135,23 +133,25 @@ const Login = ({ setToken }) => {
             // go back to login
             setLogin(true);
         } catch (err) {
-            console.log('error:', err);
+            console.log(err);
         };
     };
 
     return (
         <StyledLogin>
+            
             <LogoContainer>
                 <p>Welcome to sociALLy!</p>
             </LogoContainer>
+
             {login ?
                 <Form onSubmit={handleLogin}>
                     <InputFieldset>
                         <Label htmlFor="email">Email</Label>
-                        <Input type="email" name="email" onChange={handleInputChange} value={user.email} />
+                        <Input type="email" name="email" onChange={handleInput} value={user.email} />
 
                         <Label htmlFor="password">Password</Label>
-                        <Input type="password" name="password" onChange={handleInputChange} value={user.password} />
+                        <Input type="password" name="password" onChange={handleInput} value={user.password} />
 
                         {/* <p>Forgot password?</p> */}
                     </InputFieldset>
@@ -165,28 +165,26 @@ const Login = ({ setToken }) => {
                 :
                 <Form onSubmit={register}>
                     <InputFieldset>
-                        <Label htmlFor="firstName">First Name *</Label>
-                        <Input type="text" name="firstName" onChange={handleInputChange} value={user.firstName} />
+                        <Label htmlFor="first_name">First Name *</Label>
+                        <Input type="text" name="first_name" onChange={handleInput} value={user.first_name} />
 
-                        <Label htmlFor="lastName">Last Name *</Label>
-                        <Input type="text" name="lastName" onChange={handleInputChange} value={user.lastName} />
+                        <Label htmlFor="last_name">Last Name *</Label>
+                        <Input type="text" name="last_name" onChange={handleInput} value={user.last_name} />
 
                         <Label htmlFor="username">Username *</Label>
-                        <Input type="text" name="username" onChange={handleInputChange} value={user.username} />
+                        <Input type="text" name="username" onChange={handleInput} value={user.username} />
 
                         <Label htmlFor="bio">Bio</Label>
-                        <textarea name="bio" placeholder='Tell us something about you!' onChange={handleInputChange} value={user.bio}></textarea>
+                        <textarea name="bio" placeholder='Tell us something about you!' onChange={handleInput} value={user.bio}></textarea>
 
                         <Label htmlFor="dob">Date of birth *</Label>
-                        <Input type="date" name="dob" onChange={handleInputChange} value={user.dob} />
+                        <Input type="date" name="dob" onChange={handleInput} value={user.dob} />
 
                         <Label htmlFor="email">Email *</Label>
-                        <Input type="email" name="email" onChange={handleInputChange} value={user.email} />
+                        <Input type="email" name="email" onChange={handleInput} value={user.email} />
 
                         <Label htmlFor="password">Password *</Label>
-                        <Input type="password" name="password" onChange={handleInputChange} value={user.password} />
-
-                        {/* <p>Forgot password?</p> */}
+                        <Input type="password" name="password" onChange={handleInput} value={user.password} />
                     </InputFieldset>
 
                     <ButtonFieldset>

@@ -14,35 +14,33 @@ const StyledProfile = styled.div`
 `
 
 const Profile = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    let params = useParams();
-    // let location = useLocation();
+    const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
-    const [isLoggedUser, setIsLoggedUser] = useState();
-    const userId = params.username.split('-')[1];
+    const [isOwnUserProfile, setIsOwnUserProfile] = useState(undefined);
+
+    const userIdParam = useParams().username.split('-')[1];
 
     useEffect(() => {
-        if (userId == user.id) {
-            // console.log("this is logged in user profile");
-            setIsLoggedUser(true);
-        }
+        // check if this is logged in user's profile on component mount
+        userIdParam == user.id ? setIsOwnUserProfile(true) : setIsOwnUserProfile(false);
     }, [])
-
-    // console.log("user id: " + userId);
-    // console.log(JSON.stringify(params,null,2));
 
     return (
         <StyledProfile>
             <Left />
-            <Feed userId={userId} />
-
-            <div>Add</div>
+            <Feed userId={user.id} />
             
-            {isLoggedUser ?
+            {/* temp, i'll also have to check friends request status (added, pending etc.) */}
+            {!isOwnUserProfile ?
+                <div>Add</div>
+                : undefined
+            }
+
+            {isOwnUserProfile ?
                 <div>Edit</div>
                 : undefined
             }
-            {/* <Feed userId={user.id} /> */}
+
             {/* <Right /> */}
         </StyledProfile>
     )

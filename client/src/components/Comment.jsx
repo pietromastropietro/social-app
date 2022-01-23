@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import { createLike, removeLike } from '../likeUtil'
+import { createLike, handleLike, removeLike } from '../likeUtil'
 import Button from './Button'
 import Image from './Image'
 import Input from './Input'
@@ -31,28 +31,24 @@ const LikesContainer = styled.div`
 `
 
 const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
-    // const Comment = ({ comment, commentReplies, createComment, deleteComment, updateComment }) => {
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
     const [commentData, setCommentData] = useState(comment); // TODO rename this to commentUpdates, and use ONLY for things related to comment edits
-    const [editable, setEditable] = useState(false);
-    const [replyInputVisibility, setReplyInputVisibility] = useState(false)
+    const [commentEditMode, setCommentEditMode] = useState(false);
+    const [commentLikes, setCommentLikes] = useState([]);
     const [likesVisibility, setLikesVisibility] = useState(false);
-    const replies = comment.replies || [];
-    // const [replies, setReplies] = useState(comment.replies || []);
 
+    const replies = comment.replies || [];
+    const [replyInputMode, setReplyInputMode] = useState(false);
     const [reply, setReply] = useState({
-        userId: user.id,
-        postId: comment.postId || comment.post_id,
+        user_id: user.id,
+        post_id: comment.post_id,
         text: "",
         parent_id: comment.id
     });
 
-    const lastUpdate = new Date(comment.updated_at || comment.updatedAt).toDateString(); // temp, i need to normalize property names
-
-    // console.log(JSON.stringify(replies, null, 2));
-
-    const [commentLikes, setCommentLikes] = useState([]);
+    // temp
+    const lastUpdate = new Date(comment.updated_at).toDateString();
 
     const getCommentLikes = async () => {
         try {
@@ -63,79 +59,33 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
             });
 
             setCommentLikes(res.data);
-
-            // console.log(JSON.stringify(res.data, null, 2));
         } catch (err) {
             console.log(err);
         }
     };
 
-    //fetch post likes
+    //fetch comment likes
     useEffect(() => {
         getCommentLikes();
     }, []);
 
-    const handleLike = async () => {
-        // copy state array to add/remove like because state array can't be manipulated directly
-        let newCommentLikes = [...commentLikes];
-        let likeId;
-
-        // check if commentLikes contains a like with user_id matching the id of logged in user
-        const hasUserLikedComment = commentLikes.some(like => {
-            if (like.user_id == user.id || like.userId == user.id) { // temp, will normalize properties name and remove later
-                // user already liked this comment, so save the like id to remove it later
-                likeId = like.id;
-                return true;
-            };
-        });
-
-        if (hasUserLikedComment) {
-            // user already liked the comment, so remove the like
-            const res = await removeLike(likeId);
-
-            if (res.err) {
-                return console.log(res.err.message);
-            }
-
-            // remove (filter) like element from likes array
-            newCommentLikes = newCommentLikes.filter(like => like.id != likeId);
-
-        } else {
-            // user neved liked the comment, so create new like
-            const res = await createLike(user.id, comment.id, 'comment');
-
-            if (res.err) {
-                return console.log(res.err.message);
-            }
-
-            // add current user's full name
-            res.data.first_name = user.first_name;
-            res.data.last_name = user.last_name;
-
-            // add (push) new like into likes array
-            newCommentLikes.push(res.data);
-        }
-
-        // set the updated likes array as state array to trigger component update 
-        setCommentLikes(newCommentLikes);
+    // handle user click on 'like' button
+    const onCommentLike = async () => {
+        /*
+            handleLikes() checks if user already liked the comment,
+            creates/deletes the 'like', and returns updated 'likes' array
+        */
+        setCommentLikes(await handleLike(user, comment.id, commentLikes, 'comment'));
     };
 
-    const toggleLikes = () => {
-        setLikesVisibility(!likesVisibility)
-        // console.log(JSON.stringify(commentLikes, null, 2));
-
-    }
-
-
-
-    const submitEdit = (commentData) => {
-        setEditable(false);
+    const submitCommentEdit = (commentData) => {
+        setCommentEditMode(false);
         updateComment(commentData);
     }
 
     // todo check if i need async await
     const createReply = async () => {
-        setReplyInputVisibility(false);
+        setReplyInputMode(false);
         await createComment(reply);
 
         // reset reply text
@@ -170,20 +120,20 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                     <CommentWriter>
                         <p><strong>{comment.first_name} {comment.last_name}</strong></p>
                         <p>{lastUpdate}</p>
-                        {user.id == comment.user_id || user.id == comment.userId ? // temp, i need to normalize property names
+                        {user.id == comment.user_id ?
                             <>
-                                <div onClick={() => setEditable(true)}>Edit</div>
+                                <div onClick={() => setCommentEditMode(true)}>Edit</div>
                                 <div onClick={() => deleteComment(comment)}>Delete</div>
                             </>
                             : undefined
                         }
-                        <p onClick={toggleLikes}>-{commentLikes.length}</p>
+                        <p onClick={() => setLikesVisibility(!likesVisibility)}>-{commentLikes.length}</p>
                     </CommentWriter>
 
-                    {editable ?
+                    {commentEditMode ?
                         <form>
                             <Input type="text" value={commentData.text} name="commentText" onChange={handleInput} />
-                            <Button type='button' onClick={() => submitEdit(commentData)}>Confirm</Button>
+                            <Button type='button' onClick={() => submitCommentEdit(commentData)}>Confirm</Button>
                         </form>
                         :
                         <CommentText>
@@ -193,9 +143,9 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                     }
 
                     <div>
-                        <p onClick={handleLike}>Like</p>
+                        <p onClick={onCommentLike}>Like</p>
                         {/* // temp, i will normalize property names */}
-                        {!comment.parent_id ? <p onClick={() => setReplyInputVisibility(true)}>Reply</p> : undefined}
+                        {!comment.parent_id ? <p onClick={() => setReplyInputMode(true)}>Reply</p> : undefined}
                     </div>
                 </Container>
 
@@ -220,7 +170,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
 
             <ReplyContainer>
-                {replyInputVisibility ?
+                {replyInputMode ?
                     <form>
                         <Input type="text" placeholder='Write your reply here...' value={reply.text} name="replyText" onChange={handleInput} />
                         <Button type='button' onClick={createReply}>Confirm</Button>

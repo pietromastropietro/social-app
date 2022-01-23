@@ -22,15 +22,19 @@ const Ul = styled.ul`
 const Contacts = ({ users }) => {
     // console.log("users: ",JSON.stringify(users, null ,2));
 
-        return (
-            <div>
-                <p>Contacts</p>
-                <Ul>
-                    {/* {users.map(user => <Contact user={user} key={user._id} />)} */}
-                    {users.map(user => <Contact user={user} key={user.id} />)}
-                </Ul>
-            </div>
-        )
+    return (
+        <div>
+            <p>Contacts</p>
+            <Ul>
+                {users.map(user =>
+                    <Contact
+                        key={user.id}
+                        user={user}
+                    />)
+                }
+            </Ul>
+        </div>
+    )
     //}
 }
 

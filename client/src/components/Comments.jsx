@@ -12,187 +12,126 @@ const StyledComments = styled.div`
     padding-top: 10px;
 `
 
-const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility }) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    // const [comments, setComments] = useState([]);
-    // const [replies, setReplies] = useState([]);
+const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
+    const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
     const [comments, setComments] = useState([]);
-
     const [comment, setComment] = useState({
-        userId: user.id,
-        postId: postId,
+        user_id: user.id,
+        post_id: postId,
         text: "",
         parent_id: null
-    })
-    // const [commentInputVisibility, setCommentInputVisibility] = useState(false);
-
+    });
+    
+    // default number of comments to show
     const [commentsToShow, setCommentsToShow] = useState(4);
 
-    const getCommentsAndReplies = async () => {
+    const getComments = async () => {
         try {
             const res = await axios.get(`http://localhost:4000/api/comments/post/${postId}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
-            
-            setComments(formatCommentsData(res.data));
 
-            // console.log(JSON.stringify(res.data, null, 2));
+            setComments(formatCommentsData(res.data));
         } catch (err) {
             console.log(err);
         }
     };
 
-    const formatCommentsData = (rawCommentsData) => {
-        let comments = [];
-        let index;
-
-        // Data from db is in descending order, so, looping the array backwards, 
-        // i will always find (and add into the comments array) the parent comment first and their replies after
-        for (let i = rawCommentsData.length - 1; i >= 0; i--) {
-            // if parent_id field is null, rawCommentsData[i] is a comment
-            if (!rawCommentsData[i].parent_id) {
-                comments.unshift(rawCommentsData[i]);
-            } else {
-                // rawCommentsData[i] is a reply because parent_id field contains parent comment's id
-
-                // get index of parent comment
-                index = comments.findIndex(comment => comment.id == rawCommentsData[i].parent_id);
-
-                // create replies array field if it doesn't exists
-                if (!comments[index].replies) {
-                    comments[index].replies = [];
-                }
-
-                // push reply into replies array field
-                comments[index].replies.unshift(rawCommentsData[i]);
-            }
-        };
-
-        return comments;
-    }
-
+    // fetch post comments at component mount
     useEffect(() => {
-        getCommentsAndReplies();
+        getComments();
     }, [])
 
-    const createComment = async (newComment) => {
-        setCommentInputVisibility(false);
-        try {
 
-            const res = await axios.post(`http://localhost:4000/api/comments`, newComment, {
+    // Split comments from comments' replies and add a 'replies' field for each comment with the comment's replies
+    const formatCommentsData = (rawCommentsData) => {
+        let formattedComments = [];
+        let index;
+
+        /* 
+        Data from db is in descending order, so by looping the array backwards
+        i will always find the parent comment first and its replies after
+        */
+        for (let i = rawCommentsData.length - 1; i >= 0; i--) {
+
+            // if parent_id field is null, element is a comment
+            if (!rawCommentsData[i].parent_id) {
+                formattedComments.unshift(rawCommentsData[i]);
+            } else {
+                // element is a reply because parent_id field contains parent comment's id
+
+                // get index of parent comment
+                index = formattedComments.findIndex(elem => elem.id == rawCommentsData[i].parent_id);
+
+                // create replies array field if it doesn't exists
+                if (!formattedComments[index].replies) {
+                    formattedComments[index].replies = [];
+                }
+
+                // add reply into replies array field
+                formattedComments[index].replies.unshift(rawCommentsData[i]);
+            }
+        };
+        return formattedComments;
+    };
+
+    const createComment = async (commentData) => {
+        setCommentInputMode(false);
+
+        try {
+            const res = await axios.post(`http://localhost:4000/api/comments`, commentData, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
 
             if (res.data.message === 'Comment created') {
-                // add user full name to new comment
-                res.data.comment.first_name = user.first_name;
-                res.data.comment.last_name = user.last_name;
+                const newComment = res.data.comment;
 
-                // console.log(JSON.stringify(res.data.comment,null,2));
-                if (!res.data.comment.parent_id) {
-                    console.log("this was a comment");
+                // add user's full name to new comment
+                newComment.first_name = user.first_name;
+                newComment.last_name = user.last_name;
 
-                    // copy state array and unshift (add to the beginning) the new comment
-                    let newComments = [...comments];
-                    newComments.unshift(res.data.comment);
-
-                    // set the updated comments array as state array to trigger component update 
-                    setComments(newComments);
-
-                    // console.log(JSON.stringify(newComments, null, 2));
-
+                /* Check if it's a parent comment or a comment's reply
+                (comment's replies have a parent_id field with the id of their parent comment). */
+                if (!newComment.parent_id) {
+                    // copy comments state array, add new comment and update the state array
+                    setComments(oldComments => [newComment, ...oldComments])
 
                     // reset comment text
-                    setComment({
-                        ...comment,
-                        text: ""
-                    });
+                    setComment({ ...comment, text: "" });
 
-                    // reset show/hide more comments button text
-                    if (newComments.length <= 5) {
+                    // reset 'show/hide more comments' button text
+                    if (comments.length <= 5) {
                         setCommentsToShow(4)
-                    }
+                    };
                 } else {
-                    console.log("this was a reply");
-
-                    // find index of parent comment
-                    let index = comments.findIndex(comment => comment.id == res.data.comment.parent_id)
-
                     // copy state array 
                     let newComments = [...comments];
+
+                    // find index of parent comment
+                    let index = comments.findIndex(elem => elem.id == newComment.parent_id)
 
                     // create replies array field if it doesn't exists
                     if (!newComments[index].replies) {
                         newComments[index].replies = [];
                     }
 
-                    // unshift (add to the beginning) the new reply
-                    newComments[index].replies.unshift(res.data.comment);
+                    // add the new reply to the beginning
+                    newComments[index].replies.unshift(newComment);
 
                     // set the updated array as state array to trigger component update 
                     setComments(newComments);
-
-                    // console.log(JSON.stringify(newComments, null, 2));
                 }
-
                 console.log(res.data.message); // temp
             }
-
-            // console.log(JSON.stringify(res.data.comment,null,2));
         } catch (err) {
             console.log(err.message);
         }
     };
-
-    const deleteComment = async (comment) => {
-        if (window.confirm("Are you sure you want to delete this comment?")) { // temp
-            try {
-                const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
-                    headers: {
-                        Authorization: (localStorage.getItem('token'))
-                    }
-                });
-
-                if (res.data.message === "Comment deleted") {
-                    if (!comment.parent_id) {
-                        console.log("deleting comment");
-
-                        // copy state array and filter (remove) deleted comment
-                        let newComments = [...comments].filter(element => element.id != comment.id);
-
-                        // set the updated comments array as state array to trigger component update 
-                        setComments(newComments);
-
-                        // console.log(JSON.stringify(newComments, null, 2));
-                    } else {
-                        console.log("deleting reply");
-
-                        // copy state array 
-                        let newComments = [...comments];
-
-                        // find index of parent comment
-                        let index = newComments.findIndex(element => element.id == comment.parent_id)
-
-                        newComments[index].replies = newComments[index].replies.filter(element => element.id != comment.id)
-
-                        // set the updated array as state array to trigger component update 
-                        setComments(newComments);
-
-                        // console.log(JSON.stringify(newComments, null, 2));
-                    }
-
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    }
 
     const updateComment = async (comment) => {
         const updatedComment = {
@@ -208,49 +147,30 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
             });
 
             if (res.data.message === "Comment updated") {
-                // console.log("reply");
-                // console.log(JSON.stringify(comment, null, 2));
+                // copy state array
+                let newComments = [...comments];
+                let index;
 
+                /* Check if it's a parent comment or a comment's reply
+                (comment's replies have a parent_id field with the id of their parent comment). */
                 if (!comment.parent_id) {
-                    console.log("this was a comment update");
+                    // find index of the edited comment
+                    index = comments.findIndex(elem => elem.id == comment.id);
 
-                    // copy state array and find index of the edited comment
-                    let newComments = [...comments];
-                    let index = newComments.findIndex(item => item.id === comment.id);
-
-                    // update comment
+                    // update edited comment
                     newComments[index] = comment;
-
-                    // set the updated comments array as state array to trigger component update 
-                    setComments(newComments);
                 } else {
-                    console.log("this was a reply update");
-
                     // find index of parent comment
-                    let commentIndex = comments.findIndex(comm => comm.id == comment.parent_id)
+                    index = comments.findIndex(elem => elem.id == comment.parent_id)
 
-                    // console.log("comment index: " + commentIndex);
-
-                    // copy state array 
-                    let newComments = [...comments];
-
-                    // console.log(JSON.stringify(newComments, null, 2));
-
-                    // find index of reply
-                    let replyIndex = newComments[commentIndex].replies.findIndex(reply => reply.id == comment.id)
-                    // console.log("reply index: " + replyIndex);
-
-
+                    // find index of edited reply
+                    let replyIndex = comments[index].replies.findIndex(elem => elem.id == comment.id)
 
                     // update edited reply
-                    newComments[commentIndex].replies[replyIndex] = comment;
-
-                    // console.log(JSON.stringify(newComments, null, 2));
-
-                    // set the updated array as state array to trigger component update 
-                    setComments(newComments);
+                    newComments[index].replies[replyIndex] = comment;
                 }
-
+                // set the updated comments array as state array to trigger component update 
+                setComments(newComments);
                 console.log(res.data.message); // temp
             }
         } catch (err) {
@@ -258,49 +178,91 @@ const Comments = ({ postId, commentInputVisibility, setCommentInputVisibility })
         }
     };
 
-    const handleCommentInput = (e) => {
+    const deleteComment = async (comment) => {
+        if (window.confirm("Are you sure you want to delete this comment?")) { // temp
+            try {
+                const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
+                    headers: {
+                        Authorization: (localStorage.getItem('token'))
+                    }
+                });
+
+                if (res.data.message === "Comment deleted") {
+                    /* Check if it's a parent comment or a comment's reply
+                    (comment's replies have a parent_id field with the id of their parent comment). */
+                    if (!comment.parent_id) {
+                        // copy comments state array and remove deleted comment
+                        setComments(oldComments => [...oldComments].filter(elem => elem.id != comment.id));
+                    } else {
+                        // copy state array 
+                        let newComments = [...comments];
+
+                        // find index of parent comment
+                        let index = comments.findIndex(elem => elem.id == comment.parent_id)
+
+                        // remove deleted reply from comment's replies array
+                        newComments[index].replies = newComments[index].replies.filter(elem => elem.id != comment.id)
+
+                        // set the updated array as state array to trigger component update 
+                        setComments(newComments);
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+
+    // handle new comment input
+    const handleInput = (e) => {
         setComment({
             ...comment,
             text: e.target.value
         });
     };
 
+    // toggle between showing all comments or only the last 4 (default option)
     const toggleAllComments = () => {
-        if (commentsToShow === 4) {
-            setCommentsToShow(comments.length);
-        } else {
-            setCommentsToShow(4);
-        }
-    }
+        commentsToShow === 4 ? setCommentsToShow(comments.length) : setCommentsToShow(4);
+    };
 
     return (
         <StyledComments>
-            {commentInputVisibility ?
-                <div>
-                    <form>
-                        <Input type="text" placeholder='Write your comment here...' value={comment.text} onChange={handleCommentInput} />
-                        <Button type="button" onClick={() => createComment(comment)}>Confirm</Button>
-                    </form>
-                </div>
+            {commentInputMode ?
+                <form>
+                    <Input type="text" placeholder='Write your comment here...' value={comment.text} onChange={handleInput} />
+                    <Button type="button" onClick={() => createComment(comment)}>Confirm</Button>
+                </form>
                 :
                 undefined
             }
 
-            {comments.map((commentt, index) => {
+            {comments.map((comment, index) => {
                 if (index < commentsToShow) {
                     return <Comment
-                        comment={commentt}
-                        key={commentt.id}
-                        deleteComment={deleteComment}
-                        updateComment={updateComment}
+                        comment={comment}
+                        key={comment.id}
                         createComment={createComment}
+                        updateComment={updateComment}
+                        deleteComment={deleteComment}
                     />
                 }
             })}
-            <p onClick={toggleAllComments}>
-                {comments.length > 4 ? commentsToShow === 4 ? `Show all ${comments.length} comments` : "Hide comments" : undefined}
-            </p>
 
+            <p onClick={toggleAllComments}>
+                {/* 
+                If comments are <= 4, hide button text.
+                If comments are > 4 and user didn't click the button, display "Show all 'n' comments" text.
+                If comments are > 4 and user clicked button, display "Hide comments" text
+                 */}
+                {
+                    comments.length > 4 ?
+                        commentsToShow === 4 ?
+                            `Show all ${comments.length} comments`
+                            : "Hide comments"
+                        : undefined
+                }
+            </p>
         </StyledComments>
     )
 };

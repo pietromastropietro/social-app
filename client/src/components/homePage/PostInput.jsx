@@ -32,6 +32,7 @@ const PostInput = ({ createPost }) => {
         image_url: undefined
     });
 
+    // handle post input
     const handleInput = (e) => {
         const { name, value } = e.target;
 
@@ -41,6 +42,7 @@ const PostInput = ({ createPost }) => {
         })
     };
 
+    // handle post form submit
     const handleSubmit = (post) => {
         createPost(post);
 
@@ -54,8 +56,11 @@ const PostInput = ({ createPost }) => {
     return (
         <StyledPostInput>
             <Image />
-            <Input type="text" name="text" value={post.text} onChange={handleInput} placeholder="What's on your mind?"/>
-            <Button onClick={() => handleSubmit(post)}>Post</Button>
+
+            <form>
+                <Input type="text" name="text" value={post.text} onChange={handleInput} placeholder="What's on your mind?" />
+                <Button type='button' onClick={() => handleSubmit(post)}>Post</Button>
+            </form>
         </StyledPostInput>
     )
 }
