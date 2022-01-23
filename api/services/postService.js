@@ -63,14 +63,12 @@ const createPost = async ({ userId, postData })  => {
 
     let post = {
         id: tempId, // temp
-        userId: userId,
+        user_id: userId,
         text: postData.text,
         imgUrl: postData.imgUrl,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        created_at: new Date(),
+        updated_at: new Date()
     };
-
-    console.log(post.createdAt);
 
     const params = Object.values(post);
 

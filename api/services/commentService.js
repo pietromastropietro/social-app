@@ -51,8 +51,8 @@ const createComment = async (commentData)  => {
 
     const comment = {
         ...commentData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
         id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
     };
     
