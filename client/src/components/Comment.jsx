@@ -33,7 +33,7 @@ const LikesContainer = styled.div`
 const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
-    const [commentData, setCommentData] = useState(comment); // TODO rename this to commentUpdates, and use ONLY for things related to comment edits
+    const [commentUpdates, setCommentUpdates] = useState(comment);
     const [commentEditMode, setCommentEditMode] = useState(false);
     const [commentLikes, setCommentLikes] = useState([]);
     const [likesVisibility, setLikesVisibility] = useState(false);
@@ -78,10 +78,10 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         setCommentLikes(await handleLike(user, comment.id, commentLikes, 'comment'));
     };
 
-    const submitCommentEdit = (commentData) => {
+    const submitCommentEdit = (commentUpdates) => {
         setCommentEditMode(false);
-        updateComment(commentData);
-    }
+        updateComment(commentUpdates);
+    };
 
     // todo check if i need async await
     const createReply = async () => {
@@ -95,12 +95,13 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         });
     };
 
+    // handle user input for comments/replies
     const handleInput = (e) => {
         const { name, value } = e.target;
 
         if (name === 'commentText') {
-            setCommentData({
-                ...commentData,
+            setCommentUpdates({
+                ...commentUpdates,
                 text: value
             });
         } else {
@@ -116,10 +117,12 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         <>
             <StyledComment>
                 <Image />
+
                 <Container>
                     <CommentWriter>
                         <p><strong>{comment.first_name} {comment.last_name}</strong></p>
                         <p>{lastUpdate}</p>
+
                         {user.id == comment.user_id ?
                             <>
                                 <div onClick={() => setCommentEditMode(true)}>Edit</div>
@@ -132,69 +135,64 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
                     {commentEditMode ?
                         <form>
-                            <Input type="text" value={commentData.text} name="commentText" onChange={handleInput} />
-                            <Button type='button' onClick={() => submitCommentEdit(commentData)}>Confirm</Button>
+                            <Input type="text" name="commentText" value={commentUpdates.text} onChange={handleInput} />
+                            <Button type='button' onClick={() => submitCommentEdit(commentUpdates)}>Confirm</Button>
                         </form>
                         :
                         <CommentText>
-
                             <p>{comment.text}</p>
                         </CommentText>
                     }
-
                     <div>
                         <p onClick={onCommentLike}>Like</p>
-                        {/* // temp, i will normalize property names */}
-                        {!comment.parent_id ? <p onClick={() => setReplyInputMode(true)}>Reply</p> : undefined}
+                        {!comment.parent_id ?
+                            <p onClick={() => setReplyInputMode(true)}>Reply</p>
+                            : undefined
+                        }
                     </div>
                 </Container>
-
-
-                {/* TODO: i will add a comment input here for comments reply, and then make api call adding comment id as parent_id */}
             </StyledComment>
 
             {likesVisibility ?
                 <LikesContainer>
-                    <p>likes</p>
+                    <p>Likes</p>
                     <ul>
                         {commentLikes.map(like =>
                             <li key={like.id}>
                                 {like.first_name} {like.last_name}
                             </li>
                         )}
-
                     </ul>
                 </LikesContainer>
                 : undefined
             }
 
-
             <ReplyContainer>
                 {replyInputMode ?
                     <form>
-                        <Input type="text" placeholder='Write your reply here...' value={reply.text} name="replyText" onChange={handleInput} />
+                        <Input type="text" name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
                         <Button type='button' onClick={createReply}>Confirm</Button>
                     </form>
                     : undefined
                 }
 
                 {/* 
-                // If this is a comment, and this comment has replies, i will map the 'replies' array.
-                // If this is a reply, 'replies' array will be empty so i won't map it 
+                // If this is a comment, and this comment has replies, map the 'replies' array.
+                // If this is a reply, 'replies' array will be empty so don't map it.
                 */}
                 {replies.length > 0 &&
                     replies.map(reply => {
                         return <Comment
+                        key={reply.id}
                             comment={reply}
-                            key={reply.id}
-                            deleteComment={deleteComment}
                             updateComment={updateComment}
+                            deleteComment={deleteComment}
                         />
                     })
                 }
             </ReplyContainer>
         </>
     )
-}
+};
 
 export default Comment

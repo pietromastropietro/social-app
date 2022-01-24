@@ -22,8 +22,7 @@ export const Context = createContext();
 
 const App = () => {
     const { token, saveToken } = useToken();
-
-    const contextValues = { };
+    const contextValues = {};
 
     if (!token) {
         return <Login setToken={saveToken} />;
@@ -31,23 +30,14 @@ const App = () => {
 
     return (
         <Context.Provider value={contextValues}>
-        <>
             <GlobalStyle />
-            {/* <Router> */}
             <Header />
             <MainContainer>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/users/:username" element={<Profile />} />
-                   
-                    {/* <Route path="/login">
-                        <Login setToken={setToken} />
-                    </Route> */}
                 </Routes>
             </MainContainer>
-            {/* </Router> */}
-
-        </>
         </Context.Provider>
     );
 }
