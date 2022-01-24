@@ -58,8 +58,6 @@ const createComment = async (commentData)  => {
     
     const params = Object.values(comment);
 
-    console.log(JSON.stringify(params,null,2));
-
     try {
         await db.query(query, params);
 

@@ -2,6 +2,7 @@
 const userService = require('../services/userService')
 
 const getUsers = async (req, res, next)  => {
+    console.log("called get users");
     try {
         const users = await userService.getUsers();
 
@@ -16,6 +17,16 @@ const getUser = async (req, res, next)  => {
         const user = await userService.getUser(req.params.id);
 
         res.json(user);
+    } catch (err) {
+        return next(err);
+    }
+};
+
+const getUserFriends = async (req, res, next)  => {
+    try {
+        const friends = await userService.getUserFriends(req.params.id);
+
+        res.json(friends);
     } catch (err) {
         return next(err);
     }
@@ -43,6 +54,7 @@ const deleteUser = async (req, res, next)  => {
 module.exports = {
     getUsers,
     getUser,
+    getUserFriends,
     updateUser,
     deleteUser
 };

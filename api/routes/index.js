@@ -6,6 +6,7 @@ const userController = require('../controllers/userController')
 const postController = require('../controllers/postController')
 const commentController = require('../controllers/commentController')
 const likeController = require('../controllers/likeController')
+const relationController = require('../controllers/relationController')
 
 /* USER ROUTES */
 
@@ -14,6 +15,9 @@ router.get('/users', userController.getUsers);
 
 // get single user by id
 router.get('/users/:id', userController.getUser);
+
+// get user's friends by user id
+router.get('/users/:id/friends', userController.getUserFriends);
 
 // update user
 router.put('/users/:id', userController.updateUser);
@@ -77,5 +81,18 @@ router.post('/likes', likeController.createLike);
 // delete like
 router.delete('/likes/:id', likeController.deleteLike);
 
+/* RELATIONS ROUTES */
+
+
+router.get('/relations/users/:ids', relationController.getRelation);
+
+// create new relation
+router.post('/relations', relationController.createRelation);
+
+// update relation
+router.put('/relations/:id', relationController.updateRelation);
+
+// delete relation
+router.delete('/relations/:id', relationController.deleteRelation);
 
 module.exports = router;

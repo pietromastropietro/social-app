@@ -26,6 +26,24 @@ const getUser = async (userId) => {
     }
 };
 
+const getUserFriends = async (userId) => {
+    try {
+        const query =
+            `SELECT users.id, users.first_name, users.last_name FROM users
+        WHERE users.id IN (
+            (SELECT user1_id FROM relations WHERE user2_id = $1 and status = 1)
+            UNION
+            (SELECT user2_id FROM relations WHERE user1_id = $1 and status = 1)
+        )`
+
+        const friends = await db.query(query, [userId]);
+
+        return friends;
+    } catch (err) {
+        throw new Error(err.message)
+    }
+};
+
 const updateUser = async (userId, userData) => {
     const query =
     `UPDATE users 
@@ -63,6 +81,7 @@ const deleteUser = async (userId) => {
 module.exports = {
     getUsers,
     getUser,
+    getUserFriends,
     updateUser,
     deleteUser
 }
