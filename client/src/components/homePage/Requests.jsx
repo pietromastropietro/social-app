@@ -1,4 +1,5 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Request from './Request'
 
@@ -10,22 +11,49 @@ const Ul = styled.ul`
 `
 
 const Requests = () => {
-    const requests = [{
-        name: 'John',
-        surname: 'Smith',
-        id: 1
-    },
-    {
-        name: 'Katy',
-        surname: 'Fitch',
-        id: 2
+    const [requests, setRequests] = useState([]);
+
+    const getFriendsRequests = async () => {
+        try {
+            const res = await axios.get(`http://localhost:4000/api/xxx`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
+
+            if (res.data) {
+                setRequests(res.data)
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
-    ]
+
+    // fetch all user's friends requests
+    useEffect(() => {
+        // getFriendsRequests();
+    }, []);
+
+    const acceptRequest = () => {
+
+    }
+
+    const declineRequest = () => {
+
+    }
+
     return (
         <div>
             <p>Requests</p>
             <Ul>
-                {requests.map(item => <Request key={item.id} person={item}/>)}
+                {requests.map(request =>
+                    <Request
+                        key={request.id}
+                        user={request}
+                        acceptRequest={acceptRequest}
+                        declineRequest={declineRequest}
+                    />)
+                }
             </Ul>
         </div>
     )

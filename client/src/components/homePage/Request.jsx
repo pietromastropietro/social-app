@@ -28,16 +28,17 @@ const Name = styled.p`
     margin-left: 10px;
 `
 
-const Request = ({ person }) => {
+const Request = ({ user, acceptRequest, declineRequest }) => {
+
     return (
         <StyledRequest>
             <RequestHeader>
                 <Image />
-                <Name><strong>{person.name} {person.surname}</strong> wants to add you to friends.</Name>
+                <Name><strong>{user.first_name} {user.last_name}</strong> wants to add you to friends.</Name>
             </RequestHeader>
             <Buttons>
-                <Button>Accept</Button>
-                <Button>Decline</Button>
+                <Button onClick={acceptRequest}>Accept</Button>
+                <Button onClick={declineRequest}>Decline</Button>
             </Buttons>
         </StyledRequest>
     )

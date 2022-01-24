@@ -40,6 +40,7 @@ const Contacts = ({ users }) => {
         }
     }
 
+    // fetch all user's friends
     useEffect(() => {
         // getFriends();
     }, [])
