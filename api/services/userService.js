@@ -10,10 +10,26 @@ const getUsers = async () => {
     }
 };
 
+const getUsersByName = async (user) => {
+    try {
+        const query =
+            `SELECT * FROM users 
+        WHERE users.first_name LIKE '%' || $1 || '%' 
+        OR users.last_name LIKE '%' || $2 || '%'`;
+
+        const users = await db.query(query, [user['first-name'], user['last-name']]);
+
+        return users;
+    } catch (err) {
+        console.log(err.message);
+        throw new Error(err.message)
+    }
+};
+
 const getUser = async (userId) => {
     try {
         const query = 'SELECT * FROM users WHERE id = $1';
-        
+
         const user = await db.query(query, [userId]);
 
         if (!user.length) {
@@ -46,7 +62,7 @@ const getUserFriends = async (userId) => {
 
 const updateUser = async (userId, userData) => {
     const query =
-    `UPDATE users 
+        `UPDATE users 
     SET first_name = $2, last_name = $3, dob = $4, email = $5, password_hash = $6, bio = $7, username = $8
     WHERE id = $1`
 
@@ -80,6 +96,7 @@ const deleteUser = async (userId) => {
 
 module.exports = {
     getUsers,
+    getUsersByName,
     getUser,
     getUserFriends,
     updateUser,

@@ -11,6 +11,16 @@ const getRelation = async (req, res, next)  => {
     }
 };
 
+const getFriendsRequests = async (req, res, next)  => {
+    try {
+        const requests = await relationService.getFriendsRequests(req.params.id);
+
+        res.json(requests);
+    } catch (err) {
+        return next(err);
+    }
+};
+
 const createRelation = async (req, res, next)  => {
     try {
         const relation = await relationService.createRelation(req.body);
@@ -31,6 +41,7 @@ const updateRelation = async (req, res, next)  => {
         return next(err);
     }
 };
+
 const deleteRelation = async (req, res, next)  => {
     try {
         await relationService.deleteRelation(req.params.id);
@@ -43,6 +54,7 @@ const deleteRelation = async (req, res, next)  => {
 
 module.exports = {
     getRelation,
+    getFriendsRequests,
     createRelation,
     updateRelation,
     deleteRelation

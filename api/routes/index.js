@@ -13,6 +13,9 @@ const relationController = require('../controllers/relationController')
 // get all users
 router.get('/users', userController.getUsers);
 
+// get all users matching provided name (ex: api/users/users?name=john)
+router.get('/users/users', userController.getUsersByName);
+
 // get single user by id
 router.get('/users/:id', userController.getUser);
 
@@ -83,8 +86,11 @@ router.delete('/likes/:id', likeController.deleteLike);
 
 /* RELATIONS ROUTES */
 
-
+// get single relation
 router.get('/relations/users/:ids', relationController.getRelation);
+
+// get all user's friends requests
+router.get('/relations/users/:id/requests', relationController.getFriendsRequests);
 
 // create new relation
 router.post('/relations', relationController.createRelation);

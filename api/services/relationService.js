@@ -27,6 +27,25 @@ const getRelation = async (usersIds) => {
     }
 };
 
+const getFriendsRequests = async (userId) => {
+    try {
+        const query =
+            `SELECT relations.*, users.first_name, users.last_name
+        FROM relations
+        JOIN users ON users.id = relations.user1_id
+        WHERE user2_id = $1 AND status = 0`;
+
+        const requests = await db.query(query, [userId]);
+
+        // console.log(JSON.stringify(requests,null,2));
+
+        return requests;
+    } catch (err) {
+        console.log(err.message);
+        throw new Error(err.message)
+    }
+};
+
 const createRelation = async (usersIds) => {
     const query =
         'INSERT INTO relations (user1_id, user2_id, status, id) VALUES ($1, $2, $3, $4)';
@@ -51,8 +70,6 @@ const createRelation = async (usersIds) => {
 };
 
 const updateRelation = async (relationId) => {
-    console.log("rel id: " + relationId);
-
     const query =
         `UPDATE relations 
     SET status = 1
@@ -79,6 +96,7 @@ const deleteRelation = async (relationId) => {
 
 module.exports = {
     getRelation,
+    getFriendsRequests,
     createRelation,
     updateRelation,
     deleteRelation
