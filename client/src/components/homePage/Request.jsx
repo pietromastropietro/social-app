@@ -28,17 +28,18 @@ const Name = styled.p`
     margin-left: 10px;
 `
 
-const Request = ({ user, acceptRequest, declineRequest }) => {
+const Request = ({ request, acceptRequest, declineRequest }) => {
+    const username = `${request.first_name} ${request.last_name}`;
 
     return (
         <StyledRequest>
             <RequestHeader>
                 <Image />
-                <Name><strong>{user.first_name} {user.last_name}</strong> wants to add you to friends.</Name>
+                <Name><strong>{username}</strong> wants to add you to friends.</Name>
             </RequestHeader>
             <Buttons>
-                <Button onClick={acceptRequest}>Accept</Button>
-                <Button onClick={declineRequest}>Decline</Button>
+                <Button onClick={() => acceptRequest(request.id)}>Accept</Button>
+                <Button onClick={() => declineRequest(request.id)}>Decline</Button>
             </Buttons>
         </StyledRequest>
     )

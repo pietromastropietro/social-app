@@ -11,11 +11,13 @@ const Ul = styled.ul`
 `
 
 const Requests = () => {
+    const user = JSON.parse(localStorage.getItem('user')) || undefined;
+
     const [requests, setRequests] = useState([]);
 
     const getFriendsRequests = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/xxx`, {
+            const res = await axios.get(`http://localhost:4000/api/relations/users/${user.id}/requests`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -31,28 +33,57 @@ const Requests = () => {
 
     // fetch all user's friends requests
     useEffect(() => {
-        // getFriendsRequests();
+        getFriendsRequests();
     }, []);
 
-    const acceptRequest = () => {
+    const acceptRequest = async (requestId) => {
+        try {
+            const res = await axios.put(`http://localhost:4000/api/relations/${requestId}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
 
+            if (res.data.message == "Relation updated") {
+                updateRequests(requestId);
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    const declineRequest = () => {
+    const declineRequest = async (requestId) => {
+        try {
+            const res = await axios.delete(`http://localhost:4000/api/relations/${requestId}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
 
+            if (res.data.message == "Relation deleted") {
+                updateRequests(requestId);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const updateRequests = (requestId) => {
+        setRequests(oldRequests => [...oldRequests].filter(request => request.id != requestId))
     }
 
     return (
         <div>
             <p>Requests</p>
             <Ul>
-                {requests.map(request =>
-                    <Request
-                        key={request.id}
-                        user={request}
-                        acceptRequest={acceptRequest}
-                        declineRequest={declineRequest}
-                    />)
+                {requests.length > 0 &&
+                    requests.map(request =>
+                        <Request
+                            key={request.id}
+                            request={request}
+                            acceptRequest={acceptRequest}
+                            declineRequest={declineRequest}
+                        />)
                 }
             </Ul>
         </div>

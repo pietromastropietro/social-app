@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Image from '../Image'
 
-// TODO list all users, and show friends first and then all the other users
-
 const StyledContact = styled.li`
     display: flex;
     align-items: center;
@@ -22,7 +20,6 @@ const Contact = ({ user }) => {
     return (
         <StyledContact>
             <Image />
-            {/* <Name>{user.fullName}</Name> */}
             <Link to={`users/${path}`}>
                 <Name>{fullName}</Name>
             </Link>

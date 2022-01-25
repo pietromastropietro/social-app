@@ -17,6 +17,7 @@ const StyledProfile = styled.div`
 const Profile = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
+    const [visitedUserProfileInfo, setVisitedUserProfileInfo] = useState();
     const relationshipStatusCode = ["Request sent", "Friends", "Send friends request"]
     const [relationshipStatus, setRelationshipStatus] = useState(undefined);
     const [relationship, setRelationship] = useState(undefined);
@@ -25,6 +26,23 @@ const Profile = () => {
     const userIdParam = useParams().username.split('-')[1];
 
     const [buttonsVisibility, setButtonsVisibility] = useState(false);
+
+    const getUserInfo = async (userId) => {
+        try {
+            const res = await axios.get(`http://localhost:4000/api/users/${userId}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
+
+            if (res.data) {
+                setVisitedUserProfileInfo(res.data);
+            } else {
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const getRelationshipStatus = async (userOneId, userTwoId) => {
         try {
@@ -141,7 +159,6 @@ const Profile = () => {
         } catch (err) {
             console.log(err);
         }
-
     }
 
     const deleteRelationship = async () => {
@@ -170,6 +187,7 @@ const Profile = () => {
             setIsOwnUserProfile(true)
         } else {
             setIsOwnUserProfile(false);
+            getUserInfo(userIdParam);
             getRelationshipStatus(user.id, userIdParam);
         };
     }, [])
@@ -180,7 +198,10 @@ const Profile = () => {
             {isOwnUserProfile ?
                 <Feed userId={user.id} />
                 :
-                <Feed userId={userIdParam} />
+                relationshipStatus != 'Friends' ?
+                    <div>You must be friend with {visitedUserProfileInfo?.first_name} to see the posts.</div>
+                    :
+                    <Feed userId={userIdParam} />
             }
 
             {/* if user 2 got a req from user 1, i have to show 'accet req' when user 2 goes on user 1 profile */}

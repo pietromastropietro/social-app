@@ -10,7 +10,8 @@ export const handleLike = async (user, contentId, likes, contentType) => {
             // User already liked this content, so save the like id to remove it later
             likeToRemove_id = like.id;
             return true;
-        };
+        }
+        return false;
     });
 
     if (didUserLikeContent) {

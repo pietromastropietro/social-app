@@ -19,7 +19,7 @@ const Ul = styled.ul`
             box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 `
 
-const Contacts = ({ users }) => {
+const Contacts = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
     const [friends, setFriends] = useState([]);
@@ -32,6 +32,8 @@ const Contacts = ({ users }) => {
                 }
             });
 
+            // console.log(JSON.stringify(res.data,null,2));
+
             if (res.data) {
                 setFriends(res.data)
             }
@@ -42,7 +44,7 @@ const Contacts = ({ users }) => {
 
     // fetch all user's friends
     useEffect(() => {
-        // getFriends();
+        getFriends();
     }, [])
 
     return (
@@ -55,12 +57,6 @@ const Contacts = ({ users }) => {
                         user={friend}
                     />)
                 }
-                {/* {users.map(user =>
-                    <Contact
-                        key={user.id}
-                        user={user}
-                    />)
-                } */}
             </Ul>
         </div>
     )

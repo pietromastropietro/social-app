@@ -247,6 +247,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                         deleteComment={deleteComment}
                     />
                 }
+                return null;
             })}
 
             <p onClick={toggleAllComments}>

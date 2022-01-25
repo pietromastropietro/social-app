@@ -17,66 +17,11 @@ const StyledHome = styled.div`
 `
 
 const Home = () => {
-    const [homepageData, setHomepageData] = useState({
-        users: [],
-        // posts: [],
-        photos: []
-    });
-
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    const getHomepageData = async () => {
-        try {
-            // const response = await axios.get('http://localhost:4000/', {
-            //     headers: {
-            //         Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`
-            //     }
-            // });
-            // const postRes = await axios.get("https://jsonplaceholder.typicode.com/posts");
-
-            // const postRes = await axios.get('http://localhost:4000/api/posts', {
-            //     headers: {
-            //         Authorization: (localStorage.getItem('token'))
-            //     }
-            // });
-
-            const userRes = await axios.get('http://localhost:4000/api/users', {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            // const userRes = await axios.get("https://jsonplaceholder.typicode.com/users");
-            const imgRes = await axios.get("https://picsum.photos/v2/list");
-
-            // console.log("postres: ",JSON.stringify(imgRes.data, null ,2));
-
-            setHomepageData({
-                users: userRes.data,
-                // posts: postRes.data.slice(0, 20),
-                photos: imgRes.data
-
-            });
-            // setHomepageData({
-            //     users: response.data.users,
-            //     posts: response.data.posts
-            // });
-        } catch (error) {
-            console.error(error);
-            //setError(error)
-        }
-    };
-
-    useEffect(() => {
-        getHomepageData();
-    }, []);
-
     return (
         <StyledHome>
             <LeftSidebar />
             <Feed  />
-            {/* <Feed posts={homepageData.posts} images={homepageData.photos} /> */}
-            <RightSideBar users={homepageData.users} images={homepageData.photos} />
+            <RightSideBar />
         </StyledHome>
     )
 }
