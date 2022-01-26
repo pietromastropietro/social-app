@@ -4,9 +4,9 @@ import tempImage from '../assets/images/temp.jpg'
 // TEMP
 
 const StyledImage = styled.img`
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 `
 
 const Image = () => {

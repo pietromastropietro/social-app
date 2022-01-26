@@ -20,5 +20,37 @@ const GlobalStyle = createGlobalStyle`
     fieldset {
         border: none;
     }
+    textarea {
+        font-family: inherit;
+        font-size: inherit;
+        border: none;
+        outline: none;
+        resize: none;
+    }
+
+    /* SCROLLBAR */
+
+// Firefox
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-text-color) transparent;
+}
+
+// Chrome, Edge, and Safari
+::-webkit-scrollbar {
+    width: 8px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    /* background: transparent; */
+}
+::-webkit-scrollbar-thumb {
+    background-color: #8f8f8f;
+    border-radius: 20px;
+
+    &:hover {
+        background-color: #424242;
+    }
+}
 `
 export default GlobalStyle

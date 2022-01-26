@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components'
 import Button from './Button';
 import Comment from './Comment'
+import Image from './Image';
 import Input from './Input';
 
 const StyledComments = styled.div`
@@ -11,7 +12,26 @@ const StyledComments = styled.div`
     margin-top: 10px;
     padding-top: 10px;
 `
+const CommentInput = styled.div`
+    display: flex;
 
+    > form {
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+        align-items: flex-end;
+        margin-left: 10px;
+        width: 100%;
+
+        > textarea {
+            background-color: #eef0f5;
+            box-sizing: border-box;
+            border-radius: 10px;
+            width: 100%;
+            padding: 10px;
+        }
+    }
+`
 const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
@@ -22,7 +42,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
         text: "",
         parent_id: null
     });
-    
+
     // default number of comments to show
     const [commentsToShow, setCommentsToShow] = useState(4);
 
@@ -229,10 +249,14 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
     return (
         <StyledComments>
             {commentInputMode ?
-                <form>
-                    <Input type="text" placeholder='Write your comment here...' value={comment.text} onChange={handleInput} />
-                    <Button type="button" onClick={() => createComment(comment)}>Confirm</Button>
-                </form>
+                <CommentInput>
+                    <Image />
+
+                    <form>
+                        <textarea autoFocus rows='2' placeholder='Write your comment here...' value={comment.text} onChange={handleInput} />
+                        <Button type='button' onClick={() => createComment(comment)}>Confirm</Button>
+                    </form>
+                </CommentInput>
                 :
                 undefined
             }
