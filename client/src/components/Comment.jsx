@@ -189,6 +189,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     const [commentLikes, setCommentLikes] = useState([]);
     const [hasUserLikedComment, setHasUserLikedComment] = useState();
     const [likesVisibility, setLikesVisibility] = useState(false);
+    const [repliesVisibility, setRepliesVisibility] = useState(false);
     const [optionMenuVisibility, setOptionMenuVisibility] = useState(false);
 
     const replies = comment.replies || [];
@@ -370,18 +371,32 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                 }
 
                 {/* 
-                // If this is a comment, and this comment has replies, map the 'replies' array.
-                // If this is a reply, 'replies' array will be empty so don't map it.
+                If this is a comment, and this comment has replies, map the 'replies' array.
+                If this is a reply, 'replies' array will be empty so don't map it.
                 */}
-                {replies.length > 0 &&
-                    replies.map(reply => {
-                        return <Comment
-                            key={reply.id}
-                            comment={reply}
-                            updateComment={updateComment}
-                            deleteComment={deleteComment}
-                        />
-                    })
+                {replies.length > 0 ?
+                    <>
+                        <p onClick={() => setRepliesVisibility(!repliesVisibility)}>
+                            {repliesVisibility ?
+                                "Hide all replies"
+                                :
+                                `Show ${replies.length} replies`
+                            }
+                        </p>
+
+                        {repliesVisibility ?
+                            replies.map(reply => {
+                                return <Comment
+                                    key={reply.id}
+                                    comment={reply}
+                                    updateComment={updateComment}
+                                    deleteComment={deleteComment}
+                                />
+                            })
+                            : undefined
+                        }
+                    </>
+                    : undefined
                 }
             </ReplyContainer>
         </>
