@@ -44,13 +44,6 @@ const CommentInput = styled.form`
     
     > textarea {
         box-sizing: border-box;
-        font-family: inherit;
-        font-size: inherit;
-
-        border: none;
-        outline: none;
-        resize: none;
-        
         border-radius: 10px;
         width: 100%;
         padding: 5px;
@@ -219,24 +212,11 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
             });
 
             setCommentLikes(res.data);
-            checkIfUserLikedComment(res.data);
+            setHasUserLikedComment(res.data.some(elem => elem.user_id == user.id));
         } catch (err) {
             console.log(err);
         }
     };
-
-    const checkIfUserLikedComment = (likes) => {
-        // console.log(JSON.stringify(likes, null, 2));
-        const likee = likes.filter(elem => elem.id != user.id);
-
-        if (likee.length) {
-            setHasUserLikedComment(true);
-        } else {
-            setHasUserLikedComment(false);
-        }
-
-        // console.log(JSON.stringify(likee, null, 2));
-    }
 
     //fetch comment likes
     useEffect(() => {
@@ -343,8 +323,8 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                         <LikeAndCommentIcons>
                             <img
                                 onClick={onCommentLike}
-                                src={hasUserLikedComment ? likedIcon : likeIcon} /
-                            >
+                                src={hasUserLikedComment ? likedIcon : likeIcon}
+                            />
                             {!comment.parent_id ?
                                 <img
                                     onClick={() => setReplyInputMode(!replyInputMode)}
@@ -358,9 +338,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                             <img src={likedIcon} />
                             <p>{commentLikes.length}</p>
                         </LikesCounter>
-
                     </CommentFooter>
-
                 </div>
 
                 {likesVisibility ?
@@ -379,14 +357,12 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
             </StyledComment>
 
             <ReplyContainer>
-
                 {replyInputMode ?
                     <ReplyInput>
                         <Image />
 
                         <form>
                             <textarea autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
-                            {/* <textarea type="text" name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} /> */}
                             <Button type='button' onClick={createReply}>Confirm</Button>
                         </form>
                     </ReplyInput>

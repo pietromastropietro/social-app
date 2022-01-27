@@ -8,8 +8,57 @@ import Button from '../Button'
 import Feed from '../homePage/Feed'
 import Left from './Left'
 import Right from './Right'
+import tempImg from '../../assets/images/temp.jpg'
 
 const StyledProfile = styled.div`
+    
+`
+const ProfileHeader = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    
+    > div {
+        display: flex;
+        align-items: center;
+        
+        > img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+        }
+        
+        > p {
+            text-transform: capitalize;
+            font-size: 35px;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+    }
+`
+const BtnContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+`
+const Btn = styled.button`
+    cursor: pointer;
+    background-color: #e9e8e8;
+    padding: 10px 20px;
+    border-radius: 10px;
+    height: 100%;
+    min-width: 90px;
+    transition: .2s;
+
+    &:hover {
+        background-color: #c5c5c5;
+    }
+`
+const ProfileBody = styled.div`
     display: flex;
     justify-content: space-between;
 `
@@ -25,8 +74,6 @@ const Profile = () => {
     const [isOwnUserProfile, setIsOwnUserProfile] = useState(undefined);
     const userIdParam = useParams().username.split('-')[1];
 
-    const [buttonsVisibility, setButtonsVisibility] = useState(false);
-
     const getUserInfo = async (userId) => {
         try {
             const res = await axios.get(`http://localhost:4000/api/users/${userId}`, {
@@ -37,7 +84,6 @@ const Profile = () => {
 
             if (res.data) {
                 setVisitedUserProfileInfo(res.data);
-            } else {
             }
         } catch (err) {
             console.log(err);
@@ -52,9 +98,6 @@ const Profile = () => {
                 }
             });
 
-            // console.log(JSON.stringify(res.data, null, 2));
-
-
             if (res.data) {
                 if (res.data.status == 0) {
                     if (res.data.user1_id == user.id) {
@@ -65,6 +108,7 @@ const Profile = () => {
                 } else {
                     setRelationshipStatus(relationshipStatusCode[res.data.status])
                 }
+
                 setRelationship(res.data)
             } else {
                 setRelationshipStatus(relationshipStatusCode[2]);
@@ -75,12 +119,9 @@ const Profile = () => {
     }
 
     const handleRelationship = () => {
-        console.log("rel stat: " + relationshipStatus);
-
         switch (relationshipStatus) {
             // if friend req is sent, delete req
             case relationshipStatusCode[0]: {
-                console.log("1");
                 if (window.confirm("Do you really want to delete the friends request?")) {
                     deleteRelationship();
                 }
@@ -90,7 +131,6 @@ const Profile = () => {
 
             // if friend req is accepted, delete req
             case relationshipStatusCode[1]: {
-                console.log("2");
                 // delete req
                 if (window.confirm("Do you really want to remove this friend?")) {
                     deleteRelationship();
@@ -100,7 +140,6 @@ const Profile = () => {
 
             // if friend req doenst exist create it
             case relationshipStatusCode[2]: {
-                console.log("3");
                 // create new req
                 createRelationship();
                 break;
@@ -108,7 +147,7 @@ const Profile = () => {
 
             // if friend req is received, accept or decline it
             case 'Friends request received': {
-                setButtonsVisibility(true);
+                // setButtonsVisibility(true);
                 break;
             }
             // show a dialog box with 'accept' and 'decline' buttons
@@ -128,8 +167,6 @@ const Profile = () => {
                 }
             });
 
-            // console.log(JSON.stringify(res.data, null, 2));
-
             if (res.data.message == "Relation created") {
                 setRelationshipStatus(relationshipStatusCode[0])
                 setRelationship(res.data.relation)
@@ -141,20 +178,15 @@ const Profile = () => {
 
     const updateRelationship = async () => {
         try {
-            // console.log(JSON.stringify(relationship, null, 2));
-
             const res = await axios.put(`http://localhost:4000/api/relations/${relationship.id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
 
-            // console.log(JSON.stringify(res.data, null, 2));
-
             if (res.data.message == "Relation updated") {
                 setRelationshipStatus(relationshipStatusCode[1])
                 setRelationship({ ...relationship, status: 1 });
-                setButtonsVisibility(false)
             }
         } catch (err) {
             console.log(err);
@@ -169,12 +201,9 @@ const Profile = () => {
                 }
             });
 
-            // console.log(JSON.stringify(res.data, null, 2));
-
             if (res.data.message == "Relation deleted") {
                 setRelationshipStatus(relationshipStatusCode[2])
                 setRelationship(undefined);
-                setButtonsVisibility(false);
             }
         } catch (err) {
             console.log(err);
@@ -190,44 +219,65 @@ const Profile = () => {
             getUserInfo(userIdParam);
             getRelationshipStatus(user.id, userIdParam);
         };
-    }, [])
+    }, []);
+
+    const handleHoverOnRelationshipStatusBtn = (e) => {
+        if (relationshipStatus == "Friends") {
+            e.target.textContent = "Remove"
+        } else if (relationshipStatus == "Request sent") {
+            e.target.textContent = "Undo request"
+        }
+    }
 
     return (
         <StyledProfile>
-            <Left />
-            {isOwnUserProfile ?
-                <Feed userId={user.id} />
-                :
-                relationshipStatus != 'Friends' ?
-                    <div>You must be friend with {visitedUserProfileInfo?.first_name} to see the posts.</div>
+            <ProfileHeader>
+                <div>
+                    <img src={tempImg} />
+
+                    <p>
+                        {isOwnUserProfile ?
+                            `${user.first_name} ${user.last_name}`
+                            :
+                            `${visitedUserProfileInfo?.first_name} ${visitedUserProfileInfo?.last_name}`
+                        }
+                    </p>
+                </div>
+
+                {!isOwnUserProfile ?
+                    relationshipStatus == 'Friends request received' ?
+                        <BtnContainer>
+                            <Btn onClick={updateRelationship}>Accept request</Btn>
+                            <Btn onClick={deleteRelationship}>Decline request</Btn>
+                        </BtnContainer>
+                        :
+                        <Btn
+                            onMouseOver={handleHoverOnRelationshipStatusBtn}
+                            onMouseOut={(e) => e.target.textContent = relationshipStatus}
+                            onClick={handleRelationship}>
+                            {relationshipStatus}
+                        </Btn>
                     :
-                    <Feed userId={userIdParam} />
-            }
+                    <Btn>
+                        <p>Edit Profile</p>
+                    </Btn>
+                }
+            </ProfileHeader>
 
-            {/* if user 2 got a req from user 1, i have to show 'accet req' when user 2 goes on user 1 profile */}
-            {!isOwnUserProfile ?
-                <>
-                    <div onClick={handleRelationship}>
-                        {relationshipStatus}
-                    </div>
+            <ProfileBody>
+                <Left />
 
-                    {buttonsVisibility ?
-                        <div>
-                            <Button onClick={updateRelationship}>Accept</Button>
-                            <Button onClick={deleteRelationship}>Decline</Button>
-                        </div>
-                        : undefined
-                    }
-                </>
-                : undefined
-            }
+                {isOwnUserProfile ?
+                    <Feed userId={user.id} />
+                    :
+                    relationshipStatus != 'Friends' ?
+                        <div>You must be friend with {visitedUserProfileInfo?.first_name} to see the posts.</div>
+                        :
+                        <Feed userId={userIdParam} />
+                }
 
-            {isOwnUserProfile ?
-                <div>Edit</div>
-                : undefined
-            }
-
-            {/* <Right /> */}
+                {/* <Right /> */}
+            </ProfileBody>
         </StyledProfile>
     )
 }

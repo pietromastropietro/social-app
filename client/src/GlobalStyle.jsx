@@ -19,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
     }
     fieldset {
         border: none;
+        margin: 0;
+        padding: 0;
     }
     textarea {
         font-family: inherit;
@@ -26,6 +28,10 @@ const GlobalStyle = createGlobalStyle`
         border: none;
         outline: none;
         resize: none;
+    }
+    button {
+        border: none;
+        outline: none;
     }
 
     /* SCROLLBAR */

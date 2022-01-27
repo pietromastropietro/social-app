@@ -9,20 +9,38 @@ import axios from 'axios'
 const StyledPostInput = styled.div`
     background-color: white;
     border-radius: ${radius.primary};
-    padding: 10px 20px;
-    -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
+    padding: 10px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
     display: flex;
-    align-items: center;
-`
 
-const Input = styled.input`
-    width: 100%;
-    height: 10px;
-    padding: 10px 20px;
-    outline: none;
-    border: none;
-`;
+    > p {
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        padding: 0 10px;
+        width: 100%;
+        background-color: #eef0f5;
+        margin-left: 10px;
+        color: grey;
+    }
+
+    > form {
+        display: flex;
+        flex-direction: column;
+        row-gap: 10px;
+        align-items: flex-end;
+        margin-left: 10px;
+        width: 100%;
+
+        > textarea {
+            background-color: #eef0f5;
+            box-sizing: border-box;
+            border-radius: 10px;
+            width: 100%;
+            padding: 10px;
+        }
+    }
+`
 
 const PostInput = ({ createPost }) => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
@@ -44,6 +62,7 @@ const PostInput = ({ createPost }) => {
 
     // handle post form submit
     const handleSubmit = (post) => {
+        setPostInputMode(false);
         createPost(post);
 
         // reset input fields
@@ -52,15 +71,23 @@ const PostInput = ({ createPost }) => {
             image_url: undefined
         });
     }
+    const [postInputMode, setPostInputMode] = useState(false);
 
     return (
         <StyledPostInput>
             <Image />
 
-            <form>
-                <Input type="text" name="text" value={post.text} onChange={handleInput} placeholder="What's on your mind?" />
-                <Button type='button' onClick={() => handleSubmit(post)}>Post</Button>
-            </form>
+            {postInputMode ?
+                <form>
+                    <textarea autoFocus rows='3' name='text' value={post.text} onChange={handleInput} />
+                    <fieldset>
+                        <Button type='button'>Add an image</Button>
+                        <Button type='button' onClick={() => handleSubmit(post)}>Post</Button>
+                    </fieldset>
+                </form>
+                :
+                <p onClick={() => setPostInputMode(true)}>What's on your mind?</p>
+            }
         </StyledPostInput>
     )
 }

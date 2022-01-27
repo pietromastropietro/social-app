@@ -9,11 +9,23 @@ import Input from './Input';
 
 const StyledComments = styled.div`
     border-top: 1px solid #a5a5a5;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     padding-top: 10px;
 `
 const CommentInput = styled.div`
     display: flex;
+
+    > p {
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        padding: 0 10px;
+        width: 100%;
+        background-color: #eef0f5;
+        height: 45px;
+        margin-left: 10px;
+        color: grey;
+    }
 
     > form {
         display: flex;
@@ -32,6 +44,16 @@ const CommentInput = styled.div`
         }
     }
 `
+const CommentToggle = styled.p`
+    margin-top: 15px;
+    color: #636363;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+`
+
 const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
@@ -248,18 +270,18 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
 
     return (
         <StyledComments>
-            {commentInputMode ?
-                <CommentInput>
-                    <Image />
+            <CommentInput>
+                <Image />
 
+                {commentInputMode ?
                     <form>
-                        <textarea autoFocus rows='2' placeholder='Write your comment here...' value={comment.text} onChange={handleInput} />
+                        <textarea autoFocus rows='2' value={comment.text} onChange={handleInput} />
                         <Button type='button' onClick={() => createComment(comment)}>Confirm</Button>
                     </form>
-                </CommentInput>
-                :
-                undefined
-            }
+                    :
+                    <p onClick={() => setCommentInputMode(true)}>Write your comment...</p>
+                }
+            </CommentInput>
 
             {comments.map((comment, index) => {
                 if (index < commentsToShow) {
@@ -273,21 +295,20 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                 }
                 return null;
             })}
-
-            <p onClick={toggleAllComments}>
-                {/* 
+            
+            {/* 
                 If comments are <= 4, hide button text.
                 If comments are > 4 and user didn't click the button, display "Show all 'n' comments" text.
                 If comments are > 4 and user clicked button, display "Hide comments" text
-                 */}
-                {
-                    comments.length > 4 ?
-                        commentsToShow === 4 ?
-                            `Show all ${comments.length} comments`
-                            : "Hide comments"
-                        : undefined
-                }
-            </p>
+            */}
+            {comments.length > 4 ?
+                <CommentToggle onClick={toggleAllComments}>
+                    {commentsToShow === 4 ?
+                        `Show all ${comments.length} comments`
+                        : "Hide comments"}
+                </CommentToggle>
+                : undefined
+            }
         </StyledComments>
     )
 };

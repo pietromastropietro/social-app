@@ -51,7 +51,7 @@ const SideMenu = () => {
                     <NavLink to={`users/${userProfilePath}`}>Profile</NavLink>
                 </Li>
                 <Li>
-                    <p>Settings</p>
+                    <p>Logout</p>
                 </Li>
             </Ul>
         </StyledMenu>

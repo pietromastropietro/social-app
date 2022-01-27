@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import { createLike, handleLike, removeLike } from '../../likeUtil'
 import { getFormattedDate } from '../../dateUtil'
 
+import commentIcon from '../../assets/images/comment.svg'
 import likeIcon from '../../assets/images/like.svg'
 import likedIcon from '../../assets/images/liked.svg'
 import optionIcon from '../../assets/images/option.svg'
@@ -47,25 +48,67 @@ const PostText = styled.div`
     margin-bottom: 10px;
 `
 const PostMain = styled.div`
+    > form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        row-gap: 5px;
     
-`
-
-const PostFooter = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-`
-
-const Likes = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    & > :last-child {
-        font-size: 12px;
+        > textarea {
+            border: 1px solid grey;
+            box-sizing: border-box;
+            border-radius: 10px;
+            width: 100%;
+            padding: 5px;
+        }
     }
 `
+const PostFooter = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+const LikeAndCommentIcons = styled.div`
+    display: flex;
+    column-gap: 10px;
+    padding: 5px 0;
+    
+    > div {
+        cursor: pointer;
+        padding: 5px 15px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        transition: .2s;
 
+        &:hover {
+            background-color: #e0e0e0;
+        }
 
+        > img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+    }
+`
+const LikesCounter = styled.div`
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 #0000006c;
+    padding: 2px 4px 2px 2px;
+    margin-right: 15px;
+    
+    > img {
+        width: 20px;
+        height: 20px;
+    }
+`
 const OptionMenuBtn = styled.div`
     width: 16px;
     height: 16px;
@@ -107,8 +150,6 @@ const OptionMenu = styled.ul`
     
 `
 
-
-
 const Post = ({ postContent, deletePost, updatePost }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
@@ -118,11 +159,10 @@ const Post = ({ postContent, deletePost, updatePost }) => {
     const [postEditMode, setPostEditMode] = useState(false);
     const [commentInputMode, setCommentInputMode] = useState(false);
     const [likesVisibility, setLikesVisibility] = useState(false);
+    const [hasUserLikedPost, setHasUserLikedPost] = useState();
     const [optionMenuVisibility, setOptionMenuVisibility] = useState(false);
 
     const creationDate = getFormattedDate(post.created_at);
-
-    // console.log(JSON.stringify(postContent, null ,2));
 
     const getPostLikes = async () => {
         try {
@@ -133,8 +173,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
             });
 
             setPostLikes(res.data);
-
-            // console.log(JSON.stringify(res.data, null, 2));
+            setHasUserLikedPost(res.data.some(elem => elem.user_id == user.id));
         } catch (err) {
             console.log(err);
         }
@@ -162,6 +201,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
             creates/deletes the 'like', and returns updated 'likes' array
         */
         setPostLikes(await handleLike(user, post.id, postLikes, 'post'));
+        setHasUserLikedPost(!hasUserLikedPost);
     };
 
     const handlePostEdit = () => {
@@ -212,7 +252,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
             <PostMain>
                 {postEditMode ?
                     <form>
-                        <Input type="text" value={post.text} name="text" onChange={handleInput} />
+                        <textarea autoFocus rows='3' value={post.text} name="text" onChange={handleInput} />
                         <Button type='button' onClick={() => submitPostEdit(post)}>Confirm</Button>
                     </form>
                     :
@@ -224,16 +264,25 @@ const Post = ({ postContent, deletePost, updatePost }) => {
             </PostMain>
 
             <PostFooter>
-                <div onClick={onPostLike}>Like</div>
+                <LikeAndCommentIcons>
+                    <div onClick={onPostLike}>
+                        <img src={hasUserLikedPost ? likedIcon : likeIcon} />
+                        <p>Like</p>
+                    </div>
 
-                <Likes onClick={() => setLikesVisibility(!likesVisibility)}>
-                    <p><strong>{postLikes.length}</strong></p>
-                    <p>Likes</p>
-                </Likes>
+                    <div onClick={() => setCommentInputMode(!commentInputMode)}>
+                        <img src={commentIcon} />
+                        <p>Comment</p>
+                    </div>
+                </LikeAndCommentIcons>
 
-                <div onClick={() => setCommentInputMode(!commentInputMode)}>Comment</div>
+                <LikesCounter onClick={() => setLikesVisibility(!likesVisibility)}>
+                    <img src={likedIcon} />
+                    <p>{postLikes.length}</p>
+                </LikesCounter>
             </PostFooter>
 
+            {/* temp */}
             {likesVisibility ?
                 <div>
                     <p>Who liked this post?</p>
