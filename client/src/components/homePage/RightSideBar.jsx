@@ -1,17 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
-import Contacts from './Contacts'
 import Requests from './Requests'
+import Suggested from './Suggested'
 
 const StyledRightSidebar = styled.div`
-    width: 22%;
+    width: 250px;
+    min-width: 250px;
+
 `
 
 const RightSideBar = () => {
     return (
         <StyledRightSidebar>
             <Requests />
-            <Contacts />
+            <Suggested />
         </StyledRightSidebar>
     )
 }

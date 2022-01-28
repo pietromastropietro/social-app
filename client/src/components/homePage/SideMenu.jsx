@@ -1,60 +1,79 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Home from './Home';
-import Profile from '../profilePage/Profile';
+import { NavLink } from "react-router-dom";
 import { boxShadow, radius } from '../../style'
 
+import homeIcon from '../../assets/images/home.svg'
+import profileIcon from '../../assets/images/profile.svg'
+import logoutIcon from '../../assets/images/logout.svg'
 
-const StyledMenu = styled.nav`
+
+const Menu = styled.ul`
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    /* width: 170px; */
-    /* height: 250px; */
-    padding: 10px;
+    row-gap: 5px;
+    padding: 15px 10px;
     border-radius: ${radius.primary};
-    /* -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); */
     ${boxShadow.primary}
-`
+    
+    img {
+        width: 25px;
+        height: 25px;
+        opacity: 0.6;
+    }
 
-const Ul = styled.ul`
-    list-style-type: none;
-    border: 0;
-    margin: 0;
-    padding: 0;
 `
-const Li = styled.li`
-    border: 0;
-    margin: 0;
-    padding: 0;
-    margin: 10px 0;
-`
-
-const NavLink = styled(Link)`
-    text-decoration: none;
-    color: black;
+const NaviLink = styled(NavLink)`
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+    padding: 10px 20px;
+    transition: .2s;
+    cursor: pointer;
+    border-radius: 10px;
+    
+    &:hover {
+        background-color: #e4e4e4;
+    }
+    
+    &.active {
+        background-color: #eef0f5;
+    }
 `;
 
 const SideMenu = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
     const userProfilePath = `${user.first_name}${user.last_name}-${user.id}`
 
+    const logout = () => {
+        localStorage.clear();
+        window.location.reload();
+    };
+
     return (
-        <StyledMenu>
-            <Ul>
-                <Li>
-                    <NavLink to="/">Home</NavLink>
-                </Li>
-                <Li>
-                    <NavLink to={`users/${userProfilePath}`}>Profile</NavLink>
-                </Li>
-                <Li>
+        <Menu>
+            <li>
+                <NaviLink to="/">
+                    <img src={homeIcon} />
+                    <p>Home</p>
+                </NaviLink>
+            </li>
+
+            <li>
+                <NaviLink to={`users/${userProfilePath}`}>
+                    <img src={profileIcon} />
+                    <p>Profile</p>
+                </NaviLink>
+            </li>
+
+            <li>
+                <NaviLink to='/login' onClick={logout}>
+                    <img src={logoutIcon} />
                     <p>Logout</p>
-                </Li>
-            </Ul>
-        </StyledMenu>
+                </NaviLink>
+            </li>
+        </Menu>
     )
 }
 

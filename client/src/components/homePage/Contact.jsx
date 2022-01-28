@@ -6,11 +6,16 @@ import Image from '../Image'
 const StyledContact = styled.li`
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    column-gap: 10px;
 `
+const ProfileLink = styled(Link)`
+    color: inherit;
+    text-decoration: none;
+    text-transform: capitalize;
 
-const Name = styled.p`
-    margin-left: 10px;
+    &:hover {
+        text-decoration: underline;
+    }
 `
 
 const Contact = ({ user }) => {
@@ -20,9 +25,9 @@ const Contact = ({ user }) => {
     return (
         <StyledContact>
             <Image />
-            <Link to={`users/${path}`}>
-                <Name>{fullName}</Name>
-            </Link>
+            <ProfileLink to={`users/${path}`}>
+                {fullName}
+            </ProfileLink>
         </StyledContact>
     )
 }

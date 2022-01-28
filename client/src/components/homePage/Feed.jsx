@@ -7,8 +7,8 @@ import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
 const StyledFeed = styled.div`
-    width: 58%;
     margin: 0 20px;
+    max-width: 850px;
 `
 
 const Feed = ({ userId }) => {
@@ -114,7 +114,6 @@ const Feed = ({ userId }) => {
     };
 
     let params = useParams();
-    // console.log(JSON.stringify(params, null, 2));
 
     const userIdParam = params?.username?.split('-')[1] || undefined;
 

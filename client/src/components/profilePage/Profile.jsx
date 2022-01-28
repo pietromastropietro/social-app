@@ -2,15 +2,13 @@ import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import Button from '../Button'
 import Feed from '../homePage/Feed'
-import Left from './Left'
-import Right from './Right'
 import tempImg from '../../assets/images/temp.jpg'
 
 const StyledProfile = styled.div`
+    max-width: 850px;
     
 `
 const ProfileHeader = styled.div`
@@ -20,25 +18,48 @@ const ProfileHeader = styled.div`
     background-color: white;
     margin-bottom: 20px;
     padding: 10px;
+    margin: 0 20px 20px;
     border-radius: 10px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
     
     > div {
         display: flex;
         align-items: center;
         
+        > div {
+            width: 500px;
+        }
+
         > img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
         }
-        
+
         > p {
             text-transform: capitalize;
             font-size: 35px;
             font-weight: 600;
             margin-left: 15px;
+
+            span {
+                text-transform: none;
+                font-size: 16px;
+                font-weight: 500;
+                color: grey;
+            }
         }
     }
+`
+const UserName = styled.p`
+    text-transform: capitalize;
+    font-size: 35px;
+    font-weight: 600;
+    margin-left: 15px;
+`
+const Bio = styled.p`
+    color: grey;
+    margin-left: 15px;
 `
 const BtnContainer = styled.div`
     display: flex;
@@ -235,13 +256,17 @@ const Profile = () => {
                 <div>
                     <img src={tempImg} />
 
-                    <p>
-                        {isOwnUserProfile ?
-                            `${user.first_name} ${user.last_name}`
-                            :
-                            `${visitedUserProfileInfo?.first_name} ${visitedUserProfileInfo?.last_name}`
-                        }
-                    </p>
+                    <div>
+                        <UserName>
+                            {isOwnUserProfile ?
+                                `${user.first_name} ${user.last_name}`
+                                :
+                                `${visitedUserProfileInfo?.first_name} ${visitedUserProfileInfo?.last_name}`
+                            }
+                        </UserName>
+                        
+                        <Bio>{isOwnUserProfile ? user.bio : visitedUserProfileInfo?.bio}</Bio>
+                    </div>
                 </div>
 
                 {!isOwnUserProfile ?
@@ -265,8 +290,6 @@ const Profile = () => {
             </ProfileHeader>
 
             <ProfileBody>
-                <Left />
-
                 {isOwnUserProfile ?
                     <Feed userId={user.id} />
                     :
@@ -275,8 +298,6 @@ const Profile = () => {
                         :
                         <Feed userId={userIdParam} />
                 }
-
-                {/* <Right /> */}
             </ProfileBody>
         </StyledProfile>
     )

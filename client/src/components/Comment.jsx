@@ -132,6 +132,16 @@ const ReplyContainer = styled.div`
     margin-left: 55px;
 `
 
+const ReplyToggle = styled.p`
+    margin: 5px 0 0 10px;
+    color: #636363;
+
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+`
+
 const ReplyInput = styled.div`
     display: flex;
     margin-top: 10px;
@@ -375,28 +385,27 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                 If this is a reply, 'replies' array will be empty so don't map it.
                 */}
                 {replies.length > 0 ?
-                    <>
-                        <p onClick={() => setRepliesVisibility(!repliesVisibility)}>
-                            {repliesVisibility ?
-                                "Hide all replies"
-                                :
-                                `Show ${replies.length} replies`
-                            }
-                        </p>
+                    repliesVisibility ?
+                        <>
+                            <ReplyToggle onClick={() => setRepliesVisibility(!repliesVisibility)}>
+                                Hide replies
+                            </ReplyToggle>
 
-                        {repliesVisibility ?
-                            replies.map(reply => {
-                                return <Comment
+                            {replies.map(reply =>
+                                <Comment
                                     key={reply.id}
                                     comment={reply}
                                     updateComment={updateComment}
                                     deleteComment={deleteComment}
                                 />
-                            })
-                            : undefined
-                        }
-                    </>
-                    : undefined
+                            )}
+                        </>
+                        :
+                        <ReplyToggle onClick={() => setRepliesVisibility(!repliesVisibility)}>
+                            {replies.length === 1 ? "Show reply" : `Show ${replies.length} replies`}
+                        </ReplyToggle>
+                    :
+                    undefined
                 }
             </ReplyContainer>
         </>

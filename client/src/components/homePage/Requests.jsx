@@ -2,12 +2,19 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Request from './Request'
+import { radius, color } from '../../style'
 
-const Ul = styled.ul`
-    list-style-type: none;
-    border: 0;
-    margin: 0;
-    padding: 0;
+const Container = styled.div`
+    background-color: white;
+    border-radius: ${radius.primary};
+    padding: 15px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+
+    > p {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 5px 0 10px 0;
+    }
 `
 
 const Requests = () => {
@@ -73,9 +80,9 @@ const Requests = () => {
     }
 
     return (
-        <div>
+        <Container>
             <p>Requests</p>
-            <Ul>
+            <ul>
                 {requests.length > 0 &&
                     requests.map(request =>
                         <Request
@@ -85,8 +92,8 @@ const Requests = () => {
                             declineRequest={declineRequest}
                         />)
                 }
-            </Ul>
-        </div>
+            </ul>
+        </Container>
     )
 }
 

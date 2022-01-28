@@ -24,40 +24,41 @@ const Container = styled.div`
         row-gap: 15px;
     }
 `
-const Contacts = () => {
+
+const Suggested = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
-    const [friends, setFriends] = useState([]);
+    const [suggested, setSuggested] = useState([]);
 
-    const getFriends = async () => {
+    const getSuggested = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/friends`, {
+            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/suggestions`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
             });
 
             if (res.data) {
-                setFriends(res.data)
+                setSuggested(res.data)
             }
         } catch (err) {
             console.log(err);
         }
     }
 
-    // fetch all user's friends
+    // fetch all user's friends suggestions
     useEffect(() => {
-        getFriends();
+        getSuggested();
     }, [])
 
     return (
         <Container>
-            <p>Friends</p>
+            <p>Suggested for you</p>
             <ul>
-                {friends.map(friend =>
+                {suggested.map(person =>
                     <Contact
-                        key={friend.id}
-                        user={friend}
+                        key={person.id}
+                        user={person}
                     />)
                 }
             </ul>
@@ -65,4 +66,4 @@ const Contacts = () => {
     )
 }
 
-export default Contacts
+export default Suggested

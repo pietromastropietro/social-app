@@ -3,40 +3,53 @@ import styled from 'styled-components'
 import Button from '../Button'
 import Image from '../Image'
 import { radius, color } from '../../style'
-
+import { Link } from 'react-router-dom'
 
 const StyledRequest = styled.div`
-    background-color: white;
-    border-radius: ${radius.primary};
-    padding: 15px;
-    margin: 10px 0;
-    -webkit-box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1); 
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    padding: 15px 0;
+    border-bottom: 1px solid #d4d4d4;
+
+    &:last-child {
+        border: none;
+        padding-bottom: 0;
+    }
 `
 const RequestHeader = styled.div`
-    display: flex;    
-    margin-bottom: 10px;
-`
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
 
+    > p {
+        margin-left: 10px;
+    }
+`
+const ProfileLink = styled(Link)`
+    text-transform: capitalize;
+    font-weight: 600;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`
 const Buttons = styled.div`
     display: flex;
     justify-content: space-around;
 `
 
-const Name = styled.p`
-    align-self: center;
-    margin-left: 10px;
-`
-
 const Request = ({ request, acceptRequest, declineRequest }) => {
     const username = `${request.first_name} ${request.last_name}`;
+    const path = `${request.first_name}${request.last_name}-${request.user1_id}`
 
     return (
         <StyledRequest>
             <RequestHeader>
                 <Image />
-                <Name><strong>{username}</strong> wants to add you to friends.</Name>
+                <p>
+                    <ProfileLink to={`users/${path}`}>{username}</ProfileLink>
+                    {` wants to add you to friends.`}
+                </p>
             </RequestHeader>
+
             <Buttons>
                 <Button onClick={() => acceptRequest(request.id)}>Accept</Button>
                 <Button onClick={() => declineRequest(request.id)}>Decline</Button>

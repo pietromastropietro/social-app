@@ -33,6 +33,25 @@ const GlobalStyle = createGlobalStyle`
         border: none;
         outline: none;
     }
+    ul {
+        list-style-type: none;
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+    a {
+        color: inherit;
+    text-decoration: none;
+    }
+    input {
+        outline: none;
+        border: none;
+    }
 
     /* SCROLLBAR */
 

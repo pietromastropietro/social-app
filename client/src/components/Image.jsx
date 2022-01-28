@@ -3,17 +3,22 @@ import styled from 'styled-components'
 import tempImage from '../assets/images/temp.jpg'
 // TEMP
 
-const StyledImage = styled.img`
+const StyledImage = styled.div`
     width: 45px;
     height: 45px;
-    border-radius: 50%;
+    
+    > img {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
 `
 
 const Image = () => {
     return (
-        <div>
-            <StyledImage src={tempImage} alt="" />
-        </div>
+        <StyledImage>
+            <img src={tempImage} alt="" />
+        </StyledImage>
     )
 }
 

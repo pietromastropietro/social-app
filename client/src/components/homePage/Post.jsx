@@ -1,16 +1,13 @@
-import React, { useReducer } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Image from '../Image'
-import PostImage from '../PostImage'
 import Comments from '../Comments'
 import { radius, color } from '../../style'
-import tempImage from '../../assets/images/temp2.jpg'
 import { useState } from 'react'
-import Input from '../Input'
 import Button from '../Button'
 import axios from 'axios'
 import { useEffect } from 'react'
-import { createLike, handleLike, removeLike } from '../../likeUtil'
+import { handleLike } from '../../likeUtil'
 import { getFormattedDate } from '../../dateUtil'
 
 import commentIcon from '../../assets/images/comment.svg'
@@ -258,7 +255,6 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     :
                     <>
                         <PostText>{post.text}</PostText>
-                        <PostImage src={tempImage} />
                     </>
                 }
             </PostMain>

@@ -9,11 +9,14 @@ import GlobalStyle from './GlobalStyle';
 import useToken from './useToken';
 import { createContext } from 'react';
 import { useState } from 'react';
+import LeftSidebar from './components/homePage/LeftSidebar';
 
 const MainContainer = styled.div`
+    display: flex;
+    justify-content: center;
     align-self: center;
     background-color: #f9fafb;
-    width: 80%;
+    width: 90%;
     padding: 15px 20px;
 `
 
@@ -31,13 +34,18 @@ const App = () => {
     return (
         <Context.Provider value={contextValues}>
             <GlobalStyle />
+
             <Header />
+
             <MainContainer>
+                <LeftSidebar />
+
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/users/:username" element={<Profile />} />
                 </Routes>
             </MainContainer>
+
         </Context.Provider>
     );
 }
