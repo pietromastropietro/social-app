@@ -41,6 +41,16 @@ const getUserFriends = async (req, res, next)  => {
     }
 };
 
+const getSuggestedUsers = async (req, res, next)  => {
+    try {
+        const suggested = await userService.getSuggestedUsers(req.params.id);
+
+        res.json(suggested);
+    } catch (err) {
+        return next(err);
+    }
+};
+
 const updateUser = async (req, res, next)  => {
     try {
         await userService.updateUser(req.params.id, req.body);
@@ -65,6 +75,7 @@ module.exports = {
     getUsersByName,
     getUser,
     getUserFriends,
+    getSuggestedUsers,
     updateUser,
     deleteUser
 };

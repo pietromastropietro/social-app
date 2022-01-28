@@ -22,6 +22,9 @@ router.get('/users/:id', userController.getUser);
 // get user's friends by user id
 router.get('/users/:id/friends', userController.getUserFriends);
 
+// get user's friends suggestions by user id
+router.get('/users/:id/suggestions', userController.getSuggestedUsers);
+
 // update user
 router.put('/users/:id', userController.updateUser);
 

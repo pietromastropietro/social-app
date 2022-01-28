@@ -60,6 +60,24 @@ const getUserFriends = async (userId) => {
     }
 };
 
+const getSuggestedUsers = async (userId) => {
+    try {
+        const query =
+            `SELECT * FROM users WHERE id != $1 AND id NOT IN (
+                (SELECT user2_id FROM relations WHERE user1_id = $1) 
+                UNION
+                (SELECT user1_id FROM relations WHERE user2_id = $1)
+                )
+            LIMIT 10`
+
+        const suggested = await db.query(query, [userId]);
+
+        return suggested;
+    } catch (err) {
+        throw new Error(err.message)
+    }
+};
+
 const updateUser = async (userId, userData) => {
     const query =
         `UPDATE users 
@@ -99,6 +117,7 @@ module.exports = {
     getUsersByName,
     getUser,
     getUserFriends,
+    getSuggestedUsers,
     updateUser,
     deleteUser
 }
