@@ -21,6 +21,16 @@ const getUsersByName = async (req, res, next)  => {
     }
 };
 
+const getUserByEmail = async (req, res, next)  => {
+    try {
+        const user = await userService.getUserByEmail(req.query);
+
+        res.json(user);
+    } catch (err) {
+        return next(err);
+    }
+};
+
 const getUser = async (req, res, next)  => {
     try {
         const user = await userService.getUser(req.params.id);
@@ -73,6 +83,7 @@ const deleteUser = async (req, res, next)  => {
 module.exports = {
     getUsers,
     getUsersByName,
+    getUserByEmail,
     getUser,
     getUserFriends,
     getSuggestedUsers,

@@ -5,7 +5,7 @@ const getPosts = async ()  => {
     `SELECT posts.*, users.first_name, users.last_name
     FROM posts 
     JOIN users ON posts.user_id = users.id
-    ORDER BY id DESC`;
+    ORDER BY created_at DESC`;
 
     try {
         const posts = await db.query(query);
@@ -22,7 +22,7 @@ const getUserPosts = async (userId)  => {
     FROM posts 
     JOIN users ON posts.user_id = users.id
     WHERE user_id = $1
-    ORDER BY id DESC`;
+    ORDER BY created_at DESC`;
 
     try {
         const posts = await db.query(query, [userId]);

@@ -15,13 +15,24 @@ const getUsersByName = async (user) => {
         const query =
             `SELECT * FROM users 
         WHERE users.first_name LIKE '%' || $1 || '%' 
-        OR users.last_name LIKE '%' || $2 || '%'`;
+        AND users.last_name LIKE '%' || $2 || '%'`;
 
         const users = await db.query(query, [user['first-name'], user['last-name']]);
 
         return users;
     } catch (err) {
-        console.log(err.message);
+        throw new Error(err.message)
+    }
+};
+
+const getUserByEmail = async ({ email }) => {    
+    try {
+        const query = 'SELECT * FROM users WHERE email = $1';
+
+        const user = await db.query(query, [email]);
+
+        return user[0];
+    } catch (err) {
         throw new Error(err.message)
     }
 };
@@ -115,6 +126,7 @@ const deleteUser = async (userId) => {
 module.exports = {
     getUsers,
     getUsersByName,
+    getUserByEmail,
     getUser,
     getUserFriends,
     getSuggestedUsers,
