@@ -36,11 +36,13 @@ const PasswordResetForm = () => {
     };
 
     const handlePasswordReset = async (e) => {
+        e.preventDefault();
+
         try {
-            const res = axios.get(`http://localhost:4000/api/users/user?email=${user.email}`)
+            const res = await axios.get(`http://localhost:4000/api/users/user?email=${user.email}`)
 
             if (res.data) {
-                // email matches existing user, 'res' contains user's data
+                // email matches existing user, 'res' contains user's data, update user
 
             } else {
                 // user not found, retry

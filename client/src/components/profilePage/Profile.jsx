@@ -141,37 +141,27 @@ const Profile = () => {
 
     const handleRelationship = () => {
         switch (relationshipStatus) {
-            // if friend req is sent, delete req
+            // if user already sent a friends request, prompt for removing it
             case relationshipStatusCode[0]: {
                 if (window.confirm("Do you really want to delete the friends request?")) {
                     deleteRelationship();
                 }
-                // delete req
                 break;
             }
 
-            // if friend req is accepted, delete req
+            // If user is already friends with the other user, prompt for removing him from friends list
             case relationshipStatusCode[1]: {
-                // delete req
                 if (window.confirm("Do you really want to remove this friend?")) {
                     deleteRelationship();
                 }
                 break;
             }
 
-            // if friend req doenst exist create it
+            // send new friends request
             case relationshipStatusCode[2]: {
-                // create new req
                 createRelationship();
                 break;
             }
-
-            // if friend req is received, accept or decline it
-            case 'Friends request received': {
-                // setButtonsVisibility(true);
-                break;
-            }
-            // show a dialog box with 'accept' and 'decline' buttons
         }
     }
 
@@ -231,8 +221,8 @@ const Profile = () => {
         }
     }
 
+    // check if this is logged in user's profile whenever the 'userId' url param changes
     useEffect(() => {
-        // check if this is logged in user's profile on component mount
         if (userIdParam == user.id) {
             setIsOwnUserProfile(true)
         } else {
@@ -240,7 +230,7 @@ const Profile = () => {
             getUserInfo(userIdParam);
             getRelationshipStatus(user.id, userIdParam);
         };
-    }, []);
+    }, [userIdParam]);
 
     const handleHoverOnRelationshipStatusBtn = (e) => {
         if (relationshipStatus == "Friends") {
@@ -250,27 +240,49 @@ const Profile = () => {
         }
     }
 
-    return (
-        <StyledProfile>
-            <ProfileHeader>
-                <div>
-                    <img src={tempImg} />
-
+    if (isOwnUserProfile) {
+        // logged-in user profile
+        return (
+            <StyledProfile>
+                <ProfileHeader>
                     <div>
-                        <UserName>
-                            {isOwnUserProfile ?
-                                `${user.first_name} ${user.last_name}`
-                                :
-                                `${visitedUserProfileInfo?.first_name} ${visitedUserProfileInfo?.last_name}`
-                            }
-                        </UserName>
-                        
-                        <Bio>{isOwnUserProfile ? user.bio : visitedUserProfileInfo?.bio}</Bio>
-                    </div>
-                </div>
+                        <img src={tempImg} />
 
-                {!isOwnUserProfile ?
-                    relationshipStatus == 'Friends request received' ?
+                        <div>
+                            <UserName>
+                                {user.first_name} {user.last_name}
+                            </UserName>
+
+                            <Bio>{user.bio}</Bio>
+                        </div>
+                    </div>
+
+                    <Btn>Edit Profile</Btn>
+                </ProfileHeader>
+
+                <ProfileBody>
+                    <Feed userId={user.id} />
+                </ProfileBody>
+            </StyledProfile>
+        )
+    } else {
+        // other user's profile
+        return (
+            <StyledProfile>
+                <ProfileHeader>
+                    <div>
+                        <img src={tempImg} />
+
+                        <div>
+                            <UserName>
+                                {visitedUserProfileInfo?.first_name} {visitedUserProfileInfo?.last_name}
+                            </UserName>
+
+                            <Bio>{visitedUserProfileInfo?.bio}</Bio>
+                        </div>
+                    </div>
+
+                    {relationshipStatus == 'Friends request received' ?
                         <BtnContainer>
                             <Btn onClick={updateRelationship}>Accept request</Btn>
                             <Btn onClick={deleteRelationship}>Decline request</Btn>
@@ -282,25 +294,19 @@ const Profile = () => {
                             onClick={handleRelationship}>
                             {relationshipStatus}
                         </Btn>
-                    :
-                    <Btn>
-                        <p>Edit Profile</p>
-                    </Btn>
-                }
-            </ProfileHeader>
+                    }
+                </ProfileHeader>
 
-            <ProfileBody>
-                {isOwnUserProfile ?
-                    <Feed userId={user.id} />
-                    :
-                    relationshipStatus != 'Friends' ?
+                <ProfileBody>
+                    {relationshipStatus != 'Friends' ?
                         <div>You must be friend with {visitedUserProfileInfo?.first_name} to see the posts.</div>
                         :
                         <Feed userId={userIdParam} />
-                }
-            </ProfileBody>
-        </StyledProfile>
-    )
+                    }
+                </ProfileBody>
+            </StyledProfile>
+        )
+    }
 }
 
 export default Profile
