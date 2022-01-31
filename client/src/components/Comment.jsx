@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { createLike, handleLike, removeLike } from '../likeUtil'
 import Button from './Button'
 import Image from './Image'
-import textareas from './Input'
 import commentIcon from '../assets/images/comment.svg'
 import likeIcon from '../assets/images/like.svg'
 import likedIcon from '../assets/images/liked.svg'
@@ -21,7 +20,6 @@ const Container = styled.div`
     border-radius: 10px;
     padding: 10px;
     margin-left: 10px;
-    width: auto;
 `
 const CommentHeader = styled.div`
     display: flex;
@@ -123,15 +121,12 @@ const LikesCounter = styled.div`
         height: 20px;
     }
 `
-
-
 const CommentText = styled.p`
     margin-top: 3px;
 `
 const ReplyContainer = styled.div`
     margin-left: 55px;
 `
-
 const ReplyToggle = styled.p`
     margin: 5px 0 0 10px;
     color: #636363;
@@ -141,7 +136,6 @@ const ReplyToggle = styled.p`
         text-decoration: underline;
     }
 `
-
 const ReplyInput = styled.div`
     display: flex;
     margin-top: 10px;

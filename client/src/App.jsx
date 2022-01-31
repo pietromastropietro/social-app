@@ -1,6 +1,6 @@
 import Button from './components/Button';
 import Home from './components/homePage/Home';
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
 import Profile from './components/profilePage/Profile';
 import Header from './components/Header';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import useToken from './useToken';
 import { createContext } from 'react';
 import { useState } from 'react';
 import LeftSidebar from './components/homePage/LeftSidebar';
+import { useEffect } from 'react';
 
 const MainContainer = styled.div`
     display: flex;
@@ -24,28 +25,36 @@ const MainContainer = styled.div`
 export const Context = createContext();
 
 const App = () => {
+    const navigate = useNavigate();
     const { token, saveToken } = useToken();
     const contextValues = {};
 
-    if (!token) {
-        return <Login setToken={saveToken} />;
-    }
+    useEffect(() => {
+        if (!token) {
+            navigate('login', { replace: true });
+        }
+    }, [])
 
     return (
         <Context.Provider value={contextValues}>
             <GlobalStyle />
 
-            <Header />
+            {!token ?
+                <Login setToken={saveToken} />
+                :
+                <>
+                    <Header />
 
-            <MainContainer>
-                <LeftSidebar />
+                    <MainContainer>
+                        <LeftSidebar />
 
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/users/:username" element={<Profile />} />
-                </Routes>
-            </MainContainer>
-
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/users/:username" element={<Profile />} />
+                        </Routes>
+                    </MainContainer>
+                </>
+            }
         </Context.Provider>
     );
 }

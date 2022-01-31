@@ -4,7 +4,7 @@ import Contacts from './Contacts'
 import SideMenu from './SideMenu'
 
 const StyledLeftSidebar = styled.div`
-    width: 250px;    
+    width: 250px;
     min-width: 250px;
 `
 

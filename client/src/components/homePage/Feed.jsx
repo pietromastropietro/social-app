@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom'
 
 const StyledFeed = styled.div`
     margin: 0 20px;
-    max-width: 850px;
+    width: 850px;
 `
 
 const Feed = ({ userId }) => {
