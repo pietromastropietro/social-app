@@ -28,7 +28,7 @@ const ImgContainer = styled.figure`
     margin: 0;
     
     > img {
-        border-radius: 20px 0 0 20px;
+        border-radius: 0 20px 20px 0;
         max-width: 100%;
         height: auto;
         // todo: remove this when adding media queries
@@ -69,10 +69,6 @@ const Login = ({ setToken }) => {
     return (
         <StyledLogin>
             <LoginCard>
-                <ImgContainer>
-                    <img src={loginImg} alt="illustration about people interacting with social network features" />
-                </ImgContainer>
-
                 <LoginMain>
                     <LogoContainer>
                         <img src={logoImg} alt="website logo" />
@@ -89,6 +85,10 @@ const Login = ({ setToken }) => {
                         }
                     </div>
                 </LoginMain>
+
+                <ImgContainer>
+                    <img src={loginImg} alt="illustration about people interacting with social network features" />
+                </ImgContainer>
             </LoginCard>
         </StyledLogin>
     )

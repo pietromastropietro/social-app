@@ -2,7 +2,8 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
     body {
-        font-family: 'Lato', sans-serif;
+        font-family: 'Montserrat', sans-serif;
+        /* font-family: 'Lato', sans-serif; */
         background-color: #eef0f5;
         margin: 0;
         padding: 0;
