@@ -53,7 +53,7 @@ const LogoContainer = styled.figure`
         width: 300px;
     }
 `
-const BtnTemp =styled.button`
+const BtnTemp = styled.button`
     background-color: white;
     color: black;
     border: 1px solid grey;

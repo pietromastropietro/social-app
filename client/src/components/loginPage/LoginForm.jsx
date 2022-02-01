@@ -10,19 +10,17 @@ import PasswordResetForm from './PasswordResetForm'
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
+`
+const ForgotPassword = styled.p`
+    color: blue;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    align-self: flex-end;
 
-    > p {
-        color: blue;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        margin: 5px 0 15px 0;
-        align-self: flex-end;
-
-        &:hover {
-            text-decoration: underline;
-        }
+    &:hover {
+        text-decoration: underline;
     }
 `
 const Label = styled.label`
@@ -31,7 +29,7 @@ const Label = styled.label`
     margin: 15px 0 3px 0; 
 `
 const Register = styled.p`
-    margin-top: 10px;
+    margin-top: 5px;
 
     > span {
         color: blue;
@@ -42,12 +40,18 @@ const Register = styled.p`
         }
     }
 `
+const WrongCredentials = styled.p`
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+    height: 23px;
+`
 const Divider = styled.div`
     display: flex;
     align-items: center;
     column-gap: 10px;
     width: 100%;
-    margin: 20px 0;
+    margin: 15px 0;
 
     > div {
         background-color: #b4b4b4;
@@ -64,23 +68,42 @@ const BtnTemp = styled.button`
     border-radius: 10px;
     cursor: pointer;
 `
+const PasswordVisibilityCheckbox = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-top: 5px;
+`
 
 const LoginForm = ({ setLogin, setToken }) => {
     const navigate = useNavigate();
+
     const [passwordResetMode, setPasswordResetMode] = useState(false);
+    const [wrongCredentialsMsg, showWrongCredentialsMsg] = useState(false);
 
     const [user, setUser] = useState({
         email: '',
         password: ''
     });
 
+    // state and function to toggle password visibility
+    const [inputType, setInputType] = useState("password");
+
+    const togglePasswordVisibility = () => {
+        if (inputType === "password") {
+            setInputType("text");
+        } else {
+            setInputType("password");
+        }
+    }
+
     const handleInput = (e) => {
         const { name, value } = e.target;
 
-        setUser({
-            ...user,
-            [name]: value
-        });
+        setUser({ ...user, [name]: value });
+
+        // hide wrong credentials msg
+        showWrongCredentialsMsg(false);
     };
 
     const guestLogin = async () => {
@@ -104,15 +127,10 @@ const LoginForm = ({ setLogin, setToken }) => {
     };
 
     const handleLogin = async (e) => {
-        if (e) {
-            e.preventDefault();
-        }
+        if (e) e.preventDefault();
 
         try {
             const res = await axios.post('http://localhost:4000/api/login', user);
-            console.log(JSON.stringify(user, null, 2));
-
-            console.log(JSON.stringify(res, null, 2));
 
             if (res.data.message === 'Successful login') {
                 // save user's data in local storage
@@ -121,6 +139,8 @@ const LoginForm = ({ setLogin, setToken }) => {
                 // Set the token sent from the server in localStorage
                 setToken(res.data.token);
                 navigate('/')
+            } else {
+                showWrongCredentialsMsg(true);
             }
         } catch (err) {
             console.log(err);
@@ -136,14 +156,22 @@ const LoginForm = ({ setLogin, setToken }) => {
 
     return (
         <>
+
             <Form onSubmit={handleLogin}>
                 <Label htmlFor="email">Email</Label>
-                <Input type="email" name="email" onChange={handleInput} value={user.email} />
+                <Input type="email" name="email" onChange={handleInput} value={user.email} required spellCheck="false" />
 
                 <Label htmlFor="password">Password</Label>
-                <Input type="password" name="password" onChange={handleInput} value={user.password} />
+                <Input type={inputType} name="password" onChange={handleInput} value={user.password} required autoComplete="off" />
 
-                <p onClick={() => setPasswordResetMode(true)}>Forgot your password?</p>
+                <PasswordVisibilityCheckbox>
+                    <input type="checkbox" name="showPassword" onClick={togglePasswordVisibility} />
+                    <label htmlFor="showPassword">Show password</label>
+                </PasswordVisibilityCheckbox>
+
+                <ForgotPassword onClick={() => setPasswordResetMode(true)}>Forgot your password?</ForgotPassword>
+
+                <WrongCredentials>{wrongCredentialsMsg ? "Wrong credentials. Please try again." : undefined}</WrongCredentials>
 
                 <Button type="submit">Login</Button>
             </Form>
