@@ -34,6 +34,7 @@ const Register = styled.p`
     > span {
         color: blue;
         cursor: pointer;
+        font-weight: 600;
 
         &:hover {
             text-decoration: underline;
@@ -149,8 +150,8 @@ const LoginForm = ({ setLogin, setToken }) => {
 
     if (passwordResetMode) {
         return <>
-            <BtnTemp onClick={() => setPasswordResetMode(false)}>Go back</BtnTemp>
-            <PasswordResetForm />
+            <BtnTemp onClick={() => setPasswordResetMode(false)}>{`< Go back`}</BtnTemp>
+            <PasswordResetForm setPasswordResetMode={setPasswordResetMode} />
         </>
     }
 

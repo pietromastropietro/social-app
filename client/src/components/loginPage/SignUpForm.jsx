@@ -101,7 +101,7 @@ const SignUpForm = ({ setLogin }) => {
         e.preventDefault();
 
         if (Object.values(formValidity).every(value => value) && emailAvailable) {
-            // signUpUser();
+            signUpUser();
         }
     };
 
@@ -109,7 +109,7 @@ const SignUpForm = ({ setLogin }) => {
         try {
             const res = await axios.post('http://localhost:4000/api/register', user);
 
-            if (res.data.message === "User already exists") {
+            if (res.data.message === "User already exists. Please login") {
                 // show message for unavailable email
                 setEmailAvailable(false);
             } else {
@@ -131,7 +131,7 @@ const SignUpForm = ({ setLogin }) => {
                 <label htmlFor="full_name">Full Name *</label>
                 <ErrorMsg>{formValidity.full_name || errorMessages.full_name}</ErrorMsg>
             </InputLabels>
-            <Input type="text" name="full_name" onChange={handleInput} onBlur={validateOnBlur} value={user.full_name} />
+            <Input type="text" name="full_name" onChange={handleInput} onBlur={validateOnBlur} value={user.full_name} required />
 
             {/* <Label htmlFor="first_name">First Name *</Label>
                 <Input type="text" name="first_name" onChange={handleInput} value={user.first_name} /> */}
@@ -148,7 +148,7 @@ const SignUpForm = ({ setLogin }) => {
             <InputLabels>
                 <label htmlFor="dob">Date of birth *</label>
             </InputLabels>
-            <Input type="date" name="dob" max={getMaxDob()} onChange={handleInput} value={user.dob} />
+            <Input type="date" name="dob" max={getMaxDob()} onChange={handleInput} value={user.dob} required />
 
             <InputLabels>
                 <label htmlFor="email">Email *</label>
@@ -158,13 +158,13 @@ const SignUpForm = ({ setLogin }) => {
                     {emailAvailable || errorMessages.emailAvailable}
                 </ErrorMsg>
             </InputLabels>
-            <Input type="email" name="email" onChange={handleInput} onBlur={validateOnBlur} value={user.email} />
+            <Input type="email" name="email" onChange={handleInput} onBlur={validateOnBlur} value={user.email} required />
 
             <InputLabels>
                 <label htmlFor="password">Password *</label>
                 <ErrorMsg>{formValidity.password || errorMessages.password}</ErrorMsg>
             </InputLabels>
-            <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} />
+            <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
 
             <PasswordVisibilityCheckbox>
                 <input type="checkbox" name="showPassword" onClick={togglePasswordVisibility} />
