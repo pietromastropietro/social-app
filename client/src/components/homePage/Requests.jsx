@@ -79,19 +79,23 @@ const Requests = () => {
         setRequests(oldRequests => [...oldRequests].filter(request => request.id != requestId))
     }
 
+    // don't show requests tab if user has no requests
+    if (!requests.length) {
+        return null;
+    }
+
     return (
         <Container>
             <p>Requests</p>
             <ul>
-                {requests.length > 0 &&
-                    requests.map(request =>
-                        <Request
-                            key={request.id}
-                            request={request}
-                            acceptRequest={acceptRequest}
-                            declineRequest={declineRequest}
-                        />)
-                }
+                {requests.map(request =>
+                    <Request
+                        key={request.id}
+                        request={request}
+                        acceptRequest={acceptRequest}
+                        declineRequest={declineRequest}
+                    />
+                )}
             </ul>
         </Container>
     )

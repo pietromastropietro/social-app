@@ -12,7 +12,7 @@ const Container = styled.div`
     margin: 10px 0;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 
-    > p {
+    > h3 {
         font-size: 18px;
         font-weight: 600;
         margin: 5px 0 20px 0;
@@ -52,15 +52,19 @@ const Contacts = () => {
 
     return (
         <Container>
-            <p>Friends</p>
-            <ul>
-                {friends.map(friend =>
-                    <Contact
-                        key={friend.id}
-                        user={friend}
-                    />)
-                }
-            </ul>
+            <h3>Friends</h3>
+            {!friends.length ?
+                <p>Your friends will be here once they accept your request</p>
+                :
+                <ul>
+                    {friends.map(friend =>
+                        <Contact
+                            key={friend.id}
+                            user={friend}
+                        />
+                    )}
+                </ul>
+            }
         </Container>
     )
 }

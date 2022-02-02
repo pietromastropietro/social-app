@@ -6,6 +6,8 @@ import { useState } from 'react';
 import logo from '../assets/images/headerlogo.png'
 import tempImg from '../assets/images/temp.jpg'
 import Contact from '../components/homePage/Contact'
+import Overlay from './Overlay';
+import Button from '../components/Button'
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
@@ -43,26 +45,35 @@ const SearchMenu = styled.div`
     position: relative;
     
 `
-const Results = styled.ul`
+const Results = styled.div`
     box-sizing: border-box;
-    position: absolute;
     background-color: #fff;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
-    width: 100%;
-    border-radius: 0 0 20px 20px;
-    padding: 10px;
+    width: 500px;
+    border-radius: 20px;
+    padding: 20px;
+    max-height: 500px;
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
-    max-height: 500px;
-    overflow: auto;
-
-    > li {
+    
+    ul {
+        overflow: auto;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        row-gap: 10px;
+        margin-bottom: 20px;
+
+        > li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     }
 
+    p {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
 `
 const UserLink = styled(Link)`
     display: flex;
@@ -81,7 +92,6 @@ const UserLink = styled(Link)`
         font-size: 20px;
         font-weight: 600;
     }
-    
 `
 
 const Header = () => {
@@ -90,16 +100,17 @@ const Header = () => {
 
     const [searchedUser, setSearchedUser] = useState('');
     const [users, setUsers] = useState([])
+    const [resultsVisibility, setResultsVisibility] = useState(false);
 
     const getUsersByName = async (userToSearch) => {
         try {
-            const res = await axios.get(
-                `http://localhost:4000/api/users/users?first-name=${userToSearch.firstName}&last-name=${userToSearch.lastName}`, {
+            const res = await axios.get(`http://localhost:4000/api/users/name?name=${userToSearch}`, {
                 headers: { Authorization: (localStorage.getItem('token')) }
             });
 
             if (res.data) {
-                setUsers(res.data)
+                setUsers(res.data);
+                setResultsVisibility(true);
             }
         } catch (err) {
             console.log(err.message);
@@ -113,15 +124,8 @@ const Header = () => {
     const onUserSearchSubmit = (e) => {
         e.preventDefault();
 
-        // remove spaces after/before and split into two strings at the middle space, using regex to split regardless of how many spaces in between
-        const splitUserStr = searchedUser.trim().split(/ +/);
-
-        const userToSearch = {
-            firstName: splitUserStr[0],
-            lastName: splitUserStr[1],
-        }
-
-        getUsersByName(userToSearch);
+        setSearchedUser(searchedUser.trim());
+        getUsersByName(searchedUser);
     }
 
     return (
@@ -136,7 +140,35 @@ const Header = () => {
                         <input type="text" placeholder="Search" value={searchedUser} onChange={handleInput} />
                     </form>
 
-                    {users.length > 0 &&
+                    {resultsVisibility ?
+                        <Overlay>
+                            <Results>
+                                {!users.length ?
+                                    <p>No user found</p>
+                                    :
+                                    <>
+                                        <p>Results</p>
+                                        <ul>
+                                            {users.map(user =>
+                                                <li key={user.id}>
+                                                    <div onClick={() => setResultsVisibility(false)}>
+                                                        <Contact user={user} />
+                                                    </div>
+                                                    <button>Add</button>
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </>
+                                }
+                                <Button onClick={() => setResultsVisibility(false)}>Close</Button>
+                            </Results>
+                        </Overlay>
+                        : undefined
+                    }
+
+                    {/* {!users.length ?
+                        <p>No user found</p>
+                        :
                         <Results>
                             {users.map(user =>
                                 <li key={user.id}>
@@ -145,7 +177,7 @@ const Header = () => {
                                 </li>
                             )}
                         </Results>
-                    }
+                    } */}
                 </SearchMenu>
 
                 <UserLink to={`users/${profilePath}`}>
