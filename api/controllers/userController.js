@@ -13,7 +13,7 @@ const getUsers = async (req, res, next)  => {
 
 const getUsersByName = async (req, res, next)  => {
     try {
-        const users = await userService.getUsersByName(req.query);
+        const users = await userService.getUsersByName(req.query.name);
 
         res.json(users);
     } catch (err) {

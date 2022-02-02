@@ -13,8 +13,8 @@ const relationController = require('../controllers/relationController')
 // get all users
 router.get('/users', userController.getUsers);
 
-// get all users matching provided name (ex: api/users/users?name=john)
-router.get('/users/users', userController.getUsersByName);
+// get all users matching provided name (ex: api/users/name?name=john)
+router.get('/users/name', userController.getUsersByName);
 
 // get single user by id
 router.get('/users/:id', userController.getUser);

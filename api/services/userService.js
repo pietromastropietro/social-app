@@ -10,14 +10,15 @@ const getUsers = async () => {
     }
 };
 
-const getUsersByName = async (user) => {
+const getUsersByName = async (userName) => {
     try {
+        // temp, this will be `SELECT * FROM users WHERE users.full_name LIKE '%' || $1 || '%'`
         const query =
             `SELECT * FROM users 
         WHERE users.first_name LIKE '%' || $1 || '%' 
-        AND users.last_name LIKE '%' || $2 || '%'`;
+        OR users.last_name LIKE '%' || $1 || '%'`;
 
-        const users = await db.query(query, [user['first-name'], user['last-name']]);
+        const users = await db.query(query, [userName]);
 
         return users;
     } catch (err) {
