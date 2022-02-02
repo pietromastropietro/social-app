@@ -33,64 +33,76 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
     try {
-        const user = req.body;
-
-        // verify if user exists by email
+        // todo: fix fields when creating final database
+        const user = {
+            first_name: req.body.full_name,
+            last_name: req.body.full_name,
+            username: req.body.full_name,
+            bio: null,
+            dob: req.body.dob,
+            email: req.body.email,
+            password_hash: req.body.password,
+            id: null,
+        }
+        
+        // check if user exists by email
         let query = 'SELECT * FROM users WHERE email = $1';
-        const oldUser = await db.query(query, [user.email]);
-
-        if (oldUser.length) {
+        const fetchedUser = await db.query(query, [user.email]);
+        
+        if (fetchedUser.length) {
             return res.json({ message: "User already exists. Please login" });
         }
-
+        
         // create new user
         query =
-            `INSERT INTO users (first_name, last_name, username, bio, dob, email, password_hash, id) 
+        `INSERT INTO users (first_name, last_name, username, bio, dob, email, password_hash, id) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-
+        
         // temp
         const date = new Date();
         const tempId = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
         user.id = tempId;
-
-        const params = Object.values(user);
-
+        
         // TODO encrypt user password
-
+        
+        const params = Object.values(user);
+        
         await db.query(query, params);
 
         res.json({ message: 'New user created' });
     } catch (err) {
-        console.log(err.message);
         return next(err);
     }
 };
 
+const resetUserPassword = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        // check if user exists by email
+        let query = 'SELECT * FROM users WHERE email = $1';
+        const user = await db.query(query, [email]);
+
+        if (!user.length) {
+            return res.json({ message: "User not found" });
+        }
+
+        // user exists, update password
+        query = `UPDATE users SET password_hash = $1 WHERE email = $2`;
+
+        // todo: encrypt password
+        
+        await db.query(query, [password, email]);
+
+        res.json({ message: 'Password changed' });
+    } catch (err) {
+        return next(err);
+    }
+
+}
+
 module.exports = {
     login,
-    register
+    register,
+    resetUserPassword
 };
-
-// exports.login = async (req, res, next) => {
-//     try {
-//         const user = await User.findOne({ email: req.body.username });
-
-//         if (!user) {
-//             console.log('User not found');
-
-//             res.json({ message: 'User not found' });
-//         } else if (user.password != req.body.password) {
-//             console.log('incorrect password');
-
-//             res.json({ message: 'Incorrect password' });
-//         } else {
-//             console.log('user found');
-
-//             jwt.sign({ user }, process.env.JWT_KEY, { expiresIn: '7d' }, (err, token) => {
-//                 res.json({ message: 'Successful login', token });
-//             });
-//         }
-//     } catch (err) {
-//         return next(err);
-//     }
-// };

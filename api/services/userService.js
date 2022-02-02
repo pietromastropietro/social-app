@@ -25,18 +25,6 @@ const getUsersByName = async (user) => {
     }
 };
 
-const getUserByEmail = async ({ email }) => {    
-    try {
-        const query = 'SELECT * FROM users WHERE email = $1';
-
-        const user = await db.query(query, [email]);
-
-        return user[0];
-    } catch (err) {
-        throw new Error(err.message)
-    }
-};
-
 const getUser = async (userId) => {
     try {
         const query = 'SELECT * FROM users WHERE id = $1';
@@ -126,7 +114,6 @@ const deleteUser = async (userId) => {
 module.exports = {
     getUsers,
     getUsersByName,
-    getUserByEmail,
     getUser,
     getUserFriends,
     getSuggestedUsers,
