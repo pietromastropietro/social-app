@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import tempImage from '../assets/images/temp.jpg'
+import tempImage from 'static/images/temp.jpg'
 // TEMP
 
 const StyledImage = styled.div`

@@ -1,16 +1,15 @@
-import Button from './components/Button';
-import Home from './components/homePage/Home';
 import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
-import Profile from './components/profilePage/Profile';
-import Header from './components/Header';
 import styled from 'styled-components';
-import Login from './components/loginPage/Login';
 import GlobalStyle from './GlobalStyle';
-import useToken from './useToken';
+import useToken from 'services/auth/useToken';
 import { createContext } from 'react';
-import { useState } from 'react';
-import LeftSidebar from './components/homePage/LeftSidebar';
 import { useEffect } from 'react';
+import Sidebar from './layout/Sidebar/Sidebar';
+import LoginIndex from './pages/Login/LoginIndex';
+import Header from './layout/Header/Header'
+import Home from "./pages/Home/Home";
+import UserProfile from './pages/UserProfile/UserProfile'
+
 
 const MainContainer = styled.div`
     display: flex;
@@ -40,17 +39,17 @@ const App = () => {
             <GlobalStyle />
 
             {!token ?
-                <Login setToken={saveToken} />
+                <LoginIndex setToken={saveToken} />
                 :
                 <>
                     <Header />
 
                     <MainContainer>
-                        <LeftSidebar />
+                        <Sidebar />
 
                         <Routes>
                             <Route path="/" element={<Home />} />
-                            <Route path="/users/:username" element={<Profile />} />
+                            <Route path="/users/:username" element={<UserProfile />} />
                         </Routes>
                     </MainContainer>
                 </>
