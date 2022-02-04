@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import Feed from 'components/Feed/Feed'
 import tempImg from 'static/images/temp.jpg'
+import Button from 'components/Button/Button'
+import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
 
 const StyledProfile = styled.div`
     max-width: 850px;
@@ -16,9 +18,8 @@ const ProfileHeader = styled.div`
     align-items: center;
     justify-content: space-between;
     background-color: white;
-    margin-bottom: 20px;
     padding: 10px;
-    margin: 0 20px 20px;
+    margin: 0 20px 20px 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
     
@@ -65,6 +66,7 @@ const BtnContainer = styled.div`
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+    width: 135px;
 `
 const Btn = styled.button`
     cursor: pointer;
@@ -93,6 +95,7 @@ const UserProfile = () => {
     const [relationship, setRelationship] = useState(undefined);
 
     const [isOwnUserProfile, setIsOwnUserProfile] = useState(undefined);
+    const [profileEditMode, setProfileEditMode] = useState(false);
     const userIdParam = useParams().username.split('-')[1];
 
     const getUserInfo = async (userId) => {
@@ -256,12 +259,19 @@ const UserProfile = () => {
                             <p>{user.bio}</p>
                         </div>
                     </div>
-
-                    <Btn>Edit Profile</Btn>
+                    <BtnContainer>
+                        <Button primaryOutlined onClick={() => setProfileEditMode(!profileEditMode)}>
+                            {profileEditMode ? "Close profile Edit" : "Edit profile"}
+                        </Button>
+                    </BtnContainer>
                 </ProfileHeader>
 
                 <ProfileBody>
-                    <Feed userId={user.id} />
+                    {profileEditMode ?
+                        <UserProfileEdit userId={user.id} />
+                        :
+                        <Feed userId={user.id} />
+                    }
                 </ProfileBody>
             </StyledProfile>
         )
@@ -284,16 +294,16 @@ const UserProfile = () => {
 
                     {relationshipStatus == 'Friends request received' ?
                         <BtnContainer>
-                            <Btn onClick={updateRelationship}>Accept request</Btn>
-                            <Btn onClick={deleteRelationship}>Decline request</Btn>
+                            <Button primary onClick={updateRelationship}>Accept request</Button>
+                            <Button warningOutlined onClick={deleteRelationship}>Decline request</Button>
                         </BtnContainer>
                         :
-                        <Btn
+                        <Button primaryOutlined
                             onMouseOver={handleHoverOnRelationshipStatusBtn}
                             onMouseOut={(e) => e.target.textContent = relationshipStatus}
                             onClick={handleRelationship}>
                             {relationshipStatus}
-                        </Btn>
+                        </Button>
                     }
                 </ProfileHeader>
 

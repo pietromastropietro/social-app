@@ -5,6 +5,7 @@ import loginImg from 'static/images/loginImg.png'
 import logoImg from 'static/images/logo.png'
 import LoginForm from './LoginForm/LoginForm'
 import SignUpForm from './SignUpForm/SignUpForm'
+import Button from 'components/Button/Button'
 
 const StyledLogin = styled.div`
     display: flex;
@@ -53,15 +54,15 @@ const LogoContainer = styled.figure`
         width: 300px;
     }
 `
-const BtnTemp = styled.button`
-    background-color: white;
-    color: black;
-    border: 1px solid grey;
-    width: fit-content;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-`
+// const Button = styled.button`
+//     background-color: white;
+//     color: black;
+//     border: 1px solid grey;
+//     width: fit-content;
+//     padding: 10px;
+//     border-radius: 10px;
+//     cursor: pointer;
+// `
 
 const LoginIndex = ({ setToken }) => {
     const [login, setLogin] = useState(true);
@@ -79,7 +80,7 @@ const LoginIndex = ({ setToken }) => {
                             <LoginForm setLogin={setLogin} setToken={setToken} />
                             :
                             <>
-                                <BtnTemp onClick={() => setLogin(true)}>{`< Go back`}</BtnTemp>
+                                <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>
                                 <SignUpForm setLogin={setLogin} />
                             </>
                         }

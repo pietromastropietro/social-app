@@ -317,7 +317,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                         {commentEditMode ?
                             <CommentInput>
                                 <textarea autoFocus rows='3' cols='35' name="commentText" value={commentUpdates.text} onChange={handleInput} />
-                                <Button type='button' onClick={() => submitCommentEdit(commentUpdates)}>Confirm</Button>
+                                <Button primary type='button' onClick={() => submitCommentEdit(commentUpdates)}>Confirm</Button>
                             </CommentInput>
                             :
                             <CommentText>{comment.text}</CommentText>
@@ -368,7 +368,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
                         <form>
                             <textarea autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
-                            <Button type='button' onClick={createReply}>Confirm</Button>
+                            <Button primary type='button' onClick={createReply}>Confirm</Button>
                         </form>
                     </ReplyInput>
                     : undefined

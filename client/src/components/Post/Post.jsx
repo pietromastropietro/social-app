@@ -250,7 +250,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                 {postEditMode ?
                     <form>
                         <textarea autoFocus rows='3' value={post.text} name="text" onChange={handleInput} />
-                        <Button type='button' onClick={() => submitPostEdit(post)}>Confirm</Button>
+                        <Button primary type='button' onClick={() => submitPostEdit(post)}>Confirm</Button>
                     </form>
                     :
                     <>

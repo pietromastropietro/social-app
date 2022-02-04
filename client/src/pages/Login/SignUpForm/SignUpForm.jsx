@@ -171,7 +171,7 @@ const SignUpForm = ({ setLogin }) => {
                 <label htmlFor="showPassword">Show password</label>
             </PasswordVisibilityCheckbox>
 
-            <Button type="submit">Register</Button>
+            <Button primary type="submit">Register</Button>
         </Form>
     )
 }

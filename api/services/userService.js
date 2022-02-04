@@ -79,6 +79,8 @@ const getSuggestedUsers = async (userId) => {
 };
 
 const updateUser = async (userId, userData) => {
+    // first check  if new user email is available
+
     const query =
         `UPDATE users 
     SET first_name = $2, last_name = $3, dob = $4, email = $5, password_hash = $6, bio = $7, username = $8

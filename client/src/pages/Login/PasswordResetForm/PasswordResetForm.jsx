@@ -164,7 +164,7 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
 
                 <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
 
-                <Button type="submit">Change password</Button>
+                <Button primary type="submit">Change password</Button>
             </Form>
         </>
     )

@@ -33,7 +33,8 @@ const ProfileLink = styled(Link)`
 `
 const Buttons = styled.div`
     display: flex;
-    justify-content: space-around;
+    column-gap: 10px;
+    /* justify-content: space-around; */
 `
 
 const Request = ({ request, acceptRequest, declineRequest }) => {
@@ -51,8 +52,8 @@ const Request = ({ request, acceptRequest, declineRequest }) => {
             </RequestHeader>
 
             <Buttons>
-                <Button theme='primary' onClick={() => acceptRequest(request.id)}>Accept</Button>
-                <Button onClick={() => declineRequest(request.id)}>Decline</Button>
+                <Button primary small onClick={() => acceptRequest(request.id)}>Accept</Button>
+                <Button warningOutlined small onClick={() => declineRequest(request.id)}>Decline</Button>
             </Buttons>
         </StyledRequest>
     )

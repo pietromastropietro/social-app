@@ -93,6 +93,10 @@ const UserProfileLink = styled(Link)`
         font-weight: 600;
     }
 `
+const BtnContainer = styled.div`
+    width: 50px;
+
+`
 
 const Header = () => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
@@ -154,13 +158,15 @@ const Header = () => {
                                                     <div onClick={() => setResultsVisibility(false)}>
                                                         <UserLink user={user} />
                                                     </div>
-                                                    <button>Add</button>
+                                                    <BtnContainer>
+                                                        <Button primaryOutlined small>Add</Button>
+                                                    </BtnContainer>
                                                 </li>
                                             )}
                                         </ul>
                                     </>
                                 }
-                                <Button onClick={() => setResultsVisibility(false)}>Close</Button>
+                                <Button primary onClick={() => setResultsVisibility(false)}>Close</Button>
                             </Results>
                         </Overlay>
                         : undefined

@@ -32,6 +32,12 @@ const StyledPostInput = styled.div`
         margin-left: 10px;
         width: 100%;
 
+        > fieldset {
+            display: flex;
+            column-gap: 10px;
+            width: 300px;
+        }
+
         > textarea {
             background-color: #eef0f5;
             box-sizing: border-box;
@@ -81,8 +87,8 @@ const PostInput = ({ createPost }) => {
                 <form>
                     <textarea autoFocus rows='3' name='text' value={post.text} onChange={handleInput} />
                     <fieldset>
-                        <Button type='button'>Add an image</Button>
-                        <Button type='button' onClick={() => handleSubmit(post)}>Post</Button>
+                        <Button primary type='button'>Add an image</Button>
+                        <Button primary type='button' onClick={() => handleSubmit(post)}>Post</Button>
                     </fieldset>
                 </form>
                 :

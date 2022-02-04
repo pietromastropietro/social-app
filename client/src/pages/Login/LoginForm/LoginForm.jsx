@@ -60,15 +60,6 @@ const Divider = styled.div`
         width: 100%;
     }
 `
-const BtnTemp = styled.button`
-    background-color: white;
-    color: black;
-    border: 1px solid grey;
-    width: fit-content;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-`
 const PasswordVisibilityCheckbox = styled.div`
     display: flex;
     align-items: center;
@@ -150,7 +141,7 @@ const LoginForm = ({ setLogin, setToken }) => {
 
     if (passwordResetMode) {
         return <>
-            <BtnTemp onClick={() => setPasswordResetMode(false)}>{`< Go back`}</BtnTemp>
+            <Button primaryOutlined onClick={() => setPasswordResetMode(false)}>{`< Go back`}</Button>
             <PasswordResetForm setPasswordResetMode={setPasswordResetMode} />
         </>
     }
@@ -174,7 +165,7 @@ const LoginForm = ({ setLogin, setToken }) => {
 
                 <WrongCredentials>{wrongCredentialsMsg ? "Wrong credentials. Please try again." : undefined}</WrongCredentials>
 
-                <Button type="submit">Login</Button>
+                <Button primary type="submit">Login</Button>
             </Form>
 
             <Register>Don't have an account? <span onClick={() => setLogin(false)}>Join us!</span> </Register>
@@ -185,7 +176,7 @@ const LoginForm = ({ setLogin, setToken }) => {
                 <div></div>
             </Divider>
 
-            <Button onClick={guestLogin}>Login as Guest</Button>
+            <Button primaryOutlined onClick={guestLogin}>Login as Guest</Button>
         </>
     )
 }

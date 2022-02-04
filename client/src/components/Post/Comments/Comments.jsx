@@ -276,7 +276,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                 {commentInputMode ?
                     <form onSubmit={() => createComment(comment)}>
                         <textarea autoFocus rows='2' value={comment.text} onChange={handleInput} />
-                        <Button>Confirm</Button>
+                        <Button primary>Confirm</Button>
                     </form>
                     :
                     <p onClick={() => setCommentInputMode(true)}>Write your comment...</p>
