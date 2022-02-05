@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useState } from 'react'
 import { regex } from 'utils/constants/regex';
 import { errorMessages } from 'utils/constants/errorMessages'
-import { getMaxDob } from 'utils/dateUtil';
+import { getDateForInputElement, getMaxDob } from 'utils/dateUtil';
 import { useEffect } from 'react';
 
 const Form = styled.form`
@@ -52,8 +52,11 @@ const UserProfileEdit = ({ userId }) => {
         full_name: '',
         dob: '',
         email: '',
-        password_hash: '',
         bio: '',
+        password_hash: '',
+        oldPassword: '',
+        newPassword: '',
+        passwordConfirm: '',
     });
 
     const getUser = async () => {
@@ -64,10 +67,9 @@ const UserProfileEdit = ({ userId }) => {
                 }
             });
 
-            console.log(JSON.stringify(res.data, null, 2));
-
             if (res.data) {
-                const formattedDob = `${new Date(res.data.dob).getFullYear()}-${new Date(res.data.dob).getMonth() + 1}-${new Date(res.data.dob).getDate()}`
+                // Get formatted date suitable for input html element's default value
+                const formattedDob = getDateForInputElement(new Date(res.data.dob));
 
                 setUser({
                     full_name: res.data.first_name + ' ' + res.data.last_name, // temp
@@ -94,8 +96,7 @@ const UserProfileEdit = ({ userId }) => {
         dob: true,
         email: true,
         bio: true,
-        password_hash: true,
-        password: true,
+        newPassword: true,
         passwordConfirm: true,
         passwordEquality: true
     });
@@ -103,6 +104,10 @@ const UserProfileEdit = ({ userId }) => {
     // state to check email availability
     const [emailAvailable, setEmailAvailable] = useState(true);
 
+    // state to check if user wrote his old password correctly
+    const [wrongOldPassword, setWrongOldPassword] = useState(false);
+
+    // state to toggle form to change user password
     const [passwordEditMode, setPasswordEditMode] = useState(false);
 
     // state and function to toggle password visibility
@@ -116,22 +121,28 @@ const UserProfileEdit = ({ userId }) => {
         }
     }
 
-    const cancelPasswordChange = () => {
-        // reset password to default if user changed it and then cancelled the password change
+    const cancelPasswordEdit = () => {
+        // reset newPassword field
+        setUser({ ...user, newPassword: '' });
         setPasswordEditMode(false)
-    }
+    };
 
     const handleInput = (e) => {
         const { name, value } = e.target;
 
         setUser({ ...user, [name]: value });
 
-        if (name != 'dob') {
+        if (name != 'dob' && name != 'oldPassword') {
             setFormValidity({
                 // reset field validity to hide error message
                 ...formValidity,
                 [name]: true
             })
+        }
+
+        // reset field to hide message for wrong old user password
+        if (wrongOldPassword) {
+            setWrongOldPassword(false);
         }
     };
 
@@ -140,8 +151,8 @@ const UserProfileEdit = ({ userId }) => {
         const { name, value } = e.target;
 
         switch (name) {
+            // case "bio":
             case "full_name":
-            case "bio":
             case "email": {
                 setFormValidity({
                     ...formValidity,
@@ -149,12 +160,12 @@ const UserProfileEdit = ({ userId }) => {
                 });
                 break;
             }
-            case "password":
+            case "newPassword":
             case "passwordConfirm": {
                 setFormValidity({
                     ...formValidity,
                     [name]: regex.password.test(value),
-                    passwordEquality: (value === user.passwordConfirm && value === user.password)
+                    passwordEquality: (value === user.passwordConfirm && value === user.newPassword)
                 });
                 break;
             }
@@ -170,14 +181,41 @@ const UserProfileEdit = ({ userId }) => {
     const checkFormValidity = (e) => {
         e.preventDefault();
 
-        if (Object.values(formValidity).every(value => value) && emailAvailable) {
-            // updateUser();
+        if (Object.values(formValidity).every(value => value)
+            && emailAvailable
+            && (!wrongOldPassword)
+        ) {
+            updateUser();
         }
     };
 
     const updateUser = async () => {
         try {
-            const res = await axios.put(`http://localhost:4000/api/users/${userId}`, user, {
+            let updatedUser = user;
+
+            if (passwordEditMode) {
+                // user changed his password, check if he wrote his old password correctly
+                if (updatedUser.oldPassword !== updatedUser.password_hash) {
+                    // wrong password
+                    return setWrongOldPassword(true);
+                } else {
+                    // replace old password from db with new one
+                    updatedUser.password_hash = updatedUser.newPassword;
+                }
+            };
+
+            // delete now useless fields
+            delete updatedUser.oldPassword;
+            delete updatedUser.newPassword;
+            delete updatedUser.passwordConfirm;
+
+            // TEMP START
+            updatedUser.first_name = updatedUser.full_name.split(' ')[0];
+            updatedUser.last_name = updatedUser.full_name.split(' ')[1];
+            delete updatedUser.full_name;
+            // TEMP END
+
+            const res = await axios.put(`http://localhost:4000/api/users/${userId}`, updatedUser, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -187,7 +225,20 @@ const UserProfileEdit = ({ userId }) => {
                 // show message for unavailable email
                 setEmailAvailable(false);
             } else {
-                // user updated, go back to user profile
+                // user updated
+                
+                // add missing fields to updatedUser
+                updatedUser.id = userId;
+                updatedUser.registered_at = user.registered_at;
+                // temp, this will already be in updatedUser, i wont need to add it
+                updatedUser.profile_img_url = user.profile_img_url;
+
+                // replace user's data in localStorage with new ones
+                localStorage.removeItem('user');
+                localStorage.setItem('user', JSON.stringify(updatedUser))
+
+                // refresh page to update data on screen
+                window.location.reload();
             }
         } catch (err) {
             console.log(err);
@@ -204,13 +255,10 @@ const UserProfileEdit = ({ userId }) => {
 
             <InputLabels>
                 <label htmlFor="bio">Bio</label>
-                <ErrorMsg>{formValidity.bio || errorMessages.bio}</ErrorMsg>
             </InputLabels>
             <textarea rows='3' name="bio" placeholder='Tell us something about you!' onChange={handleInput} onBlur={validateOnBlur} value={user.bio}></textarea>
 
-            <InputLabels>
-                <label htmlFor="dob">Date of birth</label>
-            </InputLabels>
+            <InputLabels><label htmlFor="dob">Date of birth</label></InputLabels>
             <Input type="date" name="dob" max={getMaxDob()} onChange={handleInput} value={user.dob} required />
 
             <InputLabels>
@@ -226,10 +274,10 @@ const UserProfileEdit = ({ userId }) => {
             {passwordEditMode ?
                 <>
                     <InputLabels>
-                        <label htmlFor="passwordConfirm">Old password</label>
-                        <ErrorMsg>{formValidity.passwordConfirm || errorMessages.password}</ErrorMsg>
+                        <label htmlFor="oldPassword">Old password</label>
+                        <ErrorMsg>{wrongOldPassword && errorMessages.oldPassword}</ErrorMsg>
                     </InputLabels>
-                    <Input type={inputType} name="passwordConfirm" onChange={handleInput} onBlur={validateOnBlur} value={user.passwordConfirm} autoComplete="off" required />
+                    <Input type={inputType} name="oldPassword" onChange={handleInput} value={user.oldPassword} autoComplete="off" required />
 
                     <InputLabels>
                         <label htmlFor="passwordConfirm">New password</label>
@@ -237,15 +285,18 @@ const UserProfileEdit = ({ userId }) => {
                     </InputLabels>
                     <Input type={inputType} name="passwordConfirm" onChange={handleInput} onBlur={validateOnBlur} value={user.passwordConfirm} autoComplete="off" required />
 
-                    <InputLabels><label htmlFor="password">Confirm new password</label></InputLabels>
-                    <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
+                    <InputLabels>
+                        <label htmlFor="newPassword">Confirm new password</label>
+                        <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
+                    </InputLabels>
+                    <Input type={inputType} name="newPassword" onChange={handleInput} onBlur={validateOnBlur} value={user.newPassword} autoComplete="off" required />
 
                     <PasswordVisibilityCheckbox>
                         <input type="checkbox" name="showPassword" onClick={togglePasswordVisibility} />
                         <label htmlFor="showPassword">Show password</label>
                     </PasswordVisibilityCheckbox>
-                    
-                    <Button primaryOutlined width='220px' onClick={cancelPasswordChange}>Cancel password change</Button>
+
+                    <Button primaryOutlined width='220px' onClick={cancelPasswordEdit}>Cancel password change</Button>
                 </>
                 :
                 <Button primaryOutlined width='220px' onClick={() => setPasswordEditMode(true)}>Change your password</Button>

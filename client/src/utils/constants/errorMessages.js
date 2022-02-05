@@ -4,5 +4,6 @@ export const errorMessages = {
     emailAvailable: "Email not available",
     emailExistence: "Email not found",
     password: "Password not valid",
+    oldPassword: "Old password not correct",
     passwordEquality: "Passwords not matching"
 };

@@ -68,19 +68,6 @@ const BtnContainer = styled.div`
     row-gap: 10px;
     width: 135px;
 `
-const Btn = styled.button`
-    cursor: pointer;
-    background-color: #e9e8e8;
-    padding: 10px 20px;
-    border-radius: 10px;
-    height: 100%;
-    min-width: 90px;
-    transition: .2s;
-
-    &:hover {
-        background-color: #c5c5c5;
-    }
-`
 const ProfileBody = styled.div`
     display: flex;
     justify-content: space-between;
