@@ -53,9 +53,9 @@ const getSuggestedUsers = async (req, res, next)  => {
 
 const updateUser = async (req, res, next)  => {
     try {
-        await userService.updateUser(req.params.id, req.body);
+        const message = await userService.updateUser(req.params.id, req.body);
 
-        res.json({ message: 'User updated'});
+        res.json({ message: message });
     } catch (err) {
         return next(err);
     }

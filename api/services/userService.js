@@ -79,17 +79,28 @@ const getSuggestedUsers = async (userId) => {
 };
 
 const updateUser = async (userId, userData) => {
-    // first check  if new user email is available
-
-    const query =
-        `UPDATE users 
-    SET first_name = $2, last_name = $3, dob = $4, email = $5, password_hash = $6, bio = $7, username = $8
-    WHERE id = $1`
-
     try {
+        // Check if new user email is available
+        let query = 'SELECT * FROM users WHERE id != $1 AND email = $2';
+        const fetchedUser = await db.query(query, [userId, userData.email]);
+        
+        if (fetchedUser.length) {
+            // email is already in use, return
+            return "Email not available";
+        }
+
+        query =
+            `UPDATE users 
+        SET first_name = $2, last_name = $3, dob = $4, email = $5, password_hash = $6, bio = $7, username = $8
+        WHERE id = $1`
+
         // retrieve user data from db
         let newUserData = await getUser(userId);
 
+        // temp
+        delete newUserData.registered_at;
+        delete newUserData.profile_img_url;
+        
         // iterate over 'userData's properties and update 'newUserData's corresponding ones
         for (const property in userData) {
             newUserData[property] = userData[property];
@@ -98,7 +109,9 @@ const updateUser = async (userId, userData) => {
         // convert to array
         const params = Object.values(newUserData);
 
-        return await db.query(query, params);
+        await db.query(query, params);
+
+        return "User updated";
     } catch (err) {
         throw new Error(err.message)
     }
