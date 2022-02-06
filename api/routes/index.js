@@ -7,6 +7,7 @@ const postController = require('../controllers/postController')
 const commentController = require('../controllers/commentController')
 const likeController = require('../controllers/likeController')
 const relationController = require('../controllers/relationController')
+const imageController = require('../controllers/imageController')
 
 /* USER ROUTES */
 
@@ -103,5 +104,10 @@ router.put('/relations/:id', relationController.updateRelation);
 
 // delete relation
 router.delete('/relations/:id', relationController.deleteRelation);
+
+/* IMAGE ROUTE */
+
+// get a pre-signed url to upload images to AWS S3 bucket, and the url to the uploaded image
+router.get('/aws-url', imageController.getAwsUrl)
 
 module.exports = router;
