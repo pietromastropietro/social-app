@@ -50,11 +50,15 @@ const StyledPostInput = styled.div`
 
 const PostInput = ({ createPost }) => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
-
+    
     const [post, setPost] = useState({
         text: "",
         image_url: undefined
     });
+
+    const [postImage, setPostImage] = useState();
+
+    const [postInputMode, setPostInputMode] = useState(false);
 
     // handle post input
     const handleInput = (e) => {
@@ -66,8 +70,26 @@ const PostInput = ({ createPost }) => {
         })
     };
 
+    // handle image input
+    const handleImageInput = (e) => {
+        setPostImage(e.target.files[0]);
+    };
+
     // handle post form submit
-    const handleSubmit = (post) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (postImage === null) {
+            return alert("Problems with image, please retry"); // temp
+        };
+
+        // Upload image to AWS S3 bucket and get its url
+        const imgUrl = await handleImageUpload(postImage);
+
+        if (!imgUrl) {
+            return alert("Problems uploading image"); // temp
+        }
+
         setPostInputMode(false);
         createPost(post);
 
@@ -77,18 +99,55 @@ const PostInput = ({ createPost }) => {
             image_url: undefined
         });
     }
-    const [postInputMode, setPostInputMode] = useState(false);
+
+    // Upload image to AWS S3 bucket
+    const handleImageUpload = async (image) => {
+        try {
+            // Get a pre-signed AWS url to upload an image
+            let res = await axios.get(`http://localhost:4000/api/aws-url?file-name=${image.name}&file-type=${image.type}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
+            });
+
+            const { url: imgUrl, signedRequest } = res.data.returnData;
+
+            if (!signedRequest) {
+                console.log("Couldn't get signed url");
+                return;
+            }
+
+            // Upload image with the pre-signed url
+            res = await axios.put(signedRequest, image, {
+                headers: {
+                    'Content-Type': image.type
+                }
+            });
+
+            if (res.status !== 200) {
+                console.log("Couldn't upload image");
+                return;
+            }
+
+            return imgUrl;
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
 
     return (
         <StyledPostInput>
             <Image />
 
             {postInputMode ?
-                <form>
+                <form onSubmit={handleSubmit}>
                     <textarea autoFocus rows='3' name='text' value={post.text} onChange={handleInput} />
+                    
+                    <input type="file" name="postImage" onChange={handleImageInput} />
+
                     <fieldset>
                         <Button primary type='button'>Add an image</Button>
-                        <Button primary type='button' onClick={() => handleSubmit(post)}>Post</Button>
+                        <Button primary type='submit'>Post</Button>
                     </fieldset>
                 </form>
                 :
