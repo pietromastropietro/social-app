@@ -42,27 +42,18 @@ const LoginMain = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    > div {
-        width: 60%;
-    }
+ `
+const Logo = styled.img`
+    margin-bottom: 20px;
+    width: 300px;
 `
-const LogoContainer = styled.figure`
-    margin: 30px 0 20px 0;
-
-    > img {
-        width: 300px;
-    }
+const FormContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    margin-top: 30px;
 `
-// const Button = styled.button`
-//     background-color: white;
-//     color: black;
-//     border: 1px solid grey;
-//     width: fit-content;
-//     padding: 10px;
-//     border-radius: 10px;
-//     cursor: pointer;
-// `
 
 const LoginIndex = ({ setToken }) => {
     const [login, setLogin] = useState(true);
@@ -71,27 +62,23 @@ const LoginIndex = ({ setToken }) => {
         <StyledLogin>
             <LoginCard>
                 <LoginMain>
-                    <LogoContainer>
-                        <img src={logoImg} alt="website logo" />
-                    </LogoContainer>
-
-                    <div>
+                    <FormContainer>
                         {login ?
-                            <LoginForm setLogin={setLogin} setToken={setToken} />
-                            :
                             <>
-                                <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>
-                                <SignUpForm setLogin={setLogin} />
+                                <Logo src={logoImg} alt="website logo" />
+                                <LoginForm setLogin={setLogin} setToken={setToken} />
                             </>
+                            :
+                            <SignUpForm setLogin={setLogin} />
                         }
-                    </div>
+                    </FormContainer>
                 </LoginMain>
 
                 <ImgContainer>
                     <img src={loginImg} alt="illustration about people interacting with social network features" />
                 </ImgContainer>
             </LoginCard>
-        </StyledLogin>
+        </StyledLogin >
     )
 }
 

@@ -10,6 +10,7 @@ import PasswordResetForm from '../PasswordResetForm/PasswordResetForm'
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    width: 100%;
 `
 const ForgotPassword = styled.p`
     color: blue;
@@ -140,15 +141,11 @@ const LoginForm = ({ setLogin, setToken }) => {
     };
 
     if (passwordResetMode) {
-        return <>
-            <Button primaryOutlined onClick={() => setPasswordResetMode(false)}>{`< Go back`}</Button>
-            <PasswordResetForm setPasswordResetMode={setPasswordResetMode} />
-        </>
+        return <PasswordResetForm setPasswordResetMode={setPasswordResetMode} />
     }
 
     return (
         <>
-
             <Form onSubmit={handleLogin}>
                 <Label htmlFor="email">Email</Label>
                 <Input type="email" name="email" onChange={handleInput} value={user.email} required spellCheck="false" />

@@ -10,6 +10,7 @@ import { regex } from 'utils/constants/regex'
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     > button {
         margin-top: 10px;
@@ -34,6 +35,10 @@ const PasswordVisibilityCheckbox = styled.div`
     align-items: center;
     font-size: 14px;
     margin: 5px 0 15px 0;
+`
+const BtnFieldset = styled.fieldset`
+    display: flex;
+    column-gap: 10px;
 `
 
 const PasswordResetForm = ({ setPasswordResetMode }) => {
@@ -164,7 +169,10 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
 
                 <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
 
-                <Button primary type="submit">Change password</Button>
+                <BtnFieldset>
+                    <Button primaryOutlined onClick={() => setPasswordResetMode(false)}>{`< Go back`}</Button>
+                    <Button primary type="submit">Change password</Button>
+                </BtnFieldset>
             </Form>
         </>
     )

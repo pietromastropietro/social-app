@@ -85,18 +85,20 @@ const PostInput = ({ originalPost, handlePost }) => {
 
         let postData = post;
 
-        // Upload image to AWS S3 bucket and get its url
-        // const imgUrl = await handleImageUpload(postImage);
+        if (postImage) {
+            // Upload image to AWS S3 bucket and get its url
+            // const imgUrl = await handleImageUpload(postImage);
 
-        // temp for testing
-        const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
+            // temp for testing
+            const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
 
-        if (!imgUrl) {
-            return alert("Problems uploading image"); // temp
-        } else {
-            postData.image_url = imgUrl;
+            if (!imgUrl) {
+                return alert("Problems uploading image"); // temp
+            } else {
+                postData.image_url = imgUrl;
+            }
         }
-
+        
         handlePost(postData);
     }
 
@@ -109,7 +111,7 @@ const PostInput = ({ originalPost, handlePost }) => {
                     undefined
                     :
                     <PreviewImage src={post.image_url} />
-                    // <PreviewImage src={tempImg} /> // temp for testing
+                // <PreviewImage src={tempImg} /> // temp for testing
                 :
                 <PreviewImage src={URL.createObjectURL(postImage)} />
             }

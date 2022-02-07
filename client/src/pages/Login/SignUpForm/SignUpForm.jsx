@@ -7,10 +7,12 @@ import { useState } from 'react'
 import { regex } from 'utils/constants/regex';
 import { errorMessages } from 'utils/constants/errorMessages'
 import { getMaxDob } from 'utils/dateUtil';
+import defaultUserImg from 'static/images/user.svg'
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     > textarea {
         background-color: #eef0f5;
@@ -20,6 +22,36 @@ const Form = styled.form`
 
     > button {
         margin-top: 20px;
+    }
+`
+const ImageFieldset = styled.div`
+    display: flex;
+    align-items: center;
+    column-gap: 20px;
+`
+const PreviewImage = styled.img`
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+`
+const ImageInputLabel = styled.label`
+    background-color: #23b7f1;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+        background-color: #1d99ca;
+    }
+
+    > input {
+        display: none;
     }
 `
 const InputLabels = styled.div`
@@ -39,13 +71,21 @@ const PasswordVisibilityCheckbox = styled.div`
     font-size: 14px;
     margin-top: 5px;
 `
+const BtnFieldset = styled.fieldset`
+    display: flex;
+    column-gap: 10px;
+    margin-top: 15px;
+`
 const SignUpForm = ({ setLogin }) => {
     const [user, setUser] = useState({
         full_name: '',
         dob: '',
+        // profile_img_url: '',
         email: '',
         password: ''
     });
+
+    const [userImage, setUserImage] = useState();
 
     // state to check form fields validity and show error messages
     const [formValidity, setFormValidity] = useState({
@@ -82,6 +122,17 @@ const SignUpForm = ({ setLogin }) => {
         }
     };
 
+    // handle post image input
+    const handleImageInput = (e) => {
+        if (userImage) {
+            // if user already uploaded an image, remove it
+            setUserImage(undefined);
+        } else {
+            // add user profile image
+            setUserImage(e.target.files[0]);
+        }
+    };
+
     // validate fields when user leaves an input field
     const validateOnBlur = (e) => {
         const { name, value } = e.target;
@@ -107,6 +158,21 @@ const SignUpForm = ({ setLogin }) => {
 
     const signUpUser = async () => {
         try {
+            // If user chose a profile image, upload it
+            if (userImage) {
+                // Upload profile image to AWS S3 bucket and get its url
+                // const imgUrl = await handleImageUpload(userImage);
+
+                // temp for testing
+                const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
+
+                if (!imgUrl) {
+                    return alert("Problems uploading image"); // temp
+                } else {
+                    setUser({ ...user, profile_img_url: imgUrl })
+                }
+            }
+
             const res = await axios.post('http://localhost:4000/api/register', user);
 
             if (res.data.message === "User already exists. Please login") {
@@ -127,23 +193,29 @@ const SignUpForm = ({ setLogin }) => {
 
     return (
         <Form onSubmit={checkFormValidity}>
+            <ImageFieldset>
+                {!userImage ?
+                    <>
+                        <PreviewImage src={defaultUserImg} />
+
+                        <ImageInputLabel htmlFor='userImage'>
+                            Add profile image
+                            <input type="file" name='userImage' id='userImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
+                        </ImageInputLabel>
+                    </>
+                    :
+                    <>
+                        <PreviewImage src={URL.createObjectURL(userImage)} />
+                        <Button primary width='140px' type='button' onClick={handleImageInput}>Remove image</Button>
+                    </>
+                }
+            </ImageFieldset>
+
             <InputLabels>
                 <label htmlFor="full_name">Full Name *</label>
                 <ErrorMsg>{formValidity.full_name || errorMessages.full_name}</ErrorMsg>
             </InputLabels>
             <Input type="text" name="full_name" onChange={handleInput} onBlur={validateOnBlur} value={user.full_name} required />
-
-            {/* <Label htmlFor="first_name">First Name *</Label>
-                <Input type="text" name="first_name" onChange={handleInput} value={user.first_name} /> */}
-
-            {/* <Label htmlFor="last_name">Last Name *</Label>
-                <Input type="text" name="last_name" onChange={handleInput} value={user.last_name} /> */}
-
-            {/* <Label htmlFor="username">Username *</Label>
-                <Input type="text" name="username" onChange={handleInput} value={user.username} /> */}
-
-            {/* <Label htmlFor="bio">Bio</Label>
-                <textarea rows='3' name="bio" placeholder='Tell us something about you!' onChange={handleInput} value={user.bio}></textarea> */}
 
             <InputLabels>
                 <label htmlFor="dob">Date of birth *</label>
@@ -171,7 +243,10 @@ const SignUpForm = ({ setLogin }) => {
                 <label htmlFor="showPassword">Show password</label>
             </PasswordVisibilityCheckbox>
 
-            <Button primary type="submit">Register</Button>
+            <BtnFieldset>
+                <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>
+                <Button primary type="submit">Register</Button>
+            </BtnFieldset>
         </Form>
     )
 }
