@@ -1,159 +1,131 @@
 import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
-import Image from 'components/Image'
-import { radius, color } from 'style'
 import { useState } from 'react'
-import axios from 'axios'
 
-const StyledPostInput = styled.div`
-    background-color: white;
-    border-radius: ${radius.primary};
-    padding: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+const PostForm = styled.form`
     display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    width: 100%;
 
-    > p {
-        display: flex;
-        align-items: center;
-        border-radius: 10px;
-        padding: 0 10px;
-        width: 100%;
+    > textarea {
         background-color: #eef0f5;
-        margin-left: 10px;
-        color: grey;
+        box-sizing: border-box;
+        border-radius: 10px;
+        width: 100%;
+        padding: 10px;
+    }
+`
+const BtnFieldset = styled.fieldset`
+    display: flex;
+    justify-content: space-between;
+    column-gap: 10px;
+
+    // temp
+    > button {
+        width: 150px;
+    }
+`
+const PreviewImage = styled.img`
+    align-self: center;
+    max-width: 100%;
+    heigth: auto;
+    border-radius: 10px;
+`
+const ImageInputLabel = styled.label`
+    background-color: #23b7f1;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .2s;
+
+    &:hover {
+        background-color: #1d99ca;
     }
 
-    > form {
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-        align-items: flex-end;
-        margin-left: 10px;
-        width: 100%;
-
-        > fieldset {
-            display: flex;
-            column-gap: 10px;
-            width: 300px;
-        }
-
-        > textarea {
-            background-color: #eef0f5;
-            box-sizing: border-box;
-            border-radius: 10px;
-            width: 100%;
-            padding: 10px;
-        }
+    > input {
+        display: none;
     }
 `
 
-const PostInput = ({ createPost }) => {
-    let user = JSON.parse(localStorage.getItem('user')) || undefined;
-    
-    const [post, setPost] = useState({
-        text: "",
-        image_url: undefined
-    });
-
+const PostInput = ({ originalPost, handlePost }) => {
+    const [post, setPost] = useState(originalPost || { text: "", image_url: "" });
     const [postImage, setPostImage] = useState();
 
-    const [postInputMode, setPostInputMode] = useState(false);
-
-    // handle post input
+    // handle post text input
     const handleInput = (e) => {
-        const { name, value } = e.target;
-
-        setPost({
-            ...post,
-            [name]: value
-        })
+        setPost({ ...post, text: e.target.value })
     };
 
-    // handle image input
+    // handle post image input
     const handleImageInput = (e) => {
-        setPostImage(e.target.files[0]);
+        if (postImage) {
+            // if user uploaded an image during post editing/creation, remove it
+            setPostImage(undefined);
+        } else {
+            if (post.image_url !== "") {
+                // if post already had an image, remove it
+                setPost({ ...post, image_url: "" })
+            } else {
+                // add post image
+                setPostImage(e.target.files[0]);
+            }
+        }
     };
 
-    // handle post form submit
+    // handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (postImage === null) {
-            return alert("Problems with image, please retry"); // temp
-        };
+        let postData = post;
 
         // Upload image to AWS S3 bucket and get its url
-        const imgUrl = await handleImageUpload(postImage);
+        // const imgUrl = await handleImageUpload(postImage);
+
+        // temp for testing
+        const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
 
         if (!imgUrl) {
             return alert("Problems uploading image"); // temp
+        } else {
+            postData.image_url = imgUrl;
         }
 
-        setPostInputMode(false);
-        createPost(post);
-
-        // reset input fields
-        setPost({
-            text: "",
-            image_url: undefined
-        });
-    }
-
-    // Upload image to AWS S3 bucket
-    const handleImageUpload = async (image) => {
-        try {
-            // Get a pre-signed AWS url to upload an image
-            let res = await axios.get(`http://localhost:4000/api/aws-url?file-name=${image.name}&file-type=${image.type}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            const { url: imgUrl, signedRequest } = res.data.returnData;
-
-            if (!signedRequest) {
-                console.log("Couldn't get signed url");
-                return;
-            }
-
-            // Upload image with the pre-signed url
-            res = await axios.put(signedRequest, image, {
-                headers: {
-                    'Content-Type': image.type
-                }
-            });
-
-            if (res.status !== 200) {
-                console.log("Couldn't upload image");
-                return;
-            }
-
-            return imgUrl;
-        } catch (err) {
-            console.log(err.message);
-        }
+        handlePost(postData);
     }
 
     return (
-        <StyledPostInput>
-            <Image />
+        <PostForm onSubmit={handleSubmit}>
+            <textarea autoFocus rows='3' name='text' placeholder="What's on your mind?" value={post.text} onChange={handleInput} />
 
-            {postInputMode ?
-                <form onSubmit={handleSubmit}>
-                    <textarea autoFocus rows='3' name='text' value={post.text} onChange={handleInput} />
-                    
-                    <input type="file" name="postImage" onChange={handleImageInput} />
-
-                    <fieldset>
-                        <Button primary type='button'>Add an image</Button>
-                        <Button primary type='submit'>Post</Button>
-                    </fieldset>
-                </form>
+            {!postImage ?
+                post.image_url === "" ?
+                    undefined
+                    :
+                    <PreviewImage src={post.image_url} />
+                    // <PreviewImage src={tempImg} /> // temp for testing
                 :
-                <p onClick={() => setPostInputMode(true)}>What's on your mind?</p>
+                <PreviewImage src={URL.createObjectURL(postImage)} />
             }
-        </StyledPostInput>
+
+            <BtnFieldset>
+                {!postImage && post.image_url === "" ?
+                    <ImageInputLabel htmlFor='postImage'>
+                        Add an Image
+                        <input type="file" name='postImage' id='postImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
+                    </ImageInputLabel>
+                    :
+                    <Button primary type='button' onClick={handleImageInput}>Remove image</Button>
+                }
+                <Button primary type='submit'>Post</Button>
+            </BtnFieldset>
+        </PostForm>
     )
 }
 

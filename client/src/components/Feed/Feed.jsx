@@ -4,16 +4,38 @@ import PostInput from 'components/Post/PostInput'
 import Post from '../Post/Post'
 import styled from 'styled-components'
 import axios from 'axios'
+import { radius, color } from 'style'
 import { useParams } from 'react-router-dom'
+import Image from 'components/Image'
 
 const StyledFeed = styled.div`
     margin: 0 20px;
     width: 850px;
 `
+const NewPostInputContainer = styled.div`
+    background-color: white;
+    border-radius: ${radius.primary};
+    padding: 10px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    display: flex;
+    column-gap: 10px;
+
+    > p {
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        padding: 0 10px;
+        width: 100%;
+        background-color: #eef0f5;
+        margin-left: 10px;
+        color: grey;
+    }
+`
 
 const Feed = ({ userId }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
     const [posts, setPosts] = useState([]);
+    const [postInputMode, setPostInputMode] = useState(false);
 
     const getPosts = async () => {
         let path;
@@ -44,6 +66,8 @@ const Feed = ({ userId }) => {
     }, []);
 
     const createPost = async (post) => {
+        setPostInputMode(false);
+
         try {
             const res = await axios.post('http://localhost:4000/api/posts', {
                 userId: user.id,
@@ -85,7 +109,6 @@ const Feed = ({ userId }) => {
     const updatePost = async (post) => {
         const updatedPost = {
             text: post.text,
-            likes: post.likes, // temp, will remove 'likes' field from db table
             image_url: post.image_url,
             updated_at: new Date()
         };
@@ -105,8 +128,6 @@ const Feed = ({ userId }) => {
 
                 // set the updated posts array as state array to trigger component update 
                 setPosts(newPosts);
-
-                console.log(res.data.message); // temp
             }
         } catch (err) {
             console.log(err);
@@ -123,10 +144,19 @@ const Feed = ({ userId }) => {
             Logged in user can create a post only on the homepage or on its personal profile, not on other users' profiles.
             If userIdParam is undefined, user is on the homepage, if it equals logged in user's id, he's on its own profile.
             */}
-            {!userIdParam || (userIdParam == user.id) ?
-                <PostInput createPost={createPost} />
+            {(!userIdParam || userIdParam == user.id) ?
+                <NewPostInputContainer>
+                    <Image />
+
+                    {postInputMode ?
+                        <PostInput handlePost={createPost} />
+                        :
+                        <p onClick={() => setPostInputMode(true)}>What's on your mind?</p>
+                    }
+                </NewPostInputContainer>
                 : undefined
             }
+
             {posts.map(post =>
                 <Post
                     key={post.id}

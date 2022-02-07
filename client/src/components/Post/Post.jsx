@@ -4,7 +4,6 @@ import Image from 'components/Image'
 import Comments from './Comments/Comments'
 import { radius, color } from 'style'
 import { useState } from 'react'
-import Button from 'components/Button/Button'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { handleLike } from 'utils/likeUtil'
@@ -14,6 +13,8 @@ import commentIcon from 'static/images/comment.svg'
 import likeIcon from 'static/images/like.svg'
 import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
+import tempImg from 'static/images/temp2.jpg'
+import PostInput from './PostInput'
 
 const StyledPost = styled.div`
     background-color: white;
@@ -41,24 +42,16 @@ const PostAuthorAndDate = styled.div`
     text-transform: capitalize;
     margin-left: 10px;
 `
-const PostText = styled.div`
-    margin-bottom: 10px;
-`
 const PostMain = styled.div`
-    > form {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        row-gap: 5px;
-    
-        > textarea {
-            border: 1px solid grey;
-            box-sizing: border-box;
-            border-radius: 10px;
-            width: 100%;
-            padding: 5px;
-        }
-    }
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+`
+const PostImage = styled.img`
+    align-self: center;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 `
 const PostFooter = styled.div`
     display: flex;
@@ -181,16 +174,6 @@ const Post = ({ postContent, deletePost, updatePost }) => {
         getPostLikes();
     }, []);
 
-    // handle input on post edit
-    const handleInput = (e) => {
-        const { name, value } = e.target;
-
-        setPost({
-            ...post,
-            [name]: value
-        });
-    }
-
     // handle user click on 'like' button
     const onPostLike = async () => {
         /*
@@ -211,9 +194,10 @@ const Post = ({ postContent, deletePost, updatePost }) => {
         deletePost(post.id)
     }
 
-    const submitPostEdit = (post) => {
+    const submitPostEdit = (editedPost) => {
         setPostEditMode(false);
-        updatePost(post);
+        setPost(editedPost);
+        updatePost(editedPost);
     };
 
     return (
@@ -248,13 +232,14 @@ const Post = ({ postContent, deletePost, updatePost }) => {
 
             <PostMain>
                 {postEditMode ?
-                    <form>
-                        <textarea autoFocus rows='3' value={post.text} name="text" onChange={handleInput} />
-                        <Button primary type='button' onClick={() => submitPostEdit(post)}>Confirm</Button>
-                    </form>
+                    <PostInput originalPost={post} handlePost={submitPostEdit} />
                     :
                     <>
-                        <PostText>{post.text}</PostText>
+                        <p>{post.text}</p>
+                        <PostImage src={post.image_url} alt='' />
+                        
+                        {/* temp for testing */}
+                        {/* <PostImage src={tempImg} alt='post image' /> */}
                     </>
                 }
             </PostMain>
