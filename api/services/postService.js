@@ -65,7 +65,7 @@ const createPost = async ({ userId, postData })  => {
         id: tempId, // temp
         user_id: userId,
         text: postData.text,
-        imgUrl: postData.imgUrl,
+        image_url: postData.image_url,
         created_at: new Date(),
         updated_at: new Date()
     };
@@ -78,7 +78,6 @@ const createPost = async ({ userId, postData })  => {
         // fetch and return newly created post
         return await getPost(post.id);
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };
@@ -86,8 +85,8 @@ const createPost = async ({ userId, postData })  => {
 const updatePost = async (postId, postData)  => {
     const query = 
     `UPDATE posts 
-    SET text = $1, likes = $2, image_url = $3, updated_at = $4
-    WHERE id = $5`;
+    SET text = $1, image_url = $2, updated_at = $3
+    WHERE id = $4`;
 
     try {
         const params = Object.values(postData)
