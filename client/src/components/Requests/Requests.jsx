@@ -5,6 +5,7 @@ import Request from './Request/Request'
 import { radius, color } from 'style'
 
 const Container = styled.div`
+    box-sizing:border-box;
     background-color: white;
     border-radius: ${radius.primary};
     padding: 15px;

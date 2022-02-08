@@ -22,7 +22,6 @@ const Menu = styled.ul`
         height: 25px;
         opacity: 0.6;
     }
-
 `
 const NaviLink = styled(NavLink)`
     display: flex;
@@ -64,6 +63,22 @@ const Navbar = () => {
                 <NaviLink to={`users/${userProfilePath}`}>
                     <img src={profileIcon} />
                     <p>Profile</p>
+                </NaviLink>
+            </li>
+
+            {/* link only for mobile */}
+            <li>
+                <NaviLink to={`${userProfilePath}/friends`}>
+                    <img src={profileIcon} />
+                    <p>Friends</p>
+                </NaviLink>
+            </li>
+
+            {/* link only for mobile */}
+            <li>
+                <NaviLink to={`${userProfilePath}/requests`}>
+                    <img src={profileIcon} />
+                    <p>Requests</p>
                 </NaviLink>
             </li>
 

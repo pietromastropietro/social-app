@@ -5,13 +5,21 @@ import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import Feed from 'components/Feed/Feed'
-import tempImg from 'static/images/temp.jpg'
+import defaultUserImg from 'static/images/user.svg'
 import Button from 'components/Button/Button'
 import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
 
 const StyledProfile = styled.div`
+    grid-column: 2 / 3;
     max-width: 850px;
+    // temp, will remove when adding media queries
+    min-width: 500px;
+    margin: 0 15px;
     
+    // temp
+    /* @media (max-width: 1400px) {
+        grid-column: 2 / 4;
+    } */
 `
 const ProfileHeader = styled.div`
     display: flex;
@@ -19,7 +27,7 @@ const ProfileHeader = styled.div`
     justify-content: space-between;
     background-color: white;
     padding: 10px;
-    margin: 0 20px 20px 20px;
+    margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
     
@@ -69,8 +77,6 @@ const BtnContainer = styled.div`
     width: 135px;
 `
 const ProfileBody = styled.div`
-    display: flex;
-    justify-content: space-between;
 `
 
 const UserProfile = () => {
@@ -236,7 +242,7 @@ const UserProfile = () => {
             <StyledProfile>
                 <ProfileHeader>
                     <div>
-                        <img src={tempImg} />
+                        <img src={user.profile_img_url ? user.profile_img_url : defaultUserImg} />
 
                         <div>
                             <UserName>
@@ -268,7 +274,7 @@ const UserProfile = () => {
             <StyledProfile>
                 <ProfileHeader>
                     <div>
-                        <img src={tempImg} />
+                        <img src={visitedUserProfileInfo?.profile_img_url ? visitedUserProfileInfo?.profile_img_url : defaultUserImg} />
 
                         <div>
                             <UserName>

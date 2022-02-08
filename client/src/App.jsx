@@ -9,15 +9,18 @@ import LoginIndex from './pages/Login/LoginIndex';
 import Header from './layout/Header/Header'
 import Home from "./pages/Home/Home";
 import UserProfile from './pages/UserProfile/UserProfile'
+import Requests from "components/Requests/Requests";
+import FriendsList from "components/FriendsList/FriendsList";
 
 
 const MainContainer = styled.div`
-    display: flex;
-    justify-content: center;
     align-self: center;
+    display: grid;
+    grid-template-columns: 250px auto 250px;
+    justify-content: center;
     background-color: #f9fafb;
     width: 90%;
-    padding: 15px 20px;
+    padding: 15px;
 `
 
 // Context export
@@ -50,6 +53,10 @@ const App = () => {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/users/:username" element={<UserProfile />} />
+
+                            {/* following routes are only for mobile */}
+                            <Route path="/:username/friends" element={<FriendsList />} />
+                            <Route path="/:username/requests" element={<Requests />} />
                         </Routes>
                     </MainContainer>
                 </>

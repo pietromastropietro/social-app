@@ -4,19 +4,28 @@ import Requests from 'components/Requests/Requests';
 import Suggested from 'components/Suggested/Suggested';
 import styled from 'styled-components';
 
-const Sidebar = styled.div`
-    width: 250px;
-    min-width: 250px;
+const Main = styled.div`
+    grid-column: 2 / 3;
+    margin: 0 15px;
+`
+const LeftSidebar = styled.div`
+    grid-column: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
 `
 
 const Home = () => {
     return (
         <>
-            <Feed />
-            <Sidebar>
+            <Main>
+                <Feed />
+            </Main>
+
+            <LeftSidebar>
                 <Requests />
                 <Suggested />
-            </Sidebar>
+            </LeftSidebar>
         </>
     )
 }

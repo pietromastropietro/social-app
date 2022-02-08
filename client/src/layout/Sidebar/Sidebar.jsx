@@ -4,8 +4,10 @@ import Navbar from './Navbar/Navbar'
 import FriendsList from 'components/FriendsList/FriendsList'
 
 const StyledSidebar = styled.div`
-    width: 250px;
-    min-width: 250px;
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
 `
 
 const Sidebar = () => {

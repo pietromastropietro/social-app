@@ -9,8 +9,8 @@ import { useParams } from 'react-router-dom'
 import Image from 'components/Image'
 
 const StyledFeed = styled.div`
-    margin: 0 20px;
-    width: 850px;
+    max-width: 850px;
+    min-width: 500px;
 `
 const NewPostInputContainer = styled.div`
     background-color: white;

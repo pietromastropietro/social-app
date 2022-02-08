@@ -6,10 +6,10 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const Container = styled.div`
+    box-sizing:border-box;
     background-color: ${color.component};
     border-radius: ${radius.secondary};
     padding: 15px;
-    margin: 10px 0;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 
     > h3 {

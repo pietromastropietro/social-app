@@ -32,6 +32,7 @@ const ImageFieldset = styled.div`
 const PreviewImage = styled.img`
     width: 90px;
     height: 90px;
+    object-fit: cover;
     border-radius: 50%;
 `
 const ImageInputLabel = styled.label`
@@ -80,7 +81,7 @@ const SignUpForm = ({ setLogin }) => {
     const [user, setUser] = useState({
         full_name: '',
         dob: '',
-        // profile_img_url: '',
+        profile_img_url: '',
         email: '',
         password: ''
     });
@@ -122,13 +123,13 @@ const SignUpForm = ({ setLogin }) => {
         }
     };
 
-    // handle post image input
+    // handle user profile image input
     const handleImageInput = (e) => {
         if (userImage) {
-            // if user already uploaded an image, remove it
+            // remove image previously uploaded by user
             setUserImage(undefined);
         } else {
-            // add user profile image
+            // add new profile image
             setUserImage(e.target.files[0]);
         }
     };
@@ -157,14 +158,15 @@ const SignUpForm = ({ setLogin }) => {
     };
 
     const signUpUser = async () => {
-        try {
-            // If user chose a profile image, upload it
+        try {            
             if (userImage) {
+                // User chose a profile image, upload it and save its url
+                
                 // Upload profile image to AWS S3 bucket and get its url
                 // const imgUrl = await handleImageUpload(userImage);
 
                 // temp for testing
-                const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
+                const imgUrl = ''
 
                 if (!imgUrl) {
                     return alert("Problems uploading image"); // temp

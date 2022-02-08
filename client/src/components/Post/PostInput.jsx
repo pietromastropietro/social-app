@@ -66,14 +66,14 @@ const PostInput = ({ originalPost, handlePost }) => {
     // handle post image input
     const handleImageInput = (e) => {
         if (postImage) {
-            // if user uploaded an image during post editing/creation, remove it
+            // remove image previously uploaded by user
             setPostImage(undefined);
         } else {
-            if (post.image_url !== "") {
-                // if post already had an image, remove it
+            if (post.image_url) {
+                // remove old post image
                 setPost({ ...post, image_url: "" })
             } else {
-                // add post image
+                // add new post image
                 setPostImage(e.target.files[0]);
             }
         }
@@ -90,7 +90,7 @@ const PostInput = ({ originalPost, handlePost }) => {
             // const imgUrl = await handleImageUpload(postImage);
 
             // temp for testing
-            const imgUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzTP2mJsLyALmk94HwCodfgLJ61e_2hseLVBcijATdzywi7d-KfBXH6REiXKS3B8wZtHg&usqp=CAU'
+            const imgUrl = ''
 
             if (!imgUrl) {
                 return alert("Problems uploading image"); // temp
@@ -107,7 +107,7 @@ const PostInput = ({ originalPost, handlePost }) => {
             <textarea autoFocus rows='3' name='text' placeholder="What's on your mind?" value={post.text} onChange={handleInput} />
 
             {!postImage ?
-                post.image_url === "" ?
+                !post.image_url ?
                     undefined
                     :
                     <PreviewImage src={post.image_url} />
@@ -117,7 +117,7 @@ const PostInput = ({ originalPost, handlePost }) => {
             }
 
             <BtnFieldset>
-                {!postImage && post.image_url === "" ?
+                {!postImage && !post.image_url ?
                     <ImageInputLabel htmlFor='postImage'>
                         Add an Image
                         <input type="file" name='postImage' id='postImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
