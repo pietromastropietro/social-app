@@ -8,6 +8,8 @@ import tempImg from 'static/images/temp.jpg'
 import Overlay from 'components/Overlay/Overlay';
 import Button from 'components/Button/Button'
 import UserLink from 'components/UserLink/UserLink'
+import { breakpoint } from 'style'
+import menuIcon from 'static/images/menu.svg'
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
@@ -20,17 +22,12 @@ const StyledHeader = styled.header`
     z-index: 1;
 
     > div {
-        width: 90%;
+        width: 100%;
+        max-width: 1350px;
         display: flex;
         justify-content: space-between;
         align-items:center;
-    }
-
-    input {
-        background-color: #eef0f5;
-        width: 300px;
-        padding: 10px 20px;
-        border-radius: 20px;
+        margin: 0 15px;
     }
 `
 const LogoLink = styled(Link)`
@@ -40,10 +37,26 @@ const LogoLink = styled(Link)`
     > img {
         height: 35px;
     }
+
+    @media (max-width: ${breakpoint.primary}) {
+        display: none;
+    }
+`
+const Menu = styled.div`
+    > img {
+        height: 35px;
+    }
+    /* width: 35px; */
 `
 const SearchMenu = styled.div`
     position: relative;
-    
+
+    input {
+        background-color: #eef0f5;
+        width: 300px;
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
 `
 const Results = styled.div`
     box-sizing: border-box;
@@ -91,11 +104,11 @@ const UserProfileLink = styled(Link)`
         text-transform: capitalize;
         font-size: 20px;
         font-weight: 600;
-    }
-`
-const BtnContainer = styled.div`
-    width: 50px;
 
+        @media (max-width: ${breakpoint.primary}) {
+            display: none;
+        }
+    }
 `
 
 const Header = () => {
@@ -136,8 +149,12 @@ const Header = () => {
         <StyledHeader>
             <div>
                 <LogoLink to='/'>
-                    <img src={logo} alt="socially" />
+                    <img src={logo} alt="socially website logo" />
                 </LogoLink>
+
+                <Menu>
+                    <img src={menuIcon} />
+                </Menu>
 
                 <SearchMenu>
                     <form onSubmit={onUserSearchSubmit}>
@@ -158,9 +175,7 @@ const Header = () => {
                                                     <div onClick={() => setResultsVisibility(false)}>
                                                         <UserLink user={user} />
                                                     </div>
-                                                    <BtnContainer>
-                                                        <Button primaryOutlined small>Add</Button>
-                                                    </BtnContainer>
+                                                    <Button width='50px' primaryOutlined small>Add</Button>
                                                 </li>
                                             )}
                                         </ul>
@@ -171,19 +186,6 @@ const Header = () => {
                         </Overlay>
                         : undefined
                     }
-
-                    {/* {!users.length ?
-                        <p>No user found</p>
-                        :
-                        <Results>
-                            {users.map(user =>
-                                <li key={user.id}>
-                                    <Contact user={user} />
-                                    <button>Add</button>
-                                </li>
-                            )}
-                        </Results>
-                    } */}
                 </SearchMenu>
 
                 <UserProfileLink to={`users/${profilePath}`}>

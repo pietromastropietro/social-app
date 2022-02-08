@@ -11,6 +11,7 @@ import Home from "./pages/Home/Home";
 import UserProfile from './pages/UserProfile/UserProfile'
 import Requests from "components/Requests/Requests";
 import FriendsList from "components/FriendsList/FriendsList";
+import { breakpoint } from 'style'
 
 
 const MainContainer = styled.div`
@@ -19,8 +20,11 @@ const MainContainer = styled.div`
     grid-template-columns: 250px auto 250px;
     justify-content: center;
     background-color: #f9fafb;
-    width: 90%;
     padding: 15px;
+
+    @media (max-width: ${breakpoint.primary}) {
+        display: flex;
+    }
 `
 
 // Context export

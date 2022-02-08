@@ -12,14 +12,11 @@ import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
 const StyledProfile = styled.div`
     grid-column: 2 / 3;
     max-width: 850px;
-    // temp, will remove when adding media queries
-    min-width: 500px;
     margin: 0 15px;
     
-    // temp
-    /* @media (max-width: 1400px) {
+    @media (max-width: 1300px) {
         grid-column: 2 / 4;
-    } */
+    }
 `
 const ProfileHeader = styled.div`
     display: flex;
