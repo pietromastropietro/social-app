@@ -8,10 +8,11 @@ import Feed from 'components/Feed/Feed'
 import defaultUserImg from 'static/images/user.svg'
 import Button from 'components/Button/Button'
 import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
+import { breakpoint } from 'style'
 
 const StyledProfile = styled.div`
     grid-column: 2 / 3;
-    max-width: 850px;
+    /* width: 850px; */
     margin: 0 15px;
     
     @media (max-width: 1300px) {
@@ -20,60 +21,50 @@ const StyledProfile = styled.div`
 `
 const ProfileHeader = styled.div`
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    background-color: white;
+    row-gap: 10px;
+    background-color: #fff;
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
-    
-    > div {
-        display: flex;
-        align-items: center;
-        
-        > div {
-            width: 500px;
-        }
 
-        > img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-        }
-
-        > p {
-            text-transform: capitalize;
-            font-size: 35px;
-            font-weight: 600;
-            margin-left: 15px;
-
-            span {
-                text-transform: none;
-                font-size: 16px;
-                font-weight: 500;
-                color: grey;
-            }
-        }
+    > img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
     }
 `
-const UserName = styled.p`
-    text-transform: capitalize;
-    font-size: 35px;
+const UserName = styled.h2`
+    font-size: 40px;
     font-weight: 600;
-    margin-left: 15px;
-`
-const Bio = styled.p`
-    color: grey;
-    margin-left: 15px;
+    text-transform: capitalize;
+    text-align: center;
 `
 const BtnContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    width: 135px;
+    column-gap: 10px;
+`
+const Bio = styled.p`
+    box-sizing: border-box;
+    background-color: #eef0f5;
+    padding: 10px;
+    border-radius: 10px;
 `
 const ProfileBody = styled.div`
+`
+const NoFriendsMsg = styled.p`
+    background-color: #fff;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+
+    > span {
+        text-transform: capitalize;
+    }
 `
 
 const UserProfile = () => {
@@ -238,22 +229,20 @@ const UserProfile = () => {
         return (
             <StyledProfile>
                 <ProfileHeader>
-                    <div>
-                        <img src={user.profile_img_url ? user.profile_img_url : defaultUserImg} />
+                    <img src={user.profile_img_url ? user.profile_img_url : defaultUserImg} />
 
-                        <div>
-                            <UserName>
-                                {user.first_name} {user.last_name}
-                            </UserName>
+                    <UserName>
+                        {user.first_name} {user.last_name}
+                    </UserName>
 
-                            <p>{user.bio}</p>
-                        </div>
-                    </div>
-                    <BtnContainer>
-                        <Button primaryOutlined onClick={() => setProfileEditMode(!profileEditMode)}>
-                            {profileEditMode ? "Close profile Edit" : "Edit profile"}
-                        </Button>
-                    </BtnContainer>
+                    <Button width='135px' primaryOutlined onClick={() => setProfileEditMode(!profileEditMode)}>
+                        {profileEditMode ? "Close profile Edit" : "Edit profile"}
+                    </Button>
+
+                    <Bio>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </Bio>
+                    {/* <Bio>{user.bio}</Bio> */}
                 </ProfileHeader>
 
                 <ProfileBody>
@@ -270,36 +259,35 @@ const UserProfile = () => {
         return (
             <StyledProfile>
                 <ProfileHeader>
-                    <div>
-                        <img src={visitedUserProfileInfo?.profile_img_url ? visitedUserProfileInfo?.profile_img_url : defaultUserImg} />
+                    <img src={visitedUserProfileInfo?.profile_img_url ? visitedUserProfileInfo?.profile_img_url : defaultUserImg} />
 
-                        <div>
-                            <UserName>
-                                {visitedUserProfileInfo?.first_name} {visitedUserProfileInfo?.last_name}
-                            </UserName>
-
-                            <Bio>{visitedUserProfileInfo?.bio}</Bio>
-                        </div>
-                    </div>
+                    <UserName>
+                        {visitedUserProfileInfo?.first_name} {visitedUserProfileInfo?.last_name}
+                    </UserName>
 
                     {relationshipStatus == 'Friends request received' ?
                         <BtnContainer>
-                            <Button primary onClick={updateRelationship}>Accept request</Button>
-                            <Button warningOutlined onClick={deleteRelationship}>Decline request</Button>
+                            <Button width='150px' primary onClick={updateRelationship}>Accept request</Button>
+                            <Button width='150px' warningOutlined onClick={deleteRelationship}>Decline request</Button>
                         </BtnContainer>
                         :
-                        <Button primaryOutlined
+                        <Button primaryOutlined width='170px'
                             onMouseOver={handleHoverOnRelationshipStatusBtn}
                             onMouseOut={(e) => e.target.textContent = relationshipStatus}
                             onClick={handleRelationship}>
                             {relationshipStatus}
                         </Button>
                     }
+
+                    {/* <Bio>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </Bio> */}
+                    {/* <Bio>{visitedUserProfileInfo?.bio}</Bio> */}
                 </ProfileHeader>
 
                 <ProfileBody>
                     {relationshipStatus != 'Friends' ?
-                        <div>You must be friend with {visitedUserProfileInfo?.first_name} to see the posts.</div>
+                        <NoFriendsMsg>You must be friend with <span>{visitedUserProfileInfo?.first_name}</span> to see the posts</NoFriendsMsg>
                         :
                         <Feed userId={userIdParam} />
                     }

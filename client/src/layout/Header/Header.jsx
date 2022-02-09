@@ -245,7 +245,7 @@ const Header = () => {
                             <img src={closeIcon} alt="" />
                         </SidebarHeader>
                         
-                        <Navbar mobile />
+                        <Navbar type='mobile' />
                     </MobileSidebar>
                     : undefined
                 }

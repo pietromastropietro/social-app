@@ -1,12 +1,10 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { NavLink } from "react-router-dom";
-import { boxShadow, radius } from '../../../style'
-
+import { boxShadow, radius, breakpoint } from '../../../style'
 import homeIcon from 'static/images/home.svg'
 import profileIcon from 'static/images/profile.svg'
 import logoutIcon from 'static/images/logout.svg'
-
 
 const Menu = styled.ul`
     background-color: #ffffff;
@@ -14,15 +12,17 @@ const Menu = styled.ul`
     flex-direction: column;
     row-gap: 5px;
     padding: 15px 10px;
-    
-    ${props => props.desktop && css`
-        border-radius: ${radius.primary};
-        ${boxShadow.primary}
-    `}
 
-    ${props => props.mobile && css`
+    // Styling for desktop
+    @media (min-width: ${breakpoint.primary}) {
+        border-radius: ${radius.primary};
+        ${boxShadow.primary};
+    }
+    
+    // Styling for mobile
+    @media (max-width: ${breakpoint.primary}) {
         border-radius: 0 0 ${radius.primary} 0;
-    `}
+    }
     
     img {
         width: 25px;
@@ -46,9 +46,9 @@ const NaviLink = styled(NavLink)`
     &.active {
         background-color: #eef0f5;
     }
-`;
+`
 
-const Navbar = (props) => {
+const Navbar = ({ type }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
     const userProfilePath = `${user.first_name}${user.last_name}-${user.id}`
 
@@ -58,7 +58,7 @@ const Navbar = (props) => {
     };
 
     return (
-        <Menu {...props} >
+        <Menu>
             <li>
                 <NaviLink to="/">
                     <img src={homeIcon} />
@@ -73,21 +73,24 @@ const Navbar = (props) => {
                 </NaviLink>
             </li>
 
-            {/* link only for mobile */}
-            <li>
-                <NaviLink to={`${userProfilePath}/friends`}>
-                    <img src={profileIcon} />
-                    <p>Friends</p>
-                </NaviLink>
-            </li>
+            {type === 'mobile' ?
+                <>
+                    <li>
+                        <NaviLink to={`${userProfilePath}/friends`}>
+                            <img src={profileIcon} />
+                            <p>Friends</p>
+                        </NaviLink>
+                    </li>
 
-            {/* link only for mobile */}
-            <li>
-                <NaviLink to={`${userProfilePath}/requests`}>
-                    <img src={profileIcon} />
-                    <p>Requests</p>
-                </NaviLink>
-            </li>
+                    <li>
+                        <NaviLink to={`${userProfilePath}/requests`}>
+                            <img src={profileIcon} />
+                            <p>Requests</p>
+                        </NaviLink>
+                    </li>
+                </>
+                : undefined
+            }
 
             <li>
                 <NaviLink to='/login' onClick={logout}>
@@ -95,7 +98,7 @@ const Navbar = (props) => {
                     <p>Logout</p>
                 </NaviLink>
             </li>
-        </Menu>
+        </Menu >
     )
 }
 

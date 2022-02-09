@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
         display: flex;
         flex-direction: column;
     }
-    p {
+    p, h2 {
         margin: 0;
         padding: 0;
         border: 0;

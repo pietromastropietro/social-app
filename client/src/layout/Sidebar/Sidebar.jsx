@@ -18,7 +18,7 @@ const StyledSidebar = styled.div`
 const Sidebar = () => {
     return (
         <StyledSidebar>
-            <Navbar desktop />
+            <Navbar type='desktop' />
             <FriendsList />
         </StyledSidebar>
     )

@@ -4,13 +4,13 @@ import PostInput from 'components/Post/PostInput'
 import Post from '../Post/Post'
 import styled from 'styled-components'
 import axios from 'axios'
-import { radius, color } from 'style'
+import { radius, color, breakpoint } from 'style'
 import { useParams } from 'react-router-dom'
 import Image from 'components/Image'
 
 const StyledFeed = styled.div`
     max-width: 850px;
-    min-width: 500px;
+    /* min-width: 500px; */
 `
 const NewPostInputContainer = styled.div`
     background-color: white;
@@ -30,6 +30,14 @@ const NewPostInputContainer = styled.div`
         margin-left: 10px;
         color: grey;
     }
+`
+const NoPostsMsg = styled.p`
+    background-color: #fff;
+    font-weight: 600;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 `
 
 const Feed = ({ userId }) => {
@@ -157,13 +165,16 @@ const Feed = ({ userId }) => {
                 : undefined
             }
 
-            {posts.map(post =>
-                <Post
-                    key={post.id}
-                    postContent={post}
-                    deletePost={deletePost}
-                    updatePost={updatePost}
-                />)
+            {posts.length ?
+                posts.map(post =>
+                    <Post
+                        key={post.id}
+                        postContent={post}
+                        deletePost={deletePost}
+                        updatePost={updatePost}
+                    />)
+                :
+                <NoPostsMsg>No posts to show</NoPostsMsg>
             }
         </StyledFeed>
     )
