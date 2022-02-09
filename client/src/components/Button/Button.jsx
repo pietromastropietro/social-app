@@ -20,10 +20,6 @@ const Button = styled.button`
         padding: 6px;
     `}
 
-    /* ${props => props.width && css`
-        padding: 6px;
-    `} */
-
     ${props => props.primary && css`
         background-color: #23b7f1;
         border-color: #23b7f1;
@@ -79,32 +75,3 @@ const Button = styled.button`
     `}
 `
 export default Button
-
-
-
-// const StyledButton = styled.button`
-//     font-family: inherit;
-//     background-color: #23b7f1;
-//     color: white;
-//     width: 100%;
-//     border: none;
-//     padding: 10px;
-//     border-radius: 10px;
-//     cursor: pointer;
-//     border:1px solid #23b7f1;
-
-//     ${props => props.theme === 'primary' ? css`
-//         background-color: black !important;
-//     `:undefined}
-// `
-
-
-// const Button = ({children}) => {
-
-//     return (
-//         <StyledButton>
-//             {children}
-//         </StyledButton>
-//     )
-// }
-// export default Button

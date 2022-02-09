@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { NavLink } from "react-router-dom";
 import { boxShadow, radius } from '../../../style'
 
@@ -14,8 +14,15 @@ const Menu = styled.ul`
     flex-direction: column;
     row-gap: 5px;
     padding: 15px 10px;
-    border-radius: ${radius.primary};
-    ${boxShadow.primary}
+    
+    ${props => props.desktop && css`
+        border-radius: ${radius.primary};
+        ${boxShadow.primary}
+    `}
+
+    ${props => props.mobile && css`
+        border-radius: 0 0 ${radius.primary} 0;
+    `}
     
     img {
         width: 25px;
@@ -41,7 +48,7 @@ const NaviLink = styled(NavLink)`
     }
 `;
 
-const Navbar = () => {
+const Navbar = (props) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
     const userProfilePath = `${user.first_name}${user.last_name}-${user.id}`
 
@@ -51,7 +58,7 @@ const Navbar = () => {
     };
 
     return (
-        <Menu>
+        <Menu {...props} >
             <li>
                 <NaviLink to="/">
                     <img src={homeIcon} />

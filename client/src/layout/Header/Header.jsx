@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
 import axios from 'axios';
@@ -10,6 +10,9 @@ import Button from 'components/Button/Button'
 import UserLink from 'components/UserLink/UserLink'
 import { breakpoint } from 'style'
 import menuIcon from 'static/images/menu.svg'
+import closeIcon from 'static/images/close1.svg'
+import Navbar from 'layout/Sidebar/Navbar/Navbar';
+import { useEffect } from 'react';
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
@@ -28,6 +31,7 @@ const StyledHeader = styled.header`
         justify-content: space-between;
         align-items:center;
         margin: 0 15px;
+        column-gap: 20px;
     }
 `
 const LogoLink = styled(Link)`
@@ -42,18 +46,79 @@ const LogoLink = styled(Link)`
         display: none;
     }
 `
-const Menu = styled.div`
-    > img {
-        height: 35px;
+const MobileSidebarBtn = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    transition: .2s;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #c0c0c0;
     }
-    /* width: 35px; */
+
+    > img {
+        height: 20px;
+    }
+
+    @media (min-width: ${breakpoint.primary}) {
+        display: none;
+    }
+`
+const MobileSidebar = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    width: 240px;
+    padding-top: 15px;
+    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: 0 0 10px 0;
+    z-index: 1;
+	animation: slide 0.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
+    @keyframes slide {
+        0% {
+            transform: scaleX(0);
+            transform-origin: 0% 0%;
+        }
+        100% {
+            transform: scaleX(1);
+            transform-origin: 0% 0%;
+        }
+    }
+
+    @media (min-width: ${breakpoint.primary}) {
+        display: none;
+    }
+`
+const SidebarHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    width: 220px;
+
+    > img {
+        height: 28px;
+
+        &:nth-child(2) {
+            cursor: pointer;
+            opacity: .8;
+        }
+    }
 `
 const SearchMenu = styled.div`
     position: relative;
-
+    width: 100%;
+    max-width: 350px;
+        
     input {
+        box-sizing: border-box;
         background-color: #eef0f5;
-        width: 300px;
+        width: 100%;
         padding: 10px 20px;
         border-radius: 20px;
     }
@@ -118,6 +183,23 @@ const Header = () => {
     const [searchedUser, setSearchedUser] = useState('');
     const [users, setUsers] = useState([])
     const [resultsVisibility, setResultsVisibility] = useState(false);
+    const [mobileSidebarVisibility, setMobileSidebarVisibility] = useState(false);
+
+    const toggleMobileSidebar = () => {
+        if (!mobileSidebarVisibility) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        setMobileSidebarVisibility(!mobileSidebarVisibility);
+    }
+
+    const mobileSidebarRef = useRef(null);
+
+    const handleClickOutside = (e) => {
+        if (mobileSidebarRef.current && !mobileSidebarRef.current.contains(e.target)) {
+            setMobileSidebarVisibility(false);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    };
 
     const getUsersByName = async (userToSearch) => {
         try {
@@ -152,9 +234,21 @@ const Header = () => {
                     <img src={logo} alt="socially website logo" />
                 </LogoLink>
 
-                <Menu>
+                <MobileSidebarBtn onClick={toggleMobileSidebar}>
                     <img src={menuIcon} />
-                </Menu>
+                </MobileSidebarBtn>
+
+                {mobileSidebarVisibility ?
+                    <MobileSidebar onClick={toggleMobileSidebar} ref={mobileSidebarRef}>
+                        <SidebarHeader>
+                            <img src={logo} alt="socially website logo" />
+                            <img src={closeIcon} alt="" />
+                        </SidebarHeader>
+                        
+                        <Navbar mobile />
+                    </MobileSidebar>
+                    : undefined
+                }
 
                 <SearchMenu>
                     <form onSubmit={onUserSearchSubmit}>
