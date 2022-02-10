@@ -7,7 +7,8 @@ import { breakpoint } from 'style'
 
 const Main = styled.div`
     grid-column: 2 / 3;
-    margin: 0 15px;
+    width: 100%;
+    box-sizing: content-box;
 `
 const LeftSidebar = styled.div`
     grid-column: 3 / 4;

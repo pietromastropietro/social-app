@@ -26,6 +26,7 @@ const RequestHeader = styled.div`
 const ProfileLink = styled(Link)`
     text-transform: capitalize;
     font-weight: 600;
+    word-break: break-all;
 
     &:hover {
         text-decoration: underline;
@@ -46,7 +47,7 @@ const Request = ({ request, acceptRequest, declineRequest }) => {
             <RequestHeader>
                 <Image />
                 <p>
-                    <ProfileLink to={`users/${path}`}>{username}</ProfileLink>
+                    <ProfileLink to={`/users/${path}`}>{username}</ProfileLink>
                     {` wants to add you to friends.`}
                 </p>
             </RequestHeader>

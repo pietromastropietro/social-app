@@ -5,15 +5,12 @@ import { color } from 'style'
 const Button = styled.button`
     font-family: inherit;
     font-weight: 600;
-    /* background-color: #23b7f1; */
-    /* color: white; */
     width: ${ props => props.width || '100%' };
-    /* width: 100%; */
-    border: none;
+    min-width: ${ props => props.width || 'unset' };
     padding: 10px;
+    border: 2px solid;
     border-radius: 10px;
     cursor: pointer;
-    border: 2px solid;
     transition: .2s;
 
     ${props => props.small && css`

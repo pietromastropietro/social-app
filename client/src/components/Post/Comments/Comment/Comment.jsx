@@ -122,6 +122,7 @@ const LikesCounter = styled.div`
     }
 `
 const CommentText = styled.p`
+    word-break: break-all;
     margin-top: 3px;
 `
 const ReplyContainer = styled.div`
@@ -368,7 +369,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
                         <form>
                             <textarea autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
-                            <Button primary type='button' onClick={createReply}>Confirm</Button>
+                            <Button width='100px' primary type='button' onClick={createReply}>Confirm</Button>
                         </form>
                     </ReplyInput>
                     : undefined

@@ -12,12 +12,7 @@ import { breakpoint } from 'style'
 
 const StyledProfile = styled.div`
     grid-column: 2 / 3;
-    /* width: 850px; */
-    margin: 0 15px;
-    
-    @media (max-width: 1300px) {
-        grid-column: 2 / 4;
-    }
+    width: 100%;
 `
 const ProfileHeader = styled.div`
     display: flex;
@@ -51,6 +46,7 @@ const Bio = styled.p`
     background-color: #eef0f5;
     padding: 10px;
     border-radius: 10px;
+    word-break: break-all;
 `
 const ProfileBody = styled.div`
 `
@@ -282,7 +278,7 @@ const UserProfile = () => {
                     {/* <Bio>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </Bio> */}
-                    {/* <Bio>{visitedUserProfileInfo?.bio}</Bio> */}
+                    <Bio>{visitedUserProfileInfo?.bio}</Bio>
                 </ProfileHeader>
 
                 <ProfileBody>

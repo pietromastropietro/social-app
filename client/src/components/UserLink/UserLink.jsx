@@ -12,6 +12,7 @@ const ProfileLink = styled(Link)`
     color: inherit;
     text-decoration: none;
     text-transform: capitalize;
+    word-break: break-all;
 
     &:hover {
         text-decoration: underline;
@@ -25,7 +26,7 @@ const UserLink = ({ user }) => {
     return (
         <StyledContact>
             <Image />
-            <ProfileLink to={`users/${path}`}>
+            <ProfileLink to={`/users/${path}`}>
                 {fullName}
             </ProfileLink>
         </StyledContact>

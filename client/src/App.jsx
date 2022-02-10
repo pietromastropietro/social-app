@@ -13,17 +13,20 @@ import Requests from "components/Requests/Requests";
 import FriendsList from "components/FriendsList/FriendsList";
 import { breakpoint } from 'style'
 
-
 const MainContainer = styled.div`
+    box-sizing: border-box;
     align-self: center;
     display: grid;
-    grid-template-columns: 250px auto 250px;
+    grid-template-columns: 250px 680px 250px;
     justify-content: center;
     background-color: #f9fafb;
     padding: 15px;
+    column-gap: 15px;
 
     @media (max-width: ${breakpoint.primary}) {
         display: flex;
+        width: 100%;
+        min-width: 320px;
     }
 `
 

@@ -73,7 +73,7 @@ const MobileSidebar = styled.div`
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
-    width: 240px;
+    width: 260px;
     padding-top: 15px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
     border-radius: 0 0 10px 0;
@@ -99,7 +99,7 @@ const SidebarHeader = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0 10px;
-    width: 220px;
+    width: 240px;
 
     > img {
         height: 28px;
@@ -126,24 +126,30 @@ const SearchMenu = styled.div`
 const Results = styled.div`
     box-sizing: border-box;
     background-color: #fff;
-    width: 500px;
     border-radius: 20px;
     padding: 20px;
     max-height: 500px;
     display: flex;
     flex-direction: column;
-    
+    margin: 0 10px;
+
     ul {
         overflow: auto;
         display: flex;
         flex-direction: column;
         row-gap: 10px;
         margin-bottom: 20px;
+        max-width: 500px;
 
         > li {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            column-gap: 70px;
+            
+            @media (max-width: ${breakpoint.primary}) {
+                column-gap: 20px;
+            }
         }
     }
 

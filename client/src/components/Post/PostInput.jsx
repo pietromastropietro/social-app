@@ -19,13 +19,9 @@ const PostForm = styled.form`
 `
 const BtnFieldset = styled.fieldset`
     display: flex;
-    justify-content: space-between;
-    column-gap: 10px;
-
-    // temp
-    > button {
-        width: 150px;
-    }
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
 `
 const PreviewImage = styled.img`
     align-self: center;
@@ -39,11 +35,12 @@ const ImageInputLabel = styled.label`
     font-size: 14px;
     font-weight: 600;
     text-align: center;
-    width: 150px;
+    width: 130px;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
     transition: .2s;
+    height: 20px;
 
     &:hover {
         background-color: #1d99ca;
@@ -123,9 +120,9 @@ const PostInput = ({ originalPost, handlePost }) => {
                         <input type="file" name='postImage' id='postImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
                     </ImageInputLabel>
                     :
-                    <Button primary type='button' onClick={handleImageInput}>Remove image</Button>
+                    <Button width='150px' primary type='button' onClick={handleImageInput}>Remove image</Button>
                 }
-                <Button primary type='submit'>Post</Button>
+                <Button width='150px' primary type='submit'>Post</Button>
             </BtnFieldset>
         </PostForm>
     )

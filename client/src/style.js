@@ -15,5 +15,5 @@ export const boxShadow = {
 }
 
 export const breakpoint = {
-    primary: '1080px'
+    primary: '1210px'
 }

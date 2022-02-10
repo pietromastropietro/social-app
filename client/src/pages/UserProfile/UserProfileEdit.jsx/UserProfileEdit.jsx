@@ -33,9 +33,10 @@ const Form = styled.form`
 `
 const ImageFieldset = styled.div`
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content:center;
-    column-gap: 20px;
+    row-gap: 10px;
 `
 const PreviewImage = styled.img`
     width: 130px;

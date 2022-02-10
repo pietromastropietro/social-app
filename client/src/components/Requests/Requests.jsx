@@ -5,11 +5,14 @@ import Request from './Request/Request'
 import { radius, color } from 'style'
 
 const Container = styled.div`
-    box-sizing:border-box;
+    box-sizing: border-box;
     background-color: white;
     border-radius: ${radius.primary};
     padding: 15px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    max-width: 420px;
+    width: 100%;
+    height: fit-content;
 
     > p {
         font-size: 18px;
