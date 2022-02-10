@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import Image from '../Image'
 
-const StyledContact = styled.li`
+const StyledUserLink = styled.li`
     display: flex;
     align-items: center;
     column-gap: 10px;
@@ -20,16 +20,16 @@ const ProfileLink = styled(Link)`
 `
 
 const UserLink = ({ user }) => {
-    const fullName = `${user.first_name} ${user.last_name}`
+    const fullName = `${user.first_name} ${user.last_name}` // temp
     const path = `${user.first_name}${user.last_name}-${user.id}`
 
     return (
-        <StyledContact>
+        <StyledUserLink>
             <Image />
             <ProfileLink to={`/users/${path}`}>
                 {fullName}
             </ProfileLink>
-        </StyledContact>
+        </StyledUserLink>
     )
 }
 

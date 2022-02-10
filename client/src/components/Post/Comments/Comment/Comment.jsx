@@ -2,13 +2,14 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import styled from 'styled-components'
-import { createLike, handleLike, removeLike } from 'utils/likeUtil'
+import { handleLike } from 'utils/likeUtil'
 import Button from 'components/Button/Button'
 import Image from 'components/Image'
 import commentIcon from 'static/images/comment.svg'
 import likeIcon from 'static/images/like.svg'
 import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
+import LikesList from 'components/LikesList/LikesList'
 
 const StyledComment = styled.div`
     display: flex;
@@ -157,33 +158,6 @@ const ReplyInput = styled.div`
             padding: 10px;
         }
     }
-`
-const LikesContainer = styled.ul`
-    background-color: #ffffff;
-    box-shadow: 0 1px 6px 0 #0000006c;
-    border-radius: 10px;
-    padding: 10px;
-    position: absolute;
-    right: 0;
-    margin-top: 150px;
-    z-index: 1;
-
-    > li {
-        display: flex;
-        align-items: center;
-        column-gap: 10px;
-
-        > p {
-            text-transform: capitalize;
-        }
-        
-        /* temp */
-        > div > img {
-            width: 25px !important;
-            height: 25px !important;
-        }
-    }
-
 `
 
 const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
@@ -340,7 +314,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                             }
                         </LikeAndCommentIcons>
 
-                        <LikesCounter onClick={() => setLikesVisibility(!likesVisibility)}>
+                        <LikesCounter onClick={() => setLikesVisibility(true)}>
                             <img src={likedIcon} />
                             <p>{commentLikes.length}</p>
                         </LikesCounter>
@@ -348,16 +322,11 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                 </div>
 
                 {likesVisibility ?
-                    <LikesContainer>
-                        {commentLikes.map(like =>
-                            <li key={like.id}>
-                                <Image />
-                                <p>
-                                    {like.first_name} {like.last_name}
-                                </p>
-                            </li>
-                        )}
-                    </LikesContainer>
+                    <LikesList
+                        likes={commentLikes}
+                        name='comment'
+                        setLikesVisibility={setLikesVisibility}
+                    />
                     : undefined
                 }
             </StyledComment>

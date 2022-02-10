@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Image from 'components/Image'
 import Comments from './Comments/Comments'
-import { radius, color } from 'style'
+import { radius, color, breakpoint } from 'style'
 import { useState } from 'react'
 import axios from 'axios'
 import { useEffect } from 'react'
@@ -13,8 +13,8 @@ import commentIcon from 'static/images/comment.svg'
 import likeIcon from 'static/images/like.svg'
 import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
-import tempImg from 'static/images/temp2.jpg'
 import PostInput from './PostInput'
+import LikesList from 'components/LikesList/LikesList'
 
 const StyledPost = styled.div`
     background-color: white;
@@ -258,24 +258,18 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     </div>
                 </LikeAndCommentIcons>
 
-                <LikesCounter onClick={() => setLikesVisibility(!likesVisibility)}>
+                <LikesCounter onClick={() => setLikesVisibility(true)}>
                     <img src={likedIcon} />
                     <p>{postLikes.length}</p>
                 </LikesCounter>
             </PostFooter>
 
-            {/* temp */}
             {likesVisibility ?
-                <div>
-                    <p>Who liked this post?</p>
-                    <ul>
-                        {postLikes.map(like =>
-                            <li key={like.id}>
-                                {like.first_name} {like.last_name}
-                            </li>
-                        )}
-                    </ul>
-                </div>
+                <LikesList
+                    likes={postLikes}
+                    name='post'
+                    setLikesVisibility={setLikesVisibility}
+                />
                 : undefined
             }
 
