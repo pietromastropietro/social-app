@@ -9,6 +9,8 @@ import defaultUserImg from 'static/images/user.svg'
 import Button from 'components/Button/Button'
 import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
 import { breakpoint } from 'style'
+import { useRelationship } from 'utils/customHooks/useRelationship'
+import Overlay from 'components/Overlay/Overlay'
 
 const StyledProfile = styled.div`
     grid-column: 2 / 3;
@@ -67,13 +69,17 @@ const UserProfile = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
 
     const [visitedUserProfileInfo, setVisitedUserProfileInfo] = useState();
-    const relationshipStatusCode = ["Request sent", "Friends", "Send friends request"]
-    const [relationshipStatus, setRelationshipStatus] = useState(undefined);
-    const [relationship, setRelationship] = useState(undefined);
-
     const [isOwnUserProfile, setIsOwnUserProfile] = useState(undefined);
     const [profileEditMode, setProfileEditMode] = useState(false);
+    const [relationshipDialog, showRelationshipDialog] = useState(false);
     const userIdParam = useParams().username.split('-')[1];
+
+    const { relationship,
+        getRelationshipStatus,
+        sendFriendsRequest,
+        acceptFriendsRequest,
+        declineFriendsRequest
+    } = useRelationship();
 
     const getUserInfo = async (userId) => {
         try {
@@ -91,116 +97,6 @@ const UserProfile = () => {
         }
     }
 
-    const getRelationshipStatus = async (userOneId, userTwoId) => {
-        try {
-            const res = await axios.get(`http://localhost:4000/api/relations/users/${userOneId}&${userTwoId}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data) {
-                if (res.data.status == 0) {
-                    if (res.data.user1_id == user.id) {
-                        setRelationshipStatus(relationshipStatusCode[res.data.status])
-                    } else {
-                        setRelationshipStatus("Friends request received")
-                    }
-                } else {
-                    setRelationshipStatus(relationshipStatusCode[res.data.status])
-                }
-
-                setRelationship(res.data)
-            } else {
-                setRelationshipStatus(relationshipStatusCode[2]);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const handleRelationship = () => {
-        switch (relationshipStatus) {
-            // if user already sent a friends request, prompt for removing it
-            case relationshipStatusCode[0]: {
-                if (window.confirm("Do you really want to delete the friends request?")) {
-                    deleteRelationship();
-                }
-                break;
-            }
-
-            // If user is already friends with the other user, prompt for removing him from friends list
-            case relationshipStatusCode[1]: {
-                if (window.confirm("Do you really want to remove this friend?")) {
-                    deleteRelationship();
-                }
-                break;
-            }
-
-            // send new friends request
-            case relationshipStatusCode[2]: {
-                createRelationship();
-                break;
-            }
-        }
-    }
-
-    const createRelationship = async () => {
-        try {
-            const usersIds = {
-                sender: user.id,
-                receiver: userIdParam
-            };
-
-            const res = await axios.post(`http://localhost:4000/api/relations`, usersIds, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data.message == "Relation created") {
-                setRelationshipStatus(relationshipStatusCode[0])
-                setRelationship(res.data.relation)
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const updateRelationship = async () => {
-        try {
-            const res = await axios.put(`http://localhost:4000/api/relations/${relationship.id}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data.message == "Relation updated") {
-                setRelationshipStatus(relationshipStatusCode[1])
-                setRelationship({ ...relationship, status: 1 });
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const deleteRelationship = async () => {
-        try {
-            const res = await axios.delete(`http://localhost:4000/api/relations/${relationship.id}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data.message == "Relation deleted") {
-                setRelationshipStatus(relationshipStatusCode[2])
-                setRelationship(undefined);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     // check if this is logged in user's profile whenever the 'userId' url param changes
     useEffect(() => {
         if (userIdParam == user.id) {
@@ -212,12 +108,31 @@ const UserProfile = () => {
         };
     }, [userIdParam]);
 
+    const handleRelationship = () => {
+        if (!relationshipDialog &&
+            (relationship.status === "Friends" ||
+                relationship.status === "Request sent")
+        ) {
+            showRelationshipDialog(true);
+            return;
+        }
+
+        if (relationship.status === "Send friends request") {
+            sendFriendsRequest(user.id, userIdParam);
+        }
+    }
+
     const handleHoverOnRelationshipStatusBtn = (e) => {
-        if (relationshipStatus == "Friends") {
+        if (relationship.status == "Friends") {
             e.target.textContent = "Remove"
-        } else if (relationshipStatus == "Request sent") {
+        } else if (relationship.status == "Request sent") {
             e.target.textContent = "Undo request"
         }
+    }
+
+    const handleDeleteRequestConfirmationDialog = () => {
+        showRelationshipDialog(false);
+        declineFriendsRequest(relationship.id);
     }
 
     if (isOwnUserProfile) {
@@ -261,18 +176,43 @@ const UserProfile = () => {
                         {visitedUserProfileInfo?.first_name} {visitedUserProfileInfo?.last_name}
                     </UserName>
 
-                    {relationshipStatus == 'Friends request received' ?
+                    {relationship.status == 'Friends request received' ?
                         <BtnContainer>
-                            <Button width='150px' primary onClick={updateRelationship}>Accept request</Button>
-                            <Button width='150px' warningOutlined onClick={deleteRelationship}>Decline request</Button>
+                            <Button width='150px' primary
+                                onClick={() => acceptFriendsRequest(relationship.id)}
+                            >
+                                Accept request
+                            </Button>
+
+                            <Button width='150px' warningOutlined
+                                onClick={() => declineFriendsRequest(relationship.id)}
+                            >
+                                Decline request
+                            </Button>
                         </BtnContainer>
                         :
                         <Button primaryOutlined width='170px'
                             onMouseOver={handleHoverOnRelationshipStatusBtn}
-                            onMouseOut={(e) => e.target.textContent = relationshipStatus}
-                            onClick={handleRelationship}>
-                            {relationshipStatus}
+                            onMouseOut={(e) => e.target.textContent = relationship.status}
+                            onClick={handleRelationship}
+                        >
+                            {relationship.status}
                         </Button>
+                    }
+
+                    {relationshipDialog ?
+                        <Overlay>
+                            <p>
+                                {`Do u really want to 
+                                ${relationship.status === "Friends" ?
+                                        "remove this friend?" : "delete the friends request?"
+                                    }
+                            `}
+                            </p>
+                            <Button warning onClick={handleDeleteRequestConfirmationDialog}>Yes</Button>
+                            <Button primaryOutlined onClick={() => showRelationshipDialog(false)}>No</Button>
+                        </Overlay>
+                        : undefined
                     }
 
                     {/* <Bio>
@@ -282,8 +222,10 @@ const UserProfile = () => {
                 </ProfileHeader>
 
                 <ProfileBody>
-                    {relationshipStatus != 'Friends' ?
-                        <NoFriendsMsg>You must be friend with <span>{visitedUserProfileInfo?.first_name}</span> to see the posts</NoFriendsMsg>
+                    {relationship.status != 'Friends' ?
+                        <NoFriendsMsg>
+                            You must be friend with <span>{visitedUserProfileInfo?.first_name}</span> to see the posts
+                        </NoFriendsMsg>
                         :
                         <Feed userId={userIdParam} />
                     }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Request from './Request/Request'
 import { radius, color } from 'style'
+import { updateRelationship, deleteRelationship } from 'utils/relationshipUtil';
 
 const Container = styled.div`
     box-sizing: border-box;
@@ -48,35 +49,13 @@ const Requests = () => {
     }, []);
 
     const acceptRequest = async (requestId) => {
-        try {
-            const res = await axios.put(`http://localhost:4000/api/relations/${requestId}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data.message == "Relation updated") {
-                updateRequests(requestId);
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        updateRelationship(requestId);
+        updateRequests(requestId);
     }
 
     const declineRequest = async (requestId) => {
-        try {
-            const res = await axios.delete(`http://localhost:4000/api/relations/${requestId}`, {
-                headers: {
-                    Authorization: (localStorage.getItem('token'))
-                }
-            });
-
-            if (res.data.message == "Relation deleted") {
-                updateRequests(requestId);
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        deleteRelationship(requestId);
+        updateRequests(requestId);
     }
 
     const updateRequests = (requestId) => {
