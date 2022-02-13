@@ -1,18 +1,14 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import { useState } from 'react';
 import logo from 'static/images/headerlogo.png'
 import tempImg from 'static/images/temp.jpg'
-import Overlay from 'components/Overlay/Overlay';
-import Button from 'components/Button/Button'
-import UserLink from 'components/UserLink/UserLink'
 import { breakpoint } from 'style'
 import menuIcon from 'static/images/menu.svg'
 import closeIcon from 'static/images/close1.svg'
 import Navbar from 'layout/Sidebar/Navbar/Navbar';
-import { useEffect } from 'react';
+import UserSearch from 'components/UserSearchResults/UserSearchResults';
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
@@ -110,55 +106,6 @@ const SidebarHeader = styled.div`
         }
     }
 `
-const SearchMenu = styled.div`
-    position: relative;
-    width: 100%;
-    max-width: 350px;
-        
-    input {
-        box-sizing: border-box;
-        background-color: #eef0f5;
-        width: 100%;
-        padding: 10px 20px;
-        border-radius: 20px;
-    }
-`
-const Results = styled.div`
-    box-sizing: border-box;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    max-height: 500px;
-    display: flex;
-    flex-direction: column;
-    margin: 0 10px;
-
-    ul {
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        row-gap: 10px;
-        margin-bottom: 20px;
-        max-width: 500px;
-
-        > li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            column-gap: 70px;
-            
-            @media (max-width: ${breakpoint.primary}) {
-                column-gap: 20px;
-            }
-        }
-    }
-
-    p {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-`
 const UserProfileLink = styled(Link)`
     display: flex;
     align-items: center;
@@ -186,9 +133,6 @@ const Header = () => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
     let profilePath = `${user.first_name}${user.last_name}-${user.id}`;
 
-    const [searchedUser, setSearchedUser] = useState('');
-    const [users, setUsers] = useState([])
-    const [resultsVisibility, setResultsVisibility] = useState(false);
     const [mobileSidebarVisibility, setMobileSidebarVisibility] = useState(false);
 
     const toggleMobileSidebar = () => {
@@ -206,32 +150,6 @@ const Header = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     };
-
-    const getUsersByName = async (userToSearch) => {
-        try {
-            const res = await axios.get(`http://localhost:4000/api/users/name?name=${userToSearch}`, {
-                headers: { Authorization: (localStorage.getItem('token')) }
-            });
-
-            if (res.data) {
-                setUsers(res.data);
-                setResultsVisibility(true);
-            }
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-
-    const handleInput = (e) => {
-        setSearchedUser(e.target.value);
-    }
-
-    const onUserSearchSubmit = (e) => {
-        e.preventDefault();
-
-        setSearchedUser(searchedUser.trim());
-        getUsersByName(searchedUser);
-    }
 
     return (
         <StyledHeader>
@@ -256,37 +174,7 @@ const Header = () => {
                     : undefined
                 }
 
-                <SearchMenu>
-                    <form onSubmit={onUserSearchSubmit}>
-                        <input type="text" placeholder="Search" value={searchedUser} onChange={handleInput} />
-                    </form>
-
-                    {resultsVisibility ?
-                        <Overlay>
-                            <Results>
-                                {!users.length ?
-                                    <p>No user found</p>
-                                    :
-                                    <>
-                                        <p>Results</p>
-                                        <ul>
-                                            {users.map(user =>
-                                                <li key={user.id}>
-                                                    <div onClick={() => setResultsVisibility(false)}>
-                                                        <UserLink user={user} />
-                                                    </div>
-                                                    <Button width='50px' primaryOutlined small>Add</Button>
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </>
-                                }
-                                <Button primary onClick={() => setResultsVisibility(false)}>Close</Button>
-                            </Results>
-                        </Overlay>
-                        : undefined
-                    }
-                </SearchMenu>
+                <UserSearch />
 
                 <UserProfileLink to={`users/${profilePath}`}>
                     <img src={tempImg} />

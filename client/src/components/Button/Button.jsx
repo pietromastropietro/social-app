@@ -70,5 +70,10 @@ const Button = styled.button`
             color: white;
         }
     `}
+
+    ${props => props.submitPrimary && css`
+        border-radius: 20px;
+        padding: 0;
+    `}
 `
 export default Button
