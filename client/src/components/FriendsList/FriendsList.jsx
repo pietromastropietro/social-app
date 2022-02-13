@@ -5,7 +5,7 @@ import { radius, color } from '../../style'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-const Container = styled.div`
+const StyledFriendsList = styled.div`
     box-sizing:border-box;
     background-color: ${color.component};
     border-radius: ${radius.secondary};
@@ -54,10 +54,10 @@ const FriendsList = () => {
     }, [])
 
     return (
-        <Container>
+        <StyledFriendsList>
             <h3>Friends</h3>
             {!friends.length ?
-                <p>Your friends will be here once they accept your request</p>
+                <p>Your friends will be here</p>
                 :
                 <ul>
                     {friends.map(friend =>
@@ -68,7 +68,7 @@ const FriendsList = () => {
                     )}
                 </ul>
             }
-        </Container>
+        </StyledFriendsList>
     )
 }
 

@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import Request from './Request/Request'
 import { radius, color } from 'style'
 import { updateRelationship, deleteRelationship } from 'utils/relationshipUtil';
+import { useLocation } from 'react-router-dom'
 
-const Container = styled.div`
+const StyledRequests = styled.div`
     box-sizing: border-box;
     background-color: white;
     border-radius: ${radius.primary};
@@ -15,7 +16,7 @@ const Container = styled.div`
     width: 100%;
     height: fit-content;
 
-    > p {
+    > h3 {
         font-size: 18px;
         font-weight: 600;
         margin: 5px 0 10px 0;
@@ -24,6 +25,7 @@ const Container = styled.div`
 
 const Requests = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
+    const path = useLocation().pathname;
 
     const [requests, setRequests] = useState([]);
 
@@ -62,25 +64,29 @@ const Requests = () => {
         setRequests(oldRequests => [...oldRequests].filter(request => request.id != requestId))
     }
 
-    // don't show requests tab if user has no requests
-    if (!requests.length) {
+    // Don't show requests tab if user has no requests and he's on the homepage in desktop mode
+    if (!requests.length && path === '/') {
         return null;
     }
 
     return (
-        <Container>
-            <p>Requests</p>
-            <ul>
-                {requests.map(request =>
-                    <Request
-                        key={request.id}
-                        request={request}
-                        acceptRequest={acceptRequest}
-                        declineRequest={declineRequest}
-                    />
-                )}
-            </ul>
-        </Container>
+        <StyledRequests>
+            <h3>Requests</h3>
+            {!requests.length ?
+                <p>You have no friends request now</p>
+                :
+                <ul>
+                    {requests.map(request =>
+                        <Request
+                            key={request.id}
+                            request={request}
+                            acceptRequest={acceptRequest}
+                            declineRequest={declineRequest}
+                        />
+                    )}
+                </ul>
+            }
+        </StyledRequests>
     )
 }
 
