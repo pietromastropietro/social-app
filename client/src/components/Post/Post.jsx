@@ -15,6 +15,9 @@ import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
 import PostInput from './PostInput'
 import LikesList from 'components/LikesList/LikesList'
+import Overlay from 'components/Overlay/Overlay'
+import Button from 'components/Button/Button'
+import DeleteDialog from 'components/DeleteDialog/DeleteDialog'
 
 const StyledPost = styled.div`
     background-color: white;
@@ -152,6 +155,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
     const [likesVisibility, setLikesVisibility] = useState(false);
     const [hasUserLikedPost, setHasUserLikedPost] = useState();
     const [optionMenuVisibility, setOptionMenuVisibility] = useState(false);
+    const [deleteDialog, showDeleteDialog] = useState(false);
 
     const creationDate = getFormattedDate(post.created_at);
 
@@ -185,6 +189,11 @@ const Post = ({ postContent, deletePost, updatePost }) => {
         setHasUserLikedPost(!hasUserLikedPost);
     };
 
+    const hideDeleteDialog = () => {
+        setOptionMenuVisibility(false);
+        showDeleteDialog(false);
+    }
+
     const handlePostEdit = () => {
         setOptionMenuVisibility(false)
         setPostEditMode(true)
@@ -192,6 +201,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
 
     const handlePostDelete = () => {
         setOptionMenuVisibility(false)
+        showDeleteDialog(false)
         deletePost(post.id)
     }
 
@@ -225,11 +235,20 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                 {optionMenuVisibility ?
                     <OptionMenu>
                         <li onClick={handlePostEdit}>Edit post</li>
-                        <li onClick={handlePostDelete}>Delete post</li>
+                        <li onClick={() => showDeleteDialog(true)}>Delete post</li>
                     </OptionMenu>
                     : undefined
                 }
             </PostHeader>
+
+            {deleteDialog ?
+                <DeleteDialog
+                    name="post"
+                    handleConfirm={handlePostDelete}
+                    handleCancel={hideDeleteDialog}
+                />
+                : undefined
+            }
 
             <PostMain>
                 {postEditMode ?
@@ -238,7 +257,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     <>
                         <p>{post.text}</p>
                         <PostImage src={post.image_url} alt='' />
-                        
+
                         {/* temp for testing */}
                         {/* <PostImage src={tempImg} alt='post image' /> */}
                     </>

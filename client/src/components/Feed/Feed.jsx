@@ -91,23 +91,21 @@ const Feed = ({ userId }) => {
     };
 
     const deletePost = async (postId) => {
-        if (window.confirm("Are you sure you want to delete this post?")) { // temp
-            try {
-                const res = await axios.delete(`http://localhost:4000/api/posts/${postId}`, {
-                    headers: {
-                        Authorization: (localStorage.getItem('token'))
-                    }
-                });
-
-                if (res.data.message === "Post deleted") {
-                    // copy posts state array and remove deleted post
-                    setPosts(oldPosts => [...oldPosts].filter(post => post.id != postId))
-
-                    console.log(res.data.message); // temp
+        try {
+            const res = await axios.delete(`http://localhost:4000/api/posts/${postId}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
                 }
-            } catch (err) {
-                console.log(err);
+            });
+
+            if (res.data.message === "Post deleted") {
+                // copy posts state array and remove deleted post
+                setPosts(oldPosts => [...oldPosts].filter(post => post.id != postId))
+
+                console.log(res.data.message); // temp
             }
+        } catch (err) {
+            console.log(err);
         }
     };
 

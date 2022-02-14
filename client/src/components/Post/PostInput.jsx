@@ -101,7 +101,7 @@ const PostInput = ({ originalPost, handlePost }) => {
 
     return (
         <PostForm onSubmit={handleSubmit}>
-            <textarea autoFocus rows='3' name='text' placeholder="What's on your mind?" value={post.text} onChange={handleInput} />
+            <textarea required autoFocus rows='3' name='text' placeholder="What's on your mind?" value={post.text} onChange={handleInput} />
 
             {!postImage ?
                 !post.image_url ?

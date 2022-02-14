@@ -10,6 +10,7 @@ import likeIcon from 'static/images/like.svg'
 import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
 import LikesList from 'components/LikesList/LikesList'
+import DeleteDialog from 'components/DeleteDialog/DeleteDialog'
 
 const StyledComment = styled.div`
     display: flex;
@@ -170,6 +171,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     const [likesVisibility, setLikesVisibility] = useState(false);
     const [repliesVisibility, setRepliesVisibility] = useState(false);
     const [optionMenuVisibility, setOptionMenuVisibility] = useState(false);
+    const [deleteDialog, showDeleteDialog] = useState(false);
 
     const replies = comment.replies || [];
     const [replyInputMode, setReplyInputMode] = useState(false);
@@ -213,6 +215,11 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         setHasUserLikedComment(!hasUserLikedComment);
     };
 
+    const hideDeleteDialog = () => {
+        setOptionMenuVisibility(false);
+        showDeleteDialog(false);
+    }
+
     const handleCommentEdit = () => {
         setOptionMenuVisibility(false)
         setCommentEditMode(true)
@@ -220,6 +227,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
     const handleCommentDelete = () => {
         setOptionMenuVisibility(false)
+        showDeleteDialog(false)
         deleteComment(comment)
     }
 
@@ -283,11 +291,20 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                             {optionMenuVisibility ?
                                 <OptionMenu>
                                     <li onClick={handleCommentEdit}>Edit comment</li>
-                                    <li onClick={handleCommentDelete}>Delete comment</li>
+                                    <li onClick={() => showDeleteDialog(true)}>Delete comment</li>
                                 </OptionMenu>
                                 : undefined
                             }
                         </CommentHeader>
+
+                        {deleteDialog ?
+                            <DeleteDialog
+                                name="comment"
+                                handleConfirm={handleCommentDelete}
+                                handleCancel={hideDeleteDialog}
+                            />
+                            : undefined
+                        }
 
                         {commentEditMode ?
                             <CommentInput>

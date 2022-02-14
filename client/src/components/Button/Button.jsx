@@ -51,7 +51,7 @@ const Button = styled.button`
 
     ${props => props.warning && css`
         background-color: #ff5454;
-        border-color: ff5454;
+        border-color: #ff5454;
         color: white;
 
         &:hover {

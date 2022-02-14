@@ -221,37 +221,35 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
     };
 
     const deleteComment = async (comment) => {
-        if (window.confirm("Are you sure you want to delete this comment?")) { // temp
-            try {
-                const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
-                    headers: {
-                        Authorization: (localStorage.getItem('token'))
-                    }
-                });
-
-                if (res.data.message === "Comment deleted") {
-                    /* Check if it's a parent comment or a comment's reply
-                    (comment's replies have a parent_id field with the id of their parent comment). */
-                    if (!comment.parent_id) {
-                        // copy comments state array and remove deleted comment
-                        setComments(oldComments => [...oldComments].filter(elem => elem.id != comment.id));
-                    } else {
-                        // copy state array 
-                        let newComments = [...comments];
-
-                        // find index of parent comment
-                        let index = comments.findIndex(elem => elem.id == comment.parent_id)
-
-                        // remove deleted reply from comment's replies array
-                        newComments[index].replies = newComments[index].replies.filter(elem => elem.id != comment.id)
-
-                        // set the updated array as state array to trigger component update 
-                        setComments(newComments);
-                    }
+        try {
+            const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
                 }
-            } catch (err) {
-                console.log(err);
+            });
+
+            if (res.data.message === "Comment deleted") {
+                /* Check if it's a parent comment or a comment's reply
+                (comment's replies have a parent_id field with the id of their parent comment). */
+                if (!comment.parent_id) {
+                    // copy comments state array and remove deleted comment
+                    setComments(oldComments => [...oldComments].filter(elem => elem.id != comment.id));
+                } else {
+                    // copy state array 
+                    let newComments = [...comments];
+
+                    // find index of parent comment
+                    let index = comments.findIndex(elem => elem.id == comment.parent_id)
+
+                    // remove deleted reply from comment's replies array
+                    newComments[index].replies = newComments[index].replies.filter(elem => elem.id != comment.id)
+
+                    // set the updated array as state array to trigger component update 
+                    setComments(newComments);
+                }
             }
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -295,7 +293,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                 }
                 return null;
             })}
-            
+
             {/* 
                 If comments are <= 4, hide button text.
                 If comments are > 4 and user didn't click the button, display "Show all 'n' comments" text.
