@@ -7,6 +7,8 @@ import axios from 'axios'
 import { radius, color, breakpoint } from 'style'
 import { useParams } from 'react-router-dom'
 import Image from 'components/Image'
+// temp for testing
+import { populateUsers, populatePosts, populateRels } from 'popdb'
 
 const StyledFeed = styled.div`
 `
@@ -69,6 +71,10 @@ const Feed = ({ userId }) => {
 
     useEffect(() => {
         getPosts();
+        // temp for testing
+        // populateUsers();
+        // populatePosts();
+        // populateRels();
     }, []);
 
     const createPost = async (post) => {

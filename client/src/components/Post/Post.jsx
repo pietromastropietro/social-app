@@ -218,7 +218,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     <Image />
 
                     <PostAuthorAndDate>
-                        <p><strong>{user.full_name}</strong></p>
+                        <p><strong>{post.full_name}</strong></p>
                         <PostDate>{creationDate}</PostDate>
                     </PostAuthorAndDate>
                 </div>
