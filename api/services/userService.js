@@ -12,11 +12,8 @@ const getUsers = async () => {
 
 const getUsersByName = async (userName) => {
     try {
-        // temp, this will be `SELECT * FROM users WHERE users.full_name LIKE '%' || $1 || '%'`
-        const query =
-            `SELECT * FROM users 
-        WHERE users.first_name LIKE '%' || $1 || '%' 
-        OR users.last_name LIKE '%' || $1 || '%'`;
+        const query = 
+        `SELECT * FROM users WHERE users.full_name LIKE '%' || $1 || '%'`
 
         const users = await db.query(query, [userName]);
 
@@ -45,7 +42,7 @@ const getUser = async (userId) => {
 const getUserFriends = async (userId) => {
     try {
         const query =
-            `SELECT users.id, users.first_name, users.last_name FROM users
+            `SELECT users.id, users.full_name FROM users
         WHERE users.id IN (
             (SELECT user1_id FROM relations WHERE user2_id = $1 and status = 1)
             UNION
@@ -91,7 +88,7 @@ const updateUser = async (userId, userData) => {
 
         query =
             `UPDATE users 
-        SET first_name = $2, last_name = $3, dob = $4, email = $5, password_hash = $6, bio = $7, username = $8
+        SET full_name = $2, dob = $3, email = $4, password_hash = $5, bio = $6
         WHERE id = $1`
 
         // retrieve user data from db

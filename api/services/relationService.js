@@ -15,12 +15,6 @@ const getRelation = async (usersIds) => {
     try {
         const relation = await db.query(query, [users.one, users.two]);
 
-        // console.log(JSON.stringify(relation[0],null,2));
-
-        // if (!relation.length) {
-        //     throw new Error("Relation not found");
-        // }
-
         return relation[0];
     } catch (err) {
         throw new Error(err.message)
@@ -30,32 +24,26 @@ const getRelation = async (usersIds) => {
 const getFriendsRequests = async (userId) => {
     try {
         const query =
-            `SELECT relations.*, users.first_name, users.last_name
+            `SELECT relations.*, users.full_name
         FROM relations
         JOIN users ON users.id = relations.user1_id
         WHERE user2_id = $1 AND status = 0`;
 
         const requests = await db.query(query, [userId]);
 
-        // console.log(JSON.stringify(requests,null,2));
-
         return requests;
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };
 
 const createRelation = async (usersIds) => {
     const query =
-        'INSERT INTO relations (user1_id, user2_id, status, id) VALUES ($1, $2, $3, $4)';
-
-    const date = new Date(); // temp
+        'INSERT INTO relations (user1_id, user2_id, status, id) VALUES ($1, $2, $3)';
 
     const relation = {
         ...usersIds,
-        status: 0,
-        id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
+        status: 0
     };
 
     const params = Object.values(relation);

@@ -3,7 +3,6 @@ const relationService = require('../services/relationService')
 const getRelation = async (req, res, next)  => {
     try {
         const relation = await relationService.getRelation(req.params.ids);
-        // console.log(JSON.stringify(relation,null,2));
 
         res.json(relation);
     } catch (err) {
@@ -32,7 +31,6 @@ const createRelation = async (req, res, next)  => {
 };
 
 const updateRelation = async (req, res, next)  => {
-    console.log("te");
     try {
         await relationService.updateRelation(req.params.id);
 

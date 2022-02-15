@@ -3,7 +3,7 @@ const db = require('../db/db');
 const getPostLikes = async (postId) => {
     try {
         const query = 
-        `SELECT likes.*, users.first_name, users.last_name
+        `SELECT likes.*, users.full_name
         FROM likes
         JOIN users on likes.user_id = users.id
         WHERE post_id = $1
@@ -20,7 +20,7 @@ const getPostLikes = async (postId) => {
 const getCommentLikes = async (commentId) => {
     try {
         const query = 
-        `SELECT likes.*, users.first_name, users.last_name
+        `SELECT likes.*, users.full_name
         FROM likes
         JOIN users on likes.user_id = users.id
         WHERE comment_id = $1
@@ -35,26 +35,29 @@ const getCommentLikes = async (commentId) => {
 };
 
 const createLike = async (likeData) => {
+    let query =
+    `INSERT INTO likes (user_id, post_id, comment_id, created_at)
+    VALUES ($1, $2, $3, $4)`;
+    
+    const like = {
+        ...likeData,
+        created_at: new Date()
+    }
+    
+    const params = Object.values(like);
+    
     try {
-        const query =
-        `INSERT INTO likes (user_id, post_id, comment_id, created_at, id)
-        VALUES ($1, $2, $3, $4, $5)`;
-
-        const date = new Date(); // temp
-
-        const like = {
-            ...likeData,
-            created_at: new Date(),
-            id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
-        }
-
-        const params = Object.values(like);
-
+        // add new like to db
         await db.query(query, params);
 
-        return like;
+        // fetch newly created like and return it
+
+        query = `SELECT * FROM likes WHERE user_id = $1 AND created_at = $2`
+
+        const newLike = await db.query(query, [like.user_id, like.created_at])
+
+        return newLike[0];
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };

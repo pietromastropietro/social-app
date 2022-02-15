@@ -1,8 +1,8 @@
 const db = require('../db/db');
 
-const getPosts = async ()  => {
-    const query = 
-    `SELECT posts.*, users.first_name, users.last_name
+const getPosts = async () => {
+    const query =
+        `SELECT posts.*, users.full_name
     FROM posts 
     JOIN users ON posts.user_id = users.id
     ORDER BY created_at DESC`;
@@ -16,9 +16,9 @@ const getPosts = async ()  => {
     }
 };
 
-const getUserPosts = async (userId)  => {
-    const query = 
-    `SELECT posts.*, users.first_name, users.last_name
+const getUserPosts = async (userId) => {
+    const query =
+        `SELECT posts.*, users.full_name
     FROM posts 
     JOIN users ON posts.user_id = users.id
     WHERE user_id = $1
@@ -33,13 +33,13 @@ const getUserPosts = async (userId)  => {
     }
 };
 
-const getPost = async (postId)  => {
-    const query = 
-    `SELECT posts.*, users.first_name, users.last_name
+const getPost = async (postId) => {
+    const query =
+        `SELECT posts.*, users.full_name
     FROM posts 
     JOIN users ON posts.user_id = users.id
     WHERE posts.id = $1`;
-    
+
     try {
         const post = await db.query(query, [postId]);
 
@@ -53,16 +53,11 @@ const getPost = async (postId)  => {
     }
 };
 
-const createPost = async ({ userId, postData })  => {
-    let query = 
-    'INSERT INTO posts (id, user_id, text, image_url, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)';
+const createPost = async ({ userId, postData }) => {
+    let query =
+        'INSERT INTO posts (user_id, text, image_url, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)';
 
-    // temp
-    const date = new Date();
-    const tempId = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-
-    let post = {
-        id: tempId, // temp
+    const post = {
         user_id: userId,
         text: postData.text,
         image_url: postData.image_url,
@@ -73,18 +68,27 @@ const createPost = async ({ userId, postData })  => {
     const params = Object.values(post);
 
     try {
+        // add post to db
         await db.query(query, params);
 
-        // fetch and return newly created post
-        return await getPost(post.id);
+        // fetch newly created post and return it
+        
+        query = `SELECT * FROM posts 
+        WHERE posts.user_id = $1 
+        AND posts.text = $2 
+        AND posts.created_at = $3`
+
+        const newPost = await db.query(query, [post.user_id, post.text, post.created_at]);
+        
+        return newPost[0];
     } catch (err) {
         throw new Error(err.message)
     }
 };
 
-const updatePost = async (postId, postData)  => {
-    const query = 
-    `UPDATE posts 
+const updatePost = async (postId, postData) => {
+    const query =
+        `UPDATE posts 
     SET text = $1, image_url = $2, updated_at = $3
     WHERE id = $4`;
 
@@ -94,20 +98,16 @@ const updatePost = async (postId, postData)  => {
 
         return await db.query(query, params);
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };
 
-const deletePost = async (postId)  => {
-    // todo: before deleting a post i need to remove all likes/comment from db
-
+const deletePost = async (postId) => {
     const query = 'DELETE FROM posts WHERE id = $1'
 
     try {
         return await db.query(query, [postId]);
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };

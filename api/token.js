@@ -14,7 +14,6 @@ module.exports = function verifyToken(req, res, next) {
 
         jwt.verify(token, process.env.JWT_KEY, (err) => {
             if (err) {
-                console.log(err.message);
                 // Forbidden
                 return res.sendStatus(403);
             }

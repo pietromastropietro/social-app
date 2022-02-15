@@ -1,6 +1,6 @@
 const db = require('../db/db');
 
-const getComments = async ()  => {
+const getComments = async () => {
     try {
         const comments = await db.query('SELECT * from comments');
 
@@ -10,10 +10,10 @@ const getComments = async ()  => {
     }
 };
 
-const getPostComments = async (postId)  => {
+const getPostComments = async (postId) => {
     try {
-        const query = 
-        `SELECT comments.*, users.first_name, users.last_name 
+        const query =
+            `SELECT comments.*, users.full_name
         FROM comments 
         JOIN users ON comments.user_id = users.id 
         WHERE post_id = $1
@@ -27,9 +27,9 @@ const getPostComments = async (postId)  => {
     }
 };
 
-const getComment = async (commentId)  => {
+const getComment = async (commentId) => {
     const query = 'SELECT * FROM comments WHERE id = $1';
-    
+
     try {
         const comment = await db.query(query, [commentId]);
 
@@ -43,34 +43,43 @@ const getComment = async (commentId)  => {
     }
 };
 
-const createComment = async (commentData)  => {
-    const query = 
-    'INSERT INTO comments (user_id, post_id, text, parent_id, created_at, updated_at, id) VALUES ($1, $2, $3, $4, $5, $6, $7)';
-
-    const date = new Date(); // temp
+const createComment = async (commentData) => {
+    let query =
+        'INSERT INTO comments (user_id, post_id, text, parent_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)';
 
     const comment = {
-        ...commentData,
+        user_id: commentData.user_id,
+        post_id: commentData.post_id,
+        text: commentData.text,
+        parent_id: commentData.parent_id,
         created_at: new Date(),
-        updated_at: new Date(),
-        id: `${date.getHours()}${date.getMinutes()}${date.getSeconds()}` // temp
+        updated_at: new Date()
     };
-    
+
     const params = Object.values(comment);
 
     try {
+        // add comment to db
         await db.query(query, params);
 
-        return comment;
+        // fetch newly created comment and return it
+
+        query = `SELECT * FROM comments
+        WHERE comments.user_id = $1
+        AND comments.text = $2
+        AND comments.created_at = $3`
+
+        const newComment = await db.query(query, [comment.user_id, comment.text, comment.created_at]);
+
+        return newComment[0];
     } catch (err) {
-        console.log(err.message);
         throw new Error(err.message)
     }
 };
 
-const updateComment = async (commentId, commentData)  => {
+const updateComment = async (commentId, commentData) => {
     const query =
-    `UPDATE comments 
+        `UPDATE comments 
     SET text = $2
     WHERE id = $1`;
 
@@ -83,7 +92,7 @@ const updateComment = async (commentId, commentData)  => {
     }
 };
 
-const deleteComment = async (commentId)  => {
+const deleteComment = async (commentId) => {
     const query = 'DELETE FROM comments WHERE id = $1'
 
     try {

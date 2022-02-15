@@ -14,7 +14,6 @@ const login = async (req, res, next) => {
         if (user && password === user.password_hash) {
             jwt.sign({ user: user }, process.env.JWT_KEY, { expiresIn: '1h' }, (err, token) => {
                 if (err) {
-                    console.log(err.message);
                     return res.json({ message: "JWT error" });
                 }
 
@@ -26,23 +25,19 @@ const login = async (req, res, next) => {
             res.json({ message: "Incorrect/missing username or password" });
         }
     } catch (err) {
-        console.log(err.message);
         return next(err);
     }
 };
 
 const register = async (req, res, next) => {
     try {
-        // todo: fix fields when creating final database
         const user = {
-            first_name: req.body.full_name,
-            last_name: req.body.full_name,
-            username: req.body.full_name,
+            full_name: req.body.full_name,
             bio: null,
             dob: req.body.dob,
             email: req.body.email,
             password_hash: req.body.password,
-            id: null,
+            registered_at: new Date()
         }
         
         // check if user exists by email
@@ -55,13 +50,8 @@ const register = async (req, res, next) => {
         
         // create new user
         query =
-        `INSERT INTO users (first_name, last_name, username, bio, dob, email, password_hash, id) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-        
-        // temp
-        const date = new Date();
-        const tempId = `${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
-        user.id = tempId;
+        `INSERT INTO users (full_name, bio, dob, email, password_hash, registered_at) 
+        VALUES ($1, $2, $3, $4, $5, $6)`;
         
         // TODO encrypt user password
         
