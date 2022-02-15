@@ -134,8 +134,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                 const newComment = res.data.comment;
 
                 // add user's full name to new comment
-                newComment.first_name = user.first_name;
-                newComment.last_name = user.last_name;
+                newComment.full_name = user.full_name;
 
                 /* Check if it's a parent comment or a comment's reply
                 (comment's replies have a parent_id field with the id of their parent comment). */
@@ -168,7 +167,6 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                     // set the updated array as state array to trigger component update 
                     setComments(newComments);
                 }
-                console.log(res.data.message); // temp
             }
         } catch (err) {
             console.log(err.message);
@@ -213,7 +211,6 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
                 }
                 // set the updated comments array as state array to trigger component update 
                 setComments(newComments);
-                console.log(res.data.message); // temp
             }
         } catch (err) {
             console.log(err);
@@ -273,7 +270,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
 
                 {commentInputMode ?
                     <form onSubmit={() => createComment(comment)}>
-                        <textarea autoFocus rows='2' value={comment.text} onChange={handleInput} />
+                        <textarea required autoFocus rows='2' value={comment.text} onChange={handleInput} />
                         <Button width='100px' primary>Confirm</Button>
                     </form>
                     :

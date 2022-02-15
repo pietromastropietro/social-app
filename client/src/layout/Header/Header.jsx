@@ -131,7 +131,7 @@ const UserProfileLink = styled(Link)`
 
 const Header = () => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
-    let profilePath = `${user.first_name}${user.last_name}-${user.id}`;
+    let profilePath = `${user.full_name.split(' ')[0]}-${user.id}`;
 
     const [mobileSidebarVisibility, setMobileSidebarVisibility] = useState(false);
 
@@ -178,7 +178,7 @@ const Header = () => {
 
                 <UserProfileLink to={`users/${profilePath}`}>
                     <img src={tempImg} />
-                    <p>{user.first_name} {user.last_name}</p>
+                    <p>{user.full_name}</p>
                 </UserProfileLink>
             </div>
         </StyledHeader>

@@ -218,7 +218,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     <Image />
 
                     <PostAuthorAndDate>
-                        <p><strong>{`${post.first_name} ${post.last_name}`}</strong></p>
+                        <p><strong>{user.full_name}</strong></p>
                         <PostDate>{creationDate}</PostDate>
                     </PostAuthorAndDate>
                 </div>
@@ -277,10 +277,13 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     </div>
                 </LikeAndCommentIcons>
 
-                <LikesCounter onClick={() => setLikesVisibility(true)}>
-                    <img src={likedIcon} />
-                    <p>{postLikes.length}</p>
-                </LikesCounter>
+                {postLikes.length ?
+                    <LikesCounter onClick={() => setLikesVisibility(true)}>
+                        <img src={likedIcon} />
+                        <p>{postLikes.length}</p>
+                    </LikesCounter>
+                    : undefined
+                }
             </PostFooter>
 
             {likesVisibility ?

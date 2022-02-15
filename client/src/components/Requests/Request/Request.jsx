@@ -35,19 +35,17 @@ const ProfileLink = styled(Link)`
 const Buttons = styled.div`
     display: flex;
     column-gap: 10px;
-    /* justify-content: space-around; */
 `
 
 const Request = ({ request, acceptRequest, declineRequest }) => {
-    const username = `${request.first_name} ${request.last_name}`;
-    const path = `${request.first_name}${request.last_name}-${request.user1_id}`
+    const path = `${request.full_name.split(' ')[0]}-${request.user1_id}`
 
     return (
         <StyledRequest>
             <RequestHeader>
                 <Image />
                 <p>
-                    <ProfileLink to={`/users/${path}`}>{username}</ProfileLink>
+                    <ProfileLink to={`/users/${path}`}>{request.full_name}</ProfileLink>
                     {` wants to add you to friends.`}
                 </p>
             </RequestHeader>

@@ -128,7 +128,6 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
             })
 
             if (res.data.message == "Password changed") {
-                console.log("changed");
                 // Go back to login page
                 setPasswordResetMode(false);
             } else {

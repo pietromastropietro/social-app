@@ -33,6 +33,7 @@ const NoPostsMsg = styled.p`
     font-weight: 600;
     text-align: center;
     padding: 10px;
+    margin-top: 15px;
     border-radius: 10px;
     box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
 `
@@ -82,8 +83,6 @@ const Feed = ({ userId }) => {
             if (res.data.message === 'Post created') {
                 // copy posts state array, add new post at the beginning and update the state array
                 setPosts(oldPosts => [res.data.post, ...oldPosts])
-
-                console.log(res.data.message); // temp
             }
         } catch (err) {
             console.log(err);
@@ -101,8 +100,6 @@ const Feed = ({ userId }) => {
             if (res.data.message === "Post deleted") {
                 // copy posts state array and remove deleted post
                 setPosts(oldPosts => [...oldPosts].filter(post => post.id != postId))
-
-                console.log(res.data.message); // temp
             }
         } catch (err) {
             console.log(err);

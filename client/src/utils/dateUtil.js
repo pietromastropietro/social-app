@@ -1,7 +1,18 @@
 export const getFormattedDate = (rawDate) => {
-    // temp
     const date = new Date(rawDate);
-    return `${date.toDateString()} ${date.getHours()}:${date.getMinutes()}`;
+
+    let hour = date.getHours();
+    let mins = date.getMinutes();
+
+    if (hour <= 9) {
+        hour = `0${hour}`
+    }
+
+    if (mins <= 9) {
+        mins = `0${mins}`
+    }
+    
+    return `${date.toDateString()}, ${hour}:${mins}`;
 }
 
 // Get max date of birth users can set during registration/profile edit (today's date minus 18 years)

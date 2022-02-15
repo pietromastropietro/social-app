@@ -143,7 +143,7 @@ const UserProfile = () => {
                     <img src={user.profile_img_url ? user.profile_img_url : defaultUserImg} />
 
                     <UserName>
-                        {user.first_name} {user.last_name}
+                        {user.full_name}
                     </UserName>
 
                     <Button width='135px' primaryOutlined onClick={() => setProfileEditMode(!profileEditMode)}>
@@ -173,7 +173,7 @@ const UserProfile = () => {
                     <img src={visitedUserProfileInfo?.profile_img_url ? visitedUserProfileInfo?.profile_img_url : defaultUserImg} />
 
                     <UserName>
-                        {visitedUserProfileInfo?.first_name} {visitedUserProfileInfo?.last_name}
+                        {visitedUserProfileInfo?.full_name}
                     </UserName>
 
                     {relationship.status == 'Friends request received' ?
@@ -224,7 +224,7 @@ const UserProfile = () => {
                 <ProfileBody>
                     {relationship.status != 'Friends' ?
                         <NoFriendsMsg>
-                            You must be friend with <span>{visitedUserProfileInfo?.first_name}</span> to see the posts
+                            You must be friend with <span>{visitedUserProfileInfo?.full_name}</span> to see the posts
                         </NoFriendsMsg>
                         :
                         <Feed userId={userIdParam} />

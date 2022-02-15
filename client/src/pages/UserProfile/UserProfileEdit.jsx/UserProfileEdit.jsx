@@ -109,7 +109,7 @@ const UserProfileEdit = ({ userId }) => {
                 const formattedDob = getDateForInputElement(new Date(res.data.dob));
 
                 setUser({
-                    full_name: res.data.first_name + ' ' + res.data.last_name, // temp
+                    full_name: res.data.full_name,
                     dob: formattedDob,
                     email: res.data.email,
                     password_hash: res.data.password_hash,
@@ -279,12 +279,6 @@ const UserProfileEdit = ({ userId }) => {
             delete updatedUser.oldPassword;
             delete updatedUser.newPassword;
             delete updatedUser.passwordConfirm;
-
-            // TEMP START
-            updatedUser.first_name = updatedUser.full_name.split(' ')[0];
-            updatedUser.last_name = updatedUser.full_name.split(' ')[1];
-            delete updatedUser.full_name;
-            // TEMP END
 
             const res = await axios.put(`http://localhost:4000/api/users/${userId}`, updatedUser, {
                 headers: {

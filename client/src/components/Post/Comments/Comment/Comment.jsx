@@ -11,6 +11,7 @@ import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
 import LikesList from 'components/LikesList/LikesList'
 import DeleteDialog from 'components/DeleteDialog/DeleteDialog'
+import { getFormattedDate } from 'utils/dateUtil'
 
 const StyledComment = styled.div`
     display: flex;
@@ -86,6 +87,7 @@ const OptionMenu = styled.ul`
     box-shadow: 0 1px 6px 0 #0000006c;
     padding: 8px;
     border-radius: 10px;
+    z-index: 1;
     
     > li {
         border-radius: 5px;
@@ -182,8 +184,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         parent_id: comment.id
     });
 
-    // temp
-    const lastUpdate = new Date(comment.updated_at).toDateString();
+    const lastUpdate = getFormattedDate(comment.updated_at);
 
     const getCommentLikes = async () => {
         try {
@@ -275,7 +276,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                     <Container>
                         <CommentHeader>
                             <div>
-                                <p><strong>{comment.first_name} {comment.last_name}</strong></p>
+                                <p><strong>{comment.full_name}</strong></p>
                                 <CommentDate>{lastUpdate}</CommentDate>
                             </div>
 
@@ -331,10 +332,13 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                             }
                         </LikeAndCommentIcons>
 
-                        <LikesCounter onClick={() => setLikesVisibility(true)}>
-                            <img src={likedIcon} />
-                            <p>{commentLikes.length}</p>
-                        </LikesCounter>
+                        {commentLikes.length ?
+                            <LikesCounter onClick={() => setLikesVisibility(true)}>
+                                <img src={likedIcon} />
+                                <p>{commentLikes.length}</p>
+                            </LikesCounter>
+                            : undefined
+                        }
                     </CommentFooter>
                 </div>
 
@@ -353,9 +357,9 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
                     <ReplyInput>
                         <Image />
 
-                        <form>
-                            <textarea autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
-                            <Button width='100px' primary type='button' onClick={createReply}>Confirm</Button>
+                        <form onSubmit={createReply}>
+                            <textarea required autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />
+                            <Button width='100px' primary>Confirm</Button>
                         </form>
                     </ReplyInput>
                     : undefined

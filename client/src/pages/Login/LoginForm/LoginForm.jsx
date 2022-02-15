@@ -103,7 +103,7 @@ const LoginForm = ({ setLogin, setToken }) => {
         try {
             const res = await axios.post('http://localhost:4000/api/login', {
                 email: "freddie@gmail.com",
-                password: "kwbeibcvfwsbc"
+                password: "Freddie.1"
             });
 
             if (res.data.message === 'Successful login') {

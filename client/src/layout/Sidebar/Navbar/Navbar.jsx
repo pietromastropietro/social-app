@@ -50,7 +50,7 @@ const NaviLink = styled(NavLink)`
 
 const Navbar = ({ type }) => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
-    const userProfilePath = `${user.first_name}${user.last_name}-${user.id}`
+    const userProfilePath = `${user.full_name.split(' ')[0]}-${user.id}`
 
     const logout = () => {
         localStorage.clear();

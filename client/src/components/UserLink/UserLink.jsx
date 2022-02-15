@@ -20,14 +20,13 @@ const ProfileLink = styled(Link)`
 `
 
 const UserLink = ({ user }) => {
-    const fullName = `${user.first_name} ${user.last_name}` // temp
-    const path = `${user.first_name}${user.last_name}-${user.id}`
+    const path = `${user.full_name.split(' ')[0]}-${user.id}`
 
     return (
         <StyledUserLink>
             <Image />
             <ProfileLink to={`/users/${path}`}>
-                {fullName}
+                {user.full_name}
             </ProfileLink>
         </StyledUserLink>
     )
