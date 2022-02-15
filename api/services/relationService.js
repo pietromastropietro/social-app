@@ -37,9 +37,9 @@ const getFriendsRequests = async (userId) => {
     }
 };
 
-const createRelation = async (usersIds) => {
+const createRelation = async (usersIds) => {    
     const query =
-        'INSERT INTO relations (user1_id, user2_id, status, id) VALUES ($1, $2, $3)';
+        'INSERT INTO relations (user1_id, user2_id, status) VALUES ($1, $2, $3)';
 
     const relation = {
         ...usersIds,
@@ -53,6 +53,7 @@ const createRelation = async (usersIds) => {
 
         return relation;
     } catch (err) {
+        console.log(err.message);
         throw new Error(err.message)
     }
 };
