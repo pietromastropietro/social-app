@@ -69,13 +69,14 @@ const Feed = ({ userId }) => {
         }
     };
 
+    // fetch posts on component mount and on user profile change
     useEffect(() => {
         getPosts();
         // temp for testing
         // populateUsers();
         // populatePosts();
         // populateRels();
-    }, []);
+    }, [userId]);
 
     const createPost = async (post) => {
         setPostInputMode(false);
