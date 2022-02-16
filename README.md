@@ -51,33 +51,33 @@
 
 sociALLy is a social networking web app built with React and Express.
 
-I built this project in order to improve and practice my skills in web development, providing at the same time a fully functional responsive web app that users can actually enjoy.
+I built this project in order to improve and practice my skills in full-stack web development, providing at the same time a fully functional responsive web app that users can actually enjoy.
 
 Users, once registered and authenticated, can:
 - Search for other users
 - Add/remove users as personal friends
-- Acceot/decline friend requests
+- Accept/decline friend requests
 - Create posts with text and images
 - Like and comment posts from friends
 - Reply to other comments
 - Edit their profile
 
-<details>
+<!-- <details>
 <summary>Screenshots</summary>
 <br>
 
 
 |                               Home Page                               |                               Login Page                               |
 | :-------------------------------------------------------------------: | :--------------------------------------------------------------------: |
-| <img src="" title="Home Page" width="100%"> | <img src="" title="Login Page" width="100%"> |
+ | <img src="" title="Home Page" width="100%"> | <img src="" title="Login Page" width="100%"> |
 
-</details>
+</details> -->
 
 ### Built With
 
 **Client**
 
-Modern React with only functional components and hooks, paired with styled-components. Simple local state management with Context. Routing provided by [React router v6](https://reactrouter.com/).
+Modern React with functional components and hooks, paired with [styled-components](https://styled-components.com/). Simple yet effective local state management with Context. Routing provided by [React Router v6](https://reactrouter.com/).
 
 **API**
 
@@ -91,10 +91,6 @@ Express web framework for Node.js, JSON Web Token based authentication, PostgreS
 
 ### Installation
 
-- Create a postgreSQL database named `socially`
-
-- Run the .sql script to automatically map the database.
-
 - Open the command prompt where you wish to save the project and clone the repository:
     
   `git clone https://github.com/pietromastropietro/socially`
@@ -107,6 +103,40 @@ Express web framework for Node.js, JSON Web Token based authentication, PostgreS
   ```
 
 - Edit the existing `.env.example` file in `/api` with your own database username and password, and rename it to `.env`
+
+- Run the `socially.sql` script to automatically create the database and map all tables:
+  <details>
+    <summary>
+      From command prompt/terminal
+    </summary>
+
+    - Linux
+      ```
+      sudo su - <your_db_username>
+      psql -U <your_db_username> -f /<project_folder_path>/api/db/socially.sql
+      ```
+
+    - Windows
+      ```
+      psql -U <your_db_username> -f C:\<project_folder_path>\api\db\socially.sql
+      ```
+  </details>
+
+  <details>
+    <summary>
+      From psql shell
+    </summary>
+
+    - Linux
+      ```
+      \i  <project_folder_path>/api/db/socially.sql
+      ```
+
+    - Windows
+      ```
+      \i 'C:/<project_folder_path>/api/db/socially.sql'
+      ```
+  </details>
 
 ## Usage
 
