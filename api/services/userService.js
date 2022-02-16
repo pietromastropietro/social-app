@@ -13,7 +13,7 @@ const getUsers = async () => {
 const getUsersByName = async (userName) => {
     try {
         const query = 
-        `SELECT * FROM users WHERE users.full_name LIKE '%' || $1 || '%'`
+        `SELECT * FROM users WHERE users.full_name ILIKE '%' || $1 || '%'`
 
         const users = await db.query(query, [userName]);
 

@@ -37,14 +37,14 @@ const getFriendsRequests = async (userId) => {
     }
 };
 
-const createRelation = async (usersIds) => {    
+const createRelation = async (usersIds) => {
     const query =
         'INSERT INTO relations (user1_id, user2_id, status) VALUES ($1, $2, $3)';
 
-    const relation = {
-        ...usersIds,
-        status: 0
-    };
+    const relation = { ...usersIds, status: 0 };
+
+    // temp for adding mock data to db
+    // const relation = { ...usersIds };
 
     const params = Object.values(relation);
 
