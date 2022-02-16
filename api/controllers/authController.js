@@ -1,29 +1,37 @@
 const jwt = require('jsonwebtoken');
 const db = require('../db/db');
+const bcrypt = require('bcrypt');
 
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // validate user input
+        // todo: validate user input
 
-        let query = 'SELECT * FROM users WHERE email = $1';
-
+        // fetch user by email from db
+        const query = 'SELECT * FROM users WHERE email = $1';
         const user = (await db.query(query, [email]))[0];
 
-        if (user && password === user.password_hash) {
-            jwt.sign({ user: user }, process.env.JWT_KEY, { expiresIn: '1h' }, (err, token) => {
-                if (err) {
-                    return res.json({ message: "JWT error" });
-                }
-
-                // remove password before sending user data to frontend
-                delete user.password_hash;
-                res.json({ message: 'Successful login', token, user: user });
-            });
-        } else {
-            res.json({ message: "Incorrect/missing username or password" });
+        if (!user) {
+            return res.json({ message: "User not found" });
         }
+        
+        // user exists, decrypt and compare password
+        const passwordMatch = await bcrypt.compare(password, user.password_hash);
+        
+        if (!passwordMatch) {
+            return res.json({ message: "Incorrect password" });
+        }
+
+        // passwords match, get token
+        const token =  jwt.sign({ user: user }, process.env.JWT_KEY, { expiresIn: '1h' });
+
+        if (!token) {
+            return res.json({ message: "JWT error" });
+        }
+
+        // return token and fetched user
+        res.json({ message: 'Successful login', token, user: user });
     } catch (err) {
         return next(err);
     }
@@ -36,27 +44,28 @@ const register = async (req, res, next) => {
             bio: null,
             dob: req.body.dob,
             email: req.body.email,
-            password_hash: req.body.password,
+            password_hash: undefined,
             registered_at: new Date()
         }
-        
+
         // check if user exists by email
         let query = 'SELECT * FROM users WHERE email = $1';
         const fetchedUser = await db.query(query, [user.email]);
-        
+
         if (fetchedUser.length) {
             return res.json({ message: "User already exists. Please login" });
         }
-        
+
+        // encrypt user password
+        user.password_hash = await bcrypt.hash(req.body.password, 10);
+
         // create new user
         query =
-        `INSERT INTO users (full_name, bio, dob, email, password_hash, registered_at) 
+            `INSERT INTO users (full_name, bio, dob, email, password_hash, registered_at) 
         VALUES ($1, $2, $3, $4, $5, $6)`;
-        
-        // TODO encrypt user password
-        
+
         const params = Object.values(user);
-        
+
         await db.query(query, params);
 
         res.json({ message: 'New user created' });
@@ -69,26 +78,25 @@ const resetUserPassword = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // check if user exists by email
+        // fetch user by email from db
         let query = 'SELECT * FROM users WHERE email = $1';
-        const user = await db.query(query, [email]);
+        const user = (await db.query(query, [email]))[0];
 
-        if (!user.length) {
+        if (!user) {
             return res.json({ message: "User not found" });
         }
 
-        // user exists, update password
+        // user exists, encrypt new password and update the db
+        const encryptedPassword = await bcrypt.hash(password, 10);
+
         query = `UPDATE users SET password_hash = $1 WHERE email = $2`;
 
-        // todo: encrypt password
-        
-        await db.query(query, [password, email]);
+        await db.query(query, [encryptedPassword, email]);
 
         res.json({ message: 'Password changed' });
     } catch (err) {
         return next(err);
     }
-
 }
 
 module.exports = {
