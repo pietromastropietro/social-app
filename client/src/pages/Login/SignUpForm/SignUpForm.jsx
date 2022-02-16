@@ -8,7 +8,17 @@ import { regex } from 'utils/constants/regex';
 import { errorMessages } from 'utils/constants/errorMessages'
 import { getMaxDob } from 'utils/dateUtil';
 import defaultUserImg from 'static/images/user.svg'
+import logoImg from 'static/images/logo.png'
+import { breakpoint } from 'style';
 
+const Logo = styled.img`
+    margin-bottom: 20px;
+    width: 300px;
+
+    @media (max-width: ${breakpoint.primary}) {
+        width: 100%;
+    }
+`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
@@ -158,10 +168,10 @@ const SignUpForm = ({ setLogin }) => {
     };
 
     const signUpUser = async () => {
-        try {            
+        try {
             if (userImage) {
                 // User chose a profile image, upload it and save its url
-                
+
                 // Upload profile image to AWS S3 bucket and get its url
                 // const imgUrl = await handleImageUpload(userImage);
 
@@ -194,62 +204,65 @@ const SignUpForm = ({ setLogin }) => {
     };
 
     return (
-        <Form onSubmit={checkFormValidity}>
-            <ImageFieldset>
-                {!userImage ?
-                    <>
-                        <PreviewImage src={defaultUserImg} />
+        <>
+            <Logo src={logoImg} alt="website logo" />
+            <Form onSubmit={checkFormValidity}>
+                <ImageFieldset>
+                    {!userImage ?
+                        <>
+                            <PreviewImage src={defaultUserImg} />
 
-                        <ImageInputLabel htmlFor='userImage'>
-                            Add profile image
-                            <input type="file" name='userImage' id='userImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
-                        </ImageInputLabel>
-                    </>
-                    :
-                    <>
-                        <PreviewImage src={URL.createObjectURL(userImage)} />
-                        <Button primary width='140px' type='button' onClick={handleImageInput}>Remove image</Button>
-                    </>
-                }
-            </ImageFieldset>
+                            <ImageInputLabel htmlFor='userImage'>
+                                Add profile image
+                                <input type="file" name='userImage' id='userImage' onChange={handleImageInput} accept="image/png, image/jpeg" />
+                            </ImageInputLabel>
+                        </>
+                        :
+                        <>
+                            <PreviewImage src={URL.createObjectURL(userImage)} />
+                            <Button primary width='140px' type='button' onClick={handleImageInput}>Remove image</Button>
+                        </>
+                    }
+                </ImageFieldset>
 
-            <InputLabels>
-                <label htmlFor="full_name">Full Name *</label>
-                <ErrorMsg>{formValidity.full_name || errorMessages.full_name}</ErrorMsg>
-            </InputLabels>
-            <Input type="text" name="full_name" onChange={handleInput} onBlur={validateOnBlur} value={user.full_name} required />
+                <InputLabels>
+                    <label htmlFor="full_name">Full Name *</label>
+                    <ErrorMsg>{formValidity.full_name || errorMessages.full_name}</ErrorMsg>
+                </InputLabels>
+                <Input type="text" name="full_name" onChange={handleInput} onBlur={validateOnBlur} value={user.full_name} required />
 
-            <InputLabels>
-                <label htmlFor="dob">Date of birth *</label>
-            </InputLabels>
-            <Input type="date" name="dob" max={getMaxDob()} onChange={handleInput} value={user.dob} required />
+                <InputLabels>
+                    <label htmlFor="dob">Date of birth *</label>
+                </InputLabels>
+                <Input type="date" name="dob" max={getMaxDob()} onChange={handleInput} value={user.dob} required />
 
-            <InputLabels>
-                <label htmlFor="email">Email *</label>
+                <InputLabels>
+                    <label htmlFor="email">Email *</label>
 
-                <ErrorMsg>
-                    {formValidity.email || errorMessages.email}
-                    {emailAvailable || errorMessages.emailAvailable}
-                </ErrorMsg>
-            </InputLabels>
-            <Input type="email" name="email" onChange={handleInput} onBlur={validateOnBlur} value={user.email} required />
+                    <ErrorMsg>
+                        {formValidity.email || errorMessages.email}
+                        {emailAvailable || errorMessages.emailAvailable}
+                    </ErrorMsg>
+                </InputLabels>
+                <Input type="email" name="email" onChange={handleInput} onBlur={validateOnBlur} value={user.email} required />
 
-            <InputLabels>
-                <label htmlFor="password">Password *</label>
-                <ErrorMsg>{formValidity.password || errorMessages.password}</ErrorMsg>
-            </InputLabels>
-            <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
+                <InputLabels>
+                    <label htmlFor="password">Password *</label>
+                    <ErrorMsg>{formValidity.password || errorMessages.password}</ErrorMsg>
+                </InputLabels>
+                <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
 
-            <PasswordVisibilityCheckbox>
-                <input type="checkbox" name="showPassword" onClick={togglePasswordVisibility} />
-                <label htmlFor="showPassword">Show password</label>
-            </PasswordVisibilityCheckbox>
+                <PasswordVisibilityCheckbox>
+                    <input type="checkbox" name="showPassword" onClick={togglePasswordVisibility} />
+                    <label htmlFor="showPassword">Show password</label>
+                </PasswordVisibilityCheckbox>
 
-            <BtnFieldset>
-                <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>
-                <Button primary type="submit">Register</Button>
-            </BtnFieldset>
-        </Form>
+                <BtnFieldset>
+                    <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>
+                    <Button primary type="submit">Register</Button>
+                </BtnFieldset>
+            </Form>
+        </>
     )
 }
 

@@ -5,22 +5,25 @@ import loginImg from 'static/images/loginImg.png'
 import logoImg from 'static/images/logo.png'
 import LoginForm from './LoginForm/LoginForm'
 import SignUpForm from './SignUpForm/SignUpForm'
-import Button from 'components/Button/Button'
+import { boxShadow, breakpoint } from 'style'
 
 const StyledLogin = styled.div`
     display: flex;
     justify-content: center;
-    background-color: #eeeeee;
 `
 const LoginCard = styled.div`
     background-color: #ffffff;
     display: flex;
     width: 1400px;
-    // todo: remove this when adding media queries
-    min-height: 530px;
     margin: 20px 100px;
     border-radius: 20px;
+    ${boxShadow}
 
+    @media (max-width: ${breakpoint.primary}) {
+        margin: 0;
+        padding: 0 20px 20px 20px;
+        border-radius: 0;
+    }
 `
 const ImgContainer = styled.figure`
     display: flex;
@@ -32,8 +35,10 @@ const ImgContainer = styled.figure`
         border-radius: 0 20px 20px 0;
         max-width: 100%;
         height: auto;
-        // todo: remove this when adding media queries
-        min-height: 530px;
+    }
+
+    @media (max-width: ${breakpoint.primary}) {
+        display: none;
     }
 `
 const LoginMain = styled.div`
@@ -42,10 +47,18 @@ const LoginMain = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @media (max-width: ${breakpoint.primary}) {
+        width: 100%;
+    }
  `
 const Logo = styled.img`
     margin-bottom: 20px;
     width: 300px;
+
+    @media (max-width: ${breakpoint.primary}) {
+        width: 100%;
+    }
 `
 const FormContainer = styled.div`
     display: flex;
@@ -53,6 +66,11 @@ const FormContainer = styled.div`
     align-items: center;
     width: 60%;
     margin-top: 30px;
+
+    @media (max-width: ${breakpoint.primary}) {
+        width: 100%;
+        max-width: 500px;
+    }
 `
 
 const LoginIndex = ({ setToken }) => {
