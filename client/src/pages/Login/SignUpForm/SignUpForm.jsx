@@ -10,6 +10,7 @@ import { getMaxDob } from 'utils/dateUtil';
 import defaultUserImg from 'static/images/user.svg'
 import logoImg from 'static/images/logo.png'
 import { breakpoint } from 'style';
+import Overlay from 'components/Overlay/Overlay';
 
 const Logo = styled.img`
     margin-bottom: 20px;
@@ -87,6 +88,20 @@ const BtnFieldset = styled.fieldset`
     column-gap: 10px;
     margin-top: 15px;
 `
+const Dialog = styled.div`
+    background-color: #fff;
+    width: 180px;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+
+    > p {
+        margin-bottom: 30px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+`
+
 const SignUpForm = ({ setLogin }) => {
     const [user, setUser] = useState({
         full_name: '',
@@ -107,6 +122,9 @@ const SignUpForm = ({ setLogin }) => {
 
     // state to check email availability
     const [emailAvailable, setEmailAvailable] = useState(true);
+
+    // state to show user creation confirm dialog
+    const [confirmDialog, setConfirmDialog] = useState(false);
 
     // state and function to toggle password visibility
     const [inputType, setInputType] = useState("password");
@@ -191,12 +209,8 @@ const SignUpForm = ({ setLogin }) => {
                 // show message for unavailable email
                 setEmailAvailable(false);
             } else {
-                // user created, go back to login
-
-                // temp
-                alert(res.data.message);
-
-                setLogin(true);
+                // user created, show confirm dialog
+                setConfirmDialog(true)
             }
         } catch (err) {
             console.log(err);
@@ -206,6 +220,7 @@ const SignUpForm = ({ setLogin }) => {
     return (
         <>
             <Logo src={logoImg} alt="website logo" />
+
             <Form onSubmit={checkFormValidity}>
                 <ImageFieldset>
                     {!userImage ?
@@ -262,6 +277,16 @@ const SignUpForm = ({ setLogin }) => {
                     <Button primary type="submit">Register</Button>
                 </BtnFieldset>
             </Form>
+
+            {confirmDialog ?
+                <Overlay>
+                    <Dialog>
+                        <p>New user created!</p>
+                        <Button primary onClick={() => setLogin(true)}>Go to Login</Button>
+                    </Dialog>
+                </Overlay>
+                : undefined
+            }
         </>
     )
 }
