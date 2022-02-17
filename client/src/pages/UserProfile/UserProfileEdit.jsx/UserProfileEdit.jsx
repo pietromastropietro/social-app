@@ -87,7 +87,6 @@ const UserProfileEdit = ({ userId }) => {
         dob: '',
         email: '',
         bio: '',
-        password_hash: '',
         profile_img_url: '',
         oldPassword: '',
         newPassword: '',
@@ -109,12 +108,12 @@ const UserProfileEdit = ({ userId }) => {
                 const formattedDob = getDateForInputElement(new Date(res.data.dob));
 
                 setUser({
+                    ...user,
                     full_name: res.data.full_name,
                     dob: formattedDob,
                     email: res.data.email,
-                    password_hash: res.data.password_hash,
-                    bio: res.data.bio,
-                    profile_img_url: res.data.profile_img_url || "" // temp, if user nas no img the value from db will already be ""
+                    bio: res.data.bio || "",
+                    profile_img_url: res.data.profile_img_url || ""
                 });
             }
         } catch (err) {
@@ -160,8 +159,23 @@ const UserProfileEdit = ({ userId }) => {
     }
 
     const cancelPasswordEdit = () => {
-        // reset newPassword field
-        setUser({ ...user, newPassword: '' });
+        // reset password field
+        setUser({
+            ...user,
+            oldPassword: '',
+            newPassword: '',
+            passwordConfirm: ''
+        });
+
+        // reset form validity
+        setFormValidity({
+            ...formValidity,
+            newPassword: true,
+            passwordConfirm: true,
+            passwordEquality: true
+        });
+
+        // hide password inputs
         setPasswordEditMode(false)
     };
 
@@ -247,18 +261,6 @@ const UserProfileEdit = ({ userId }) => {
         try {
             let updatedUser = user;
 
-            if (passwordEditMode) {
-                // user changed his password, check if he wrote his old password correctly
-                if (updatedUser.oldPassword !== updatedUser.password_hash) {
-                    // wrong password
-                    return setWrongOldPassword(true);
-                } else {
-                    // replace old password from db with new one
-                    updatedUser.password_hash = updatedUser.newPassword;
-                }
-            };
-
-
             if (userImage) {
                 // user changed his profile image, upload it and save its url
 
@@ -276,8 +278,6 @@ const UserProfileEdit = ({ userId }) => {
             }
 
             // delete now useless fields
-            delete updatedUser.oldPassword;
-            delete updatedUser.newPassword;
             delete updatedUser.passwordConfirm;
 
             const res = await axios.put(`http://localhost:4000/api/users/${userId}`, updatedUser, {
@@ -286,23 +286,28 @@ const UserProfileEdit = ({ userId }) => {
                 }
             });
 
-            if (res.data.message === "Email not available") {
-                // show message for unavailable email
-                setEmailAvailable(false);
-            } else {
-                // user updated
-
-                // add missing fields to updatedUser
-                updatedUser.id = userId;
-                updatedUser.registered_at = user.registered_at;
-
-                // replace user's data in localStorage with new ones
-                localStorage.removeItem('user');
-                localStorage.setItem('user', JSON.stringify(updatedUser))
-
-                // refresh page to update data on screen
-                window.location.reload();
+            if (res.data.message === "Passwords don't match") {
+                // user wants to change his password but the old one he inputted and the one from db don't match, show error msg
+                return setWrongOldPassword(true);
             }
+
+            if (res.data.message === "Email not available") {
+                // user's new chosen email isn't available, show errro msg
+                return setEmailAvailable(false);
+            }
+
+            // User successfully updated
+
+            // add missing fields to updatedUser
+            updatedUser.id = userId;
+            updatedUser.registered_at = user.registered_at;
+
+            // replace user's data in localStorage with new ones
+            localStorage.removeItem('user');
+            localStorage.setItem('user', JSON.stringify(updatedUser))
+
+            // refresh page to update data on screen
+            window.location.reload();
         } catch (err) {
             console.log(err);
         };
