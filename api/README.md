@@ -1,29 +1,96 @@
 # sociALLy API
 
-Backend server providing API endpoints to authenticate users and perform CRUD operations on postgreSQL database.
+Backend server providing API endpoints to authenticate users and perform CRUD operations on PostgreSQL database.
 
-## Project structure
+<!-- ## Project structure
 
 | File or folder | Description |
 | -------------- | ----------- |
 |                |             | 
 |                |             |
+ -->
 
 ## Details
 
 ### PostgreSQL database
 
-The sociALLy postgreSQL database consists of five tables: users, posts, comments, likes, relationships
+The sociALLy postgreSQL database consists of five tables: users, posts, comments, likes, relations
 
-- The 'users' table has  columns: id, 
+<details>
+    <summary>
+    Users table
+    </summary>
 
-- The 'posts' table has  columns: id, 
+| Column | Type | Nullable |
+| - | - | - |
+| id (PK) | SERIAL | |
+| full_name | VARCHAR | NOT NULL |
+| dob | TIMESTAMP WITH TIME ZONE | NOT NULL |
+| email | VARCHAR | NOT NULL |
+| password_hash | VARCHAR | NOT NULL |
+| bio | TEXT | |
+| registered_at | TIMESTAMP WITH TIME ZONE | NOT NULL |
 
-- The 'comments' table has  columns: id, 
+</details>
+<details>
+    <summary>
+    Posts table
+    </summary>
 
-- The 'likes' table has  columns: id, 
+| Column | Type | Nullable |
+| - | - | - |
+| id (PK) | SERIAL | |
+| user_id (FK) | BIGINT | NOT NULL |
+| text | TEXT | NOT NULL |
+| image_url | TEXT | |
+| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL |
+| updated at | TIMESTAMP WITH TIME ZONE | NOT NULL |
 
-- The 'relationships' table has  columns: id, 
+</details>
+<details>
+    <summary>
+    Comments table
+    </summary>
+
+| Column | Type | Nullable |
+| - | - | - |
+| id (PK) | SERIAL | |
+| user_id (FK) | BIGINT | NOT NULL |
+| post_id (FK) | BIGINT | NOT NULL |
+| parent_id (FK) | BIGINT | |
+| text | TEXT | NOT NULL |
+| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL |
+| updated at | TIMESTAMP WITH TIME ZONE | NOT NULL |
+
+</details>
+<details>
+    <summary>
+    Likes table
+    </summary>
+
+| Column | Type | Nullable |
+| - | - | - |
+| id (PK) | SERIAL | |
+| user_id (FK) | BIGINT | NOT NULL |
+| post_id (FK) | BIGINT | |
+| comment_id (FK) | BIGINT | |
+| text | TEXT | NOT NULL |
+| created_at | TIMESTAMP WITH TIME ZONE | NOT NULL |
+
+</details>
+<details>
+    <summary>
+    Relations table
+    </summary>
+
+| Column | Type | Nullable |
+| - | - | - |
+| id (PK) | SERIAL | |
+| user1_id (FK) | BIGINT | NOT NULL |
+| user2_id (FK) | BIGINT | NOT NULL |
+| status | integer | |
+
+</details>
 
 ### Restricted routes
 

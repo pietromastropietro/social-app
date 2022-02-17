@@ -1,10 +1,10 @@
 # sociALLy Client
 
-React frontend using styled-components and React Router v6.
+React front-end using styled-components and React Router v6.
 
-## Project structure
+<!-- ## Project structure
 
 | File or folder | Description |
 | -------------- | ----------- |
 |                |             | 
-|                |             |
+|                |             | -->
