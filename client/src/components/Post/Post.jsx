@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Image from 'components/Image'
+import UserProfileImage from 'components/UserProfileImage'
 import Comments from './Comments/Comments'
 import { radius, boxShadow } from 'style'
 import { useState } from 'react'
@@ -212,7 +212,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
         <StyledPost>
             <PostHeader>
                 <div>
-                    <Image />
+                    <UserProfileImage src={post.profile_img_url} />
 
                     <PostAuthorAndDate>
                         <p><strong>{post.full_name}</strong></p>

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import { radius, boxShadow } from 'style'
 import { useParams } from 'react-router-dom'
-import Image from 'components/Image'
+import UserProfileImage from 'components/UserProfileImage'
 
 // temp for testing
 import { populateUsers, populatePosts, populateRels } from 'popdb'
@@ -157,7 +157,7 @@ const Feed = ({ userId }) => {
             */}
             {(!userIdParam || userIdParam == user.id) ?
                 <NewPostInputContainer>
-                    <Image />
+                    <UserProfileImage src={user.profile_img_url} />
 
                     {postInputMode ?
                         <PostInput handlePost={createPost} />

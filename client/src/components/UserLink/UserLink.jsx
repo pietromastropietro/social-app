@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import Image from '../Image'
+import UserProfileImage from '../UserProfileImage'
 
 const StyledUserLink = styled.li`
     display: flex;
@@ -23,7 +23,8 @@ const UserLink = ({ user }) => {
 
     return (
         <StyledUserLink>
-            <Image />
+            <UserProfileImage />
+
             <ProfileLink to={`/users/${path}`}>
                 {user.full_name}
             </ProfileLink>

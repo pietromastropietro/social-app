@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { handleLike } from 'utils/likeUtil'
 import Button from 'components/Button/Button'
-import Image from 'components/Image'
+import UserProfileImage from 'components/UserProfileImage'
 import commentIcon from 'static/images/comment.svg'
 import likeIcon from 'static/images/like.svg'
 import likedIcon from 'static/images/liked.svg'
@@ -269,7 +269,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
     return (
         <>
             <StyledComment>
-                <Image />
+                <UserProfileImage src={comment.profile_img_url} />
 
                 <div>
                     <Container>
@@ -354,7 +354,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
             <ReplyContainer>
                 {replyInputMode ?
                     <ReplyInput>
-                        <Image />
+                        <UserProfileImage src={user.profile_img_url} />
 
                         <form onSubmit={createReply}>
                             <textarea required autoFocus rows='2' name="replyText" placeholder='Write your reply here...' value={reply.text} onChange={handleInput} />

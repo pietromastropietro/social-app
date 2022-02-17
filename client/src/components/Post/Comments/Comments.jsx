@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button';
 import Comment from './Comment/Comment'
-import Image from 'components/Image';
+import UserProfileImage from 'components/UserProfileImage';
 import { radius } from 'style';
 
 const StyledComments = styled.div`
     border-top: 1px solid #a5a5a5;
-    /* margin-top: 10px; */
     padding-top: 10px;
 `
 const CommentInput = styled.div`
@@ -265,7 +264,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
     return (
         <StyledComments>
             <CommentInput>
-                <Image />
+                <UserProfileImage src={user.profile_img_url} />
 
                 {commentInputMode ?
                     <form onSubmit={() => createComment(comment)}>

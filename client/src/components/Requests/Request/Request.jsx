@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
-import Image from 'components/Image'
+import UserProfileImage from 'components/UserProfileImage'
 import { Link } from 'react-router-dom'
 
 const StyledRequest = styled.div`
@@ -41,7 +41,8 @@ const Request = ({ request, acceptRequest, declineRequest }) => {
     return (
         <StyledRequest>
             <RequestHeader>
-                <Image />
+                <UserProfileImage src={request.profile_img_url} />
+                
                 <p>
                     <ProfileLink to={`/users/${path}`}>{request.full_name}</ProfileLink>
                     {` wants to add you to friends.`}

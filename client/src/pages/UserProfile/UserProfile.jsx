@@ -9,6 +9,7 @@ import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
 import { boxShadow, radius } from 'style'
 import { useRelationship } from 'utils/customHooks/useRelationship'
 import Overlay from 'components/Overlay/Overlay'
+import UserProfileImage from 'components/UserProfileImage'
 
 const StyledProfile = styled.div`
     grid-column: 2 / 3;
@@ -24,12 +25,6 @@ const ProfileHeader = styled.div`
     margin-bottom: 15px;
     border-radius: ${radius.primary};
     box-shadow: ${boxShadow.primary};
-
-    > img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-    }
 `
 const UserName = styled.h2`
     font-size: 40px;
@@ -154,7 +149,7 @@ const UserProfile = () => {
         return (
             <StyledProfile>
                 <ProfileHeader>
-                    <img src={user.profile_img_url ? user.profile_img_url : defaultUserImg} />
+                    <UserProfileImage big src={user.profile_img_url} />
 
                     <UserName>
                         {user.full_name}
@@ -184,7 +179,7 @@ const UserProfile = () => {
         return (
             <StyledProfile>
                 <ProfileHeader>
-                    <img src={visitedUserProfileInfo?.profile_img_url ? visitedUserProfileInfo?.profile_img_url : defaultUserImg} />
+                    <UserProfileImage big src={visitedUserProfileInfo?.profile_img_url} />
 
                     <UserName>
                         {visitedUserProfileInfo?.full_name}
