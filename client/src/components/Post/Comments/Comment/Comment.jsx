@@ -237,7 +237,6 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
         updateComment(commentUpdates);
     };
 
-    // todo check if i need async await
     const createReply = async () => {
         setReplyInputMode(false);
         await createComment(reply);

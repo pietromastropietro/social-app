@@ -82,9 +82,10 @@ const Feed = ({ userId }) => {
         setPostInputMode(false);
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/posts`, {
-                userId: user.id,
-                postData: post
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/posts`, { userId: user.id, postData: post }, {
+                headers: {
+                    Authorization: (localStorage.getItem('token'))
+                }
             });
 
             if (res.data.message === 'Post created') {

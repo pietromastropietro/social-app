@@ -64,6 +64,22 @@ const NoFriendsMsg = styled.p`
         text-transform: capitalize;
     }
 `
+const Dialog = styled.div`
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    row-gap: 30px;
+
+    > div {
+        display: flex;
+        justify-content: space-evenly;
+    }
+`
 
 const UserProfile = () => {
     const user = JSON.parse(localStorage.getItem('user')) || undefined;
@@ -202,15 +218,19 @@ const UserProfile = () => {
 
                     {relationshipDialog ?
                         <Overlay>
-                            <p>
-                                {`Do u really want to 
-                                ${relationship.status === "Friends" ?
-                                        "remove this friend?" : "delete the friends request?"
-                                    }
-                            `}
-                            </p>
-                            <Button warning onClick={handleDeleteRequestConfirmationDialog}>Yes</Button>
-                            <Button primaryOutlined onClick={() => showRelationshipDialog(false)}>No</Button>
+                            <Dialog>
+                                <p>{`Do u really want to ${relationship.status === "Friends" ?
+                                    "remove this friend?"
+                                    :
+                                    "delete the friends request?"
+                                    }`}
+                                </p>
+
+                                <div>
+                                    <Button width='60px' warning onClick={handleDeleteRequestConfirmationDialog}>Yes</Button>
+                                    <Button width='60px' primaryOutlined onClick={() => showRelationshipDialog(false)}>No</Button>
+                                </div>
+                            </Dialog>
                         </Overlay>
                         : undefined
                     }
@@ -230,7 +250,7 @@ const UserProfile = () => {
                         <Feed userId={userIdParam} />
                     }
                 </ProfileBody>
-            </StyledProfile>
+            </StyledProfile >
         )
     }
 }
