@@ -122,7 +122,7 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
 
     const handlePasswordReset = async () => {
         try {
-            const res = await axios.put(`http://localhost:4000/api/reset-password`, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}/reset-password`, {
                 email: user.email,
                 password: user.password
             })

@@ -50,10 +50,10 @@ const Feed = ({ userId }) => {
 
         if (userId) {
             // I'm on the user's profile so show only user's posts
-            path = `http://localhost:4000/api/posts/user/${userId}`
+            path = `${process.env.REACT_APP_API_URL}/posts/user/${userId}`
         } else {
             // I'm on the homepage so show all user's post and also friend's ones
-            path = `http://localhost:4000/api/posts`
+            path = `${process.env.REACT_APP_API_URL}/posts`
         };
 
         try {
@@ -82,7 +82,7 @@ const Feed = ({ userId }) => {
         setPostInputMode(false);
 
         try {
-            const res = await axios.post('http://localhost:4000/api/posts', {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/posts`, {
                 userId: user.id,
                 postData: post
             });
@@ -98,7 +98,7 @@ const Feed = ({ userId }) => {
 
     const deletePost = async (postId) => {
         try {
-            const res = await axios.delete(`http://localhost:4000/api/posts/${postId}`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -121,7 +121,7 @@ const Feed = ({ userId }) => {
         };
 
         try {
-            const res = await axios.put(`http://localhost:4000/api/posts/${post.id}`, updatedPost, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}/posts/${post.id}`, updatedPost, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

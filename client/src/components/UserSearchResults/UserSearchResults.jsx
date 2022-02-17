@@ -61,7 +61,7 @@ const UserSearch = () => {
 
     const getUsersByName = async (userToSearch) => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/name?name=${userToSearch}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/name?name=${userToSearch}`, {
                 headers: { Authorization: (localStorage.getItem('token')) }
             });
 

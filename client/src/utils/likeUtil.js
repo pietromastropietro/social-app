@@ -54,7 +54,7 @@ export const createLike = async (userId, contentId, contentType) => {
     }
 
     try {
-        const res = await axios.post(`http://localhost:4000/api/likes`, like, {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/likes`, like, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }
@@ -68,7 +68,7 @@ export const createLike = async (userId, contentId, contentType) => {
 
 export const removeLike = async (contentId) => {
     try {
-        const res = await axios.delete(`http://localhost:4000/api/likes/${contentId}`, {
+        const res = await axios.delete(`${process.env.REACT_APP_API_URL}/likes/${contentId}`, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }

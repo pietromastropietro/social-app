@@ -7,7 +7,7 @@ export const createRelationship = async (user1Id, user2Id) => {
     };
 
     try {
-        await axios.post(`http://localhost:4000/api/relations`, usersIds, {
+        await axios.post(`${process.env.REACT_APP_API_URL}/relations`, usersIds, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }
@@ -19,7 +19,7 @@ export const createRelationship = async (user1Id, user2Id) => {
 
 export const updateRelationship = async (relationshipId) => {
     try {
-        await axios.put(`http://localhost:4000/api/relations/${relationshipId}`, {
+        await axios.put(`${process.env.REACT_APP_API_URL}/relations/${relationshipId}`, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }
@@ -31,7 +31,7 @@ export const updateRelationship = async (relationshipId) => {
 
 export const deleteRelationship = async (relationshipId) => {
     try {
-        await axios.delete(`http://localhost:4000/api/relations/${relationshipId}`, {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/relations/${relationshipId}`, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }

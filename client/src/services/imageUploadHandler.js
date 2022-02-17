@@ -4,7 +4,7 @@ import axios from "axios";
 export const handleImageUpload = async (image) => {
     try {
         // Get a pre-signed AWS url to upload an image
-        let res = await axios.get(`http://localhost:4000/api/aws-url?img-type=${image.type}`, {
+        let res = await axios.get(`${process.env.REACT_APP_API_URL}/aws-url?img-type=${image.type}`, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }

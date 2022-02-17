@@ -7,7 +7,7 @@ export const useRelationship = () => {
 
     const getRelationshipStatus = async (user1Id, user2Id) => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/relations/users/${user1Id}&${user2Id}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/relations/users/${user1Id}&${user2Id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

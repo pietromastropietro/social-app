@@ -161,7 +161,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
 
     const getPostLikes = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/likes/post/${post.id}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/likes/post/${post.id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

@@ -188,7 +188,7 @@ const Comment = ({ comment, createComment, deleteComment, updateComment }) => {
 
     const getCommentLikes = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/likes/comment/${comment.id}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/likes/comment/${comment.id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

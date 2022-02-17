@@ -101,7 +101,7 @@ const LoginForm = ({ setLogin, setToken }) => {
 
     const guestLogin = async () => {
         try {
-            const res = await axios.post('http://localhost:4000/api/login', {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
                 email: "freddie@gmail.com",
                 password: "Freddie.1"
             });
@@ -123,7 +123,7 @@ const LoginForm = ({ setLogin, setToken }) => {
         if (e) e.preventDefault();
 
         try {
-            const res = await axios.post('http://localhost:4000/api/login', user);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, user);
 
             if (res.data.message === 'Successful login') {
                 // save user's data in local storage

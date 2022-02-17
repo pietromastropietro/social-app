@@ -83,7 +83,7 @@ const UserProfile = () => {
 
     const getUserInfo = async (userId) => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/${userId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

@@ -97,7 +97,7 @@ const UserProfileEdit = ({ userId }) => {
 
     const getUser = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/${userId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -280,7 +280,7 @@ const UserProfileEdit = ({ userId }) => {
             // delete now useless fields
             delete updatedUser.passwordConfirm;
 
-            const res = await axios.put(`http://localhost:4000/api/users/${userId}`, updatedUser, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userId}`, updatedUser, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

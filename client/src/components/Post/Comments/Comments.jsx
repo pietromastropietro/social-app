@@ -70,7 +70,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
 
     const getComments = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/comments/post/${postId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/comments/post/${postId}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -124,7 +124,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
         setCommentInputMode(false);
 
         try {
-            const res = await axios.post(`http://localhost:4000/api/comments`, commentData, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/comments`, commentData, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -180,7 +180,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
         };
 
         try {
-            const res = await axios.put(`http://localhost:4000/api/comments/${comment.id}`, updatedComment, {
+            const res = await axios.put(`${process.env.REACT_APP_API_URL}/comments/${comment.id}`, updatedComment, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
@@ -219,7 +219,7 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
 
     const deleteComment = async (comment) => {
         try {
-            const res = await axios.delete(`http://localhost:4000/api/comments/${comment.id}`, {
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/comments/${comment.id}`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

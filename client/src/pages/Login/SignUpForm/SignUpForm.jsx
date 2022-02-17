@@ -203,7 +203,7 @@ const SignUpForm = ({ setLogin }) => {
                 }
             }
 
-            const res = await axios.post('http://localhost:4000/api/register', user);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/register`, user);
 
             if (res.data.message === "User already exists. Please login") {
                 // show message for unavailable email

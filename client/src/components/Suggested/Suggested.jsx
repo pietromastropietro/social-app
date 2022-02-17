@@ -32,7 +32,7 @@ const Suggested = () => {
 
     const getSuggested = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/suggestions`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/${user.id}/suggestions`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }

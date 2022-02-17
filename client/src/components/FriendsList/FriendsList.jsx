@@ -34,7 +34,7 @@ const FriendsList = () => {
 
     const getFriends = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/users/${user.id}/friends`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/users/${user.id}/friends`, {
                 headers: {
                     Authorization: (localStorage.getItem('token'))
                 }
