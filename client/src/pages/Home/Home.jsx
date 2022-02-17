@@ -1,4 +1,3 @@
-import React from 'react';
 import Feed from 'components/Feed/Feed'
 import Requests from 'components/Requests/Requests';
 import Suggested from 'components/Suggested/Suggested';

@@ -1,8 +1,7 @@
-import React from 'react'
 import styled from 'styled-components'
 import Image from 'components/Image'
 import Comments from './Comments/Comments'
-import { radius, color, breakpoint } from 'style'
+import { radius, boxShadow } from 'style'
 import { useState } from 'react'
 import axios from 'axios'
 import { useEffect } from 'react'
@@ -15,8 +14,6 @@ import likedIcon from 'static/images/liked.svg'
 import optionIcon from 'static/images/option.svg'
 import PostInput from './PostInput'
 import LikesList from 'components/LikesList/LikesList'
-import Overlay from 'components/Overlay/Overlay'
-import Button from 'components/Button/Button'
 import DeleteDialog from 'components/DeleteDialog/DeleteDialog'
 
 const StyledPost = styled.div`
@@ -24,7 +21,7 @@ const StyledPost = styled.div`
     border-radius: ${radius.primary};
     padding: 12px;
     margin: 15px 0;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
 `
 const PostHeader = styled.div`
     display: flex;
@@ -55,7 +52,7 @@ const PostImage = styled.img`
     align-self: center;
     max-width: 100%;
     height: auto;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
 `
 const PostFooter = styled.div`
     display: flex;
@@ -70,7 +67,7 @@ const LikeAndCommentIcons = styled.div`
     > div {
         cursor: pointer;
         padding: 5px 15px;
-        border-radius: 10px;
+        border-radius: ${radius.primary};
         display: flex;
         align-items: center;
         transition: .2s;
@@ -92,9 +89,9 @@ const LikesCounter = styled.div`
     align-items: center;
     column-gap: 5px;
     height: 100%;
-    border-radius: 10px;
+    border-radius:10px;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px 0 #0000006c;
+    box-shadow: ${boxShadow.likeCounter};
     padding: 2px 4px 2px 2px;
     margin-right: 15px;
     
@@ -127,9 +124,9 @@ const OptionMenu = styled.ul`
     position: absolute;
     right: 0;
     margin-top: 30px;
-    box-shadow: 0 1px 6px 0 #0000006c;
+    box-shadow: ${boxShadow.optionMenu};
     padding: 8px;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     
     > li {
         border-radius: 5px;

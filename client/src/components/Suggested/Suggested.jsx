@@ -1,16 +1,15 @@
-import React from 'react'
 import styled from 'styled-components'
-import { radius, color } from '../../style'
+import { radius, color, boxShadow } from '../../style'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import UserLink from '../UserLink/UserLink';
 
 const Container = styled.div`
     box-sizing:border-box;
-    background-color: ${color.component};
-    border-radius: ${radius.secondary};
+    background-color: ${color.primary};
+    border-radius: ${radius.primary};
     padding: 15px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
 
     > p {
         font-size: 18px;

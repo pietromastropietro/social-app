@@ -1,5 +1,6 @@
 import Button from 'components/Button/Button'
 import Overlay from 'components/Overlay/Overlay'
+import { radius } from 'style'
 import styled from 'styled-components'
 
 const Dialog = styled.div`
@@ -8,7 +9,7 @@ const Dialog = styled.div`
     flex-direction: column;
     width: 250px;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: ${radius.primary};
     padding: 20px;
     text-align: center;
     row-gap: 30px;

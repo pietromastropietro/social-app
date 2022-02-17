@@ -19,7 +19,7 @@ export const createRelationship = async (user1Id, user2Id) => {
 
 export const updateRelationship = async (relationshipId) => {
     try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/relations/${relationshipId}`, {
+        await axios.put(`${process.env.REACT_APP_API_URL}/relations/${relationshipId}`, undefined, {
             headers: {
                 Authorization: (localStorage.getItem('token'))
             }

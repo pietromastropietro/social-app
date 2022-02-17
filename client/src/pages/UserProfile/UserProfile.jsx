@@ -1,14 +1,12 @@
 import axios from 'axios'
-import React from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import Feed from 'components/Feed/Feed'
 import defaultUserImg from 'static/images/user.svg'
 import Button from 'components/Button/Button'
 import UserProfileEdit from './UserProfileEdit.jsx/UserProfileEdit'
-import { breakpoint } from 'style'
+import { boxShadow, radius } from 'style'
 import { useRelationship } from 'utils/customHooks/useRelationship'
 import Overlay from 'components/Overlay/Overlay'
 
@@ -24,8 +22,8 @@ const ProfileHeader = styled.div`
     background-color: #fff;
     padding: 10px;
     margin-bottom: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: ${radius.primary};
+    box-shadow: ${boxShadow.primary};
 
     > img {
         width: 150px;
@@ -47,7 +45,7 @@ const Bio = styled.p`
     box-sizing: border-box;
     background-color: #eef0f5;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     word-break: break-all;
 `
 const ProfileBody = styled.div`
@@ -57,8 +55,8 @@ const NoFriendsMsg = styled.p`
     font-weight: 600;
     text-align: center;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: ${radius.primary};
+    box-shadow: ${boxShadow.primary};
 
     > span {
         text-transform: capitalize;
@@ -70,7 +68,7 @@ const Dialog = styled.div`
     flex-direction: column;
     width: 250px;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: ${radius.primary};
     padding: 20px;
     text-align: center;
     row-gap: 30px;
@@ -166,10 +164,10 @@ const UserProfile = () => {
                         {profileEditMode ? "Close profile Edit" : "Edit profile"}
                     </Button>
 
-                    <Bio>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </Bio>
-                    {/* <Bio>{user.bio}</Bio> */}
+                    {user.bio ?
+                        <Bio>{user.bio}</Bio>
+                        : undefined
+                    }
                 </ProfileHeader>
 
                 <ProfileBody>
@@ -235,10 +233,10 @@ const UserProfile = () => {
                         : undefined
                     }
 
-                    {/* <Bio>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </Bio> */}
-                    <Bio>{visitedUserProfileInfo?.bio}</Bio>
+                    {visitedUserProfileInfo?.bio ?
+                        <Bio>{visitedUserProfileInfo.bio}</Bio>
+                        : undefined
+                    }
                 </ProfileHeader>
 
                 <ProfileBody>

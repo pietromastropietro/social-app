@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Overlay from 'components/Overlay/Overlay';
 import Button from 'components/Button/Button'
 import UserLink from 'components/UserLink/UserLink'
+import { radius } from 'style';
 
 const StyledUserSearch = styled.div`
     position: relative;
@@ -16,7 +17,7 @@ const Searchbar = styled.form`
     column-gap: 5px;
     height: 40px;
     padding: 4px 4px 4px 20px;
-    border-radius: 20px;
+    border-radius: ${radius.input};
     background-color: #eef0f5;
 
     input {
@@ -27,7 +28,7 @@ const Searchbar = styled.form`
 const Results = styled.div`
     box-sizing: border-box;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: ${radius.primary};
     padding: 20px;
     max-height: 500px;
     display: flex;

@@ -1,11 +1,10 @@
 import axios from 'axios';
-import React, { useState } from 'react'
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button';
 import Comment from './Comment/Comment'
 import Image from 'components/Image';
-import Input from 'components/Input';
+import { radius } from 'style';
 
 const StyledComments = styled.div`
     border-top: 1px solid #a5a5a5;
@@ -18,7 +17,7 @@ const CommentInput = styled.div`
     > p {
         display: flex;
         align-items: center;
-        border-radius: 10px;
+        border-radius: ${radius.primary};
         padding: 0 10px;
         width: 100%;
         background-color: #eef0f5;
@@ -38,7 +37,7 @@ const CommentInput = styled.div`
         > textarea {
             background-color: #eef0f5;
             box-sizing: border-box;
-            border-radius: 10px;
+            border-radius: ${radius.primary};
             width: 100%;
             padding: 10px;
         }

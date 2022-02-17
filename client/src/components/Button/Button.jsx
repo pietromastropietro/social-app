@@ -1,6 +1,5 @@
-import React from 'react'
+import { radius } from 'style';
 import styled, { css } from "styled-components";
-import { color } from 'style'
 
 const Button = styled.button`
     font-family: inherit;
@@ -9,7 +8,7 @@ const Button = styled.button`
     min-width: ${ props => props.width || 'unset' };
     padding: 10px;
     border: 2px solid;
-    border-radius: 10px;
+    border-radius: ${radius.button};
     cursor: pointer;
     transition: .2s;
 

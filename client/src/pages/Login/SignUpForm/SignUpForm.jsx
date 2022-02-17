@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import Input from 'components/Input'
@@ -9,7 +8,7 @@ import { errorMessages } from 'utils/constants/errorMessages'
 import { getMaxDob } from 'utils/dateUtil';
 import defaultUserImg from 'static/images/user.svg'
 import logoImg from 'static/images/logo.png'
-import { breakpoint } from 'style';
+import { breakpoint, radius } from 'style';
 import Overlay from 'components/Overlay/Overlay';
 
 const Logo = styled.img`
@@ -24,12 +23,6 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     width: 100%;
-
-    > textarea {
-        background-color: #eef0f5;
-        border-radius: 20px;
-        padding: 10px;
-    }
 
     > button {
         margin-top: 20px;
@@ -54,7 +47,7 @@ const ImageInputLabel = styled.label`
     text-align: center;
     width: 150px;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: ${radius.button};
     cursor: pointer;
     transition: .2s;
 
@@ -91,7 +84,7 @@ const BtnFieldset = styled.fieldset`
 const Dialog = styled.div`
     background-color: #fff;
     width: 180px;
-    border-radius: 20px;
+    border-radius: ${radius.primary};
     padding: 20px;
     text-align: center;
 

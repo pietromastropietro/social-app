@@ -1,15 +1,14 @@
-import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import Input from 'components/Input'
 import axios from 'axios';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { regex } from 'utils/constants/regex';
 import { errorMessages } from 'utils/constants/errorMessages'
 import { getDateForInputElement, getMaxDob } from 'utils/dateUtil';
-import { useEffect } from 'react';
 import defaultUserImg from 'static/images/user.svg'
 import tempImg from 'static/images/temp.jpg'
+import { boxShadow, radius } from 'style';
 
 const Form = styled.form`
     box-sizing:border-box;
@@ -17,12 +16,12 @@ const Form = styled.form`
     flex-direction: column;
     background-color: white;
     padding: 10px 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: ${radius.primary};
+    box-shadow: ${boxShadow.primary};
 
     > textarea {
         background-color: #eef0f5;
-        border-radius: 20px;
+        border-radius: ${radius.input};
         padding: 10px;
     }
 
@@ -52,7 +51,7 @@ const ImageInputLabel = styled.label`
     text-align: center;
     width: 150px;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     cursor: pointer;
     transition: .2s;
 

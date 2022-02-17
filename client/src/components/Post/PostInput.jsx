@@ -1,7 +1,7 @@
-import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import { useState } from 'react'
+import { radius } from 'style'
 
 const PostForm = styled.form`
     display: flex;
@@ -12,7 +12,7 @@ const PostForm = styled.form`
     > textarea {
         background-color: #eef0f5;
         box-sizing: border-box;
-        border-radius: 10px;
+        border-radius: ${radius.primary};
         width: 100%;
         padding: 10px;
     }
@@ -27,7 +27,7 @@ const PreviewImage = styled.img`
     align-self: center;
     max-width: 100%;
     heigth: auto;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
 `
 const ImageInputLabel = styled.label`
     background-color: #23b7f1;
@@ -37,7 +37,7 @@ const ImageInputLabel = styled.label`
     text-align: center;
     width: 130px;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: ${radius.button};
     cursor: pointer;
     transition: .2s;
     height: 20px;

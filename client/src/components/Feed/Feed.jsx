@@ -1,12 +1,12 @@
-import React from 'react'
 import { useState, useEffect } from 'react'
 import PostInput from 'components/Post/PostInput'
 import Post from '../Post/Post'
 import styled from 'styled-components'
 import axios from 'axios'
-import { radius, color, breakpoint } from 'style'
+import { radius, boxShadow } from 'style'
 import { useParams } from 'react-router-dom'
 import Image from 'components/Image'
+
 // temp for testing
 import { populateUsers, populatePosts, populateRels } from 'popdb'
 
@@ -16,14 +16,14 @@ const NewPostInputContainer = styled.div`
     background-color: white;
     border-radius: ${radius.primary};
     padding: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
     display: flex;
     column-gap: 10px;
 
     > p {
         display: flex;
         align-items: center;
-        border-radius: 10px;
+        border-radius: ${radius.primary};
         padding: 0 10px;
         width: 100%;
         background-color: #eef0f5;
@@ -36,8 +36,8 @@ const NoPostsMsg = styled.p`
     text-align: center;
     padding: 10px;
     margin-top: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    border-radius: ${radius.primary};
+    box-shadow: ${boxShadow.primary};
 `
 
 const Feed = ({ userId }) => {
@@ -53,7 +53,7 @@ const Feed = ({ userId }) => {
             path = `${process.env.REACT_APP_API_URL}/posts/user/${userId}`
         } else {
             // I'm on the homepage so show all user's post and also friend's ones
-            path = `${process.env.REACT_APP_API_URL}/posts`
+            path = `${process.env.REACT_APP_API_URL}/posts/${user.id}`
         };
 
         try {
@@ -89,6 +89,9 @@ const Feed = ({ userId }) => {
             });
 
             if (res.data.message === 'Post created') {
+                console.log("new post: " + JSON.stringify(posts,null,2));
+                console.log("new post: " + JSON.stringify(res.data.post,null,2));
+
                 // copy posts state array, add new post at the beginning and update the state array
                 setPosts(oldPosts => [res.data.post, ...oldPosts])
             }

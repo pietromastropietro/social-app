@@ -1,16 +1,15 @@
-import React from 'react'
 import styled from 'styled-components'
 import UserLink from '../UserLink/UserLink'
-import { radius, color } from '../../style'
+import { radius, color, boxShadow } from '../../style'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const StyledFriendsList = styled.div`
     box-sizing:border-box;
-    background-color: ${color.component};
+    background-color: ${color.primary};
     border-radius: ${radius.secondary};
     padding: 15px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
     height: fit-content;
     max-width: 420px;
     width: 100%;

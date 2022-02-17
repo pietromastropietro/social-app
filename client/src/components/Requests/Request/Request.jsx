@@ -1,8 +1,6 @@
-import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import Image from 'components/Image'
-import { radius, color } from 'style'
 import { Link } from 'react-router-dom'
 
 const StyledRequest = styled.div`

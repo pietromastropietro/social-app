@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import Input from 'components/Input'
@@ -6,6 +5,8 @@ import { useState } from 'react'
 import axios from 'axios'
 import { errorMessages } from 'utils/constants/errorMessages'
 import { regex } from 'utils/constants/regex'
+import Overlay from 'components/Overlay/Overlay'
+import { radius } from 'style'
 
 const Form = styled.form`
     display: flex;
@@ -40,6 +41,19 @@ const BtnFieldset = styled.fieldset`
     display: flex;
     column-gap: 10px;
 `
+const Dialog = styled.div`
+    background-color: #fff;
+    width: 180px;
+    border-radius: ${radius.primary};
+    padding: 20px;
+    text-align: center;
+
+    > p {
+        margin-bottom: 30px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+`
 
 const PasswordResetForm = ({ setPasswordResetMode }) => {
     const [user, setUser] = useState({
@@ -58,6 +72,9 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
 
     // state to check email existence
     const [emailExistence, setEmailExistence] = useState(true);
+
+    // state to show password update confirm dialog
+    const [confirmDialog, setConfirmDialog] = useState(false);
 
     // state and function to toggle password visibility
     const [inputType, setInputType] = useState("password");
@@ -80,7 +97,7 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
             ...formValidity,
             [name]: true
         })
-        
+
         // remove error msg about email existence
         if (!emailExistence) {
             setEmailExistence(true);
@@ -128,8 +145,8 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
             })
 
             if (res.data.message == "Password changed") {
-                // Go back to login page
-                setPasswordResetMode(false);
+                // Show confirm dialog
+                setConfirmDialog(true)
             } else {
                 // User not found, retry
                 setEmailExistence(false);
@@ -158,7 +175,10 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
                 </InputLabels>
                 <Input type={inputType} name="passwordConfirm" onChange={handleInput} onBlur={validateOnBlur} value={user.passwordConfirm} autoComplete="off" required />
 
-                <InputLabels><label htmlFor="password">Confirm password</label></InputLabels>
+                <InputLabels>
+                    <label htmlFor="password">Confirm password</label>
+                    <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
+                </InputLabels>
                 <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
 
                 <PasswordVisibilityCheckbox>
@@ -166,13 +186,21 @@ const PasswordResetForm = ({ setPasswordResetMode }) => {
                     <label htmlFor="showPassword">Show password</label>
                 </PasswordVisibilityCheckbox>
 
-                <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
-
                 <BtnFieldset>
                     <Button primaryOutlined onClick={() => setPasswordResetMode(false)}>{`< Go back`}</Button>
                     <Button primary type="submit">Change password</Button>
                 </BtnFieldset>
             </Form>
+
+            {confirmDialog ?
+                <Overlay>
+                    <Dialog>
+                        <p>Password updated!</p>
+                        <Button primary onClick={() => setPasswordResetMode(false)}>Go to Login</Button>
+                    </Dialog>
+                </Overlay>
+                : undefined
+            }
         </>
     )
 }

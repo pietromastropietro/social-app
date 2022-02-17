@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { NavLink } from "react-router-dom";
 import { boxShadow, radius, breakpoint } from '../../../style'
@@ -16,7 +15,7 @@ const Menu = styled.ul`
     // Styling for desktop
     @media (min-width: ${breakpoint.primary}) {
         border-radius: ${radius.primary};
-        ${boxShadow.primary};
+        box-shadow: ${boxShadow.primary};
     }
     
     // Styling for mobile
@@ -37,7 +36,7 @@ const NaviLink = styled(NavLink)`
     padding: 10px 20px;
     transition: .2s;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     
     &:hover {
         background-color: #e4e4e4;

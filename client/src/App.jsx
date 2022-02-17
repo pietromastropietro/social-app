@@ -1,9 +1,8 @@
-import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 import GlobalStyle from './GlobalStyle';
 import useToken from 'services/auth/useToken';
-import { createContext } from 'react';
-import { useEffect } from 'react';
+import { useEffect, createContext } from 'react';
 import Sidebar from './layout/Sidebar/Sidebar';
 import LoginIndex from './pages/Login/LoginIndex';
 import Header from './layout/Header/Header'

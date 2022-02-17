@@ -49,11 +49,15 @@ export const useRelationship = () => {
     const acceptFriendsRequest = (relationshipId) => {
         updateRelationship(relationshipId);
         setRelationship({ ...relationship, status: 'Friends' });
+        // reload page to update friends list
+        window.location.reload();
     }
 
     const declineFriendsRequest = (relationshipId) => {
         deleteRelationship(relationshipId);
         setRelationship({ ...relationship, status: 'Send friends request' });
+        // reload page to update friends list
+        window.location.reload();
     }
 
     return {

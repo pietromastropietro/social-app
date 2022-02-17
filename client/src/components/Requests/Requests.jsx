@@ -1,8 +1,8 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Request from './Request/Request'
-import { radius, color } from 'style'
+import { radius, boxShadow } from 'style'
 import { updateRelationship, deleteRelationship } from 'utils/relationshipUtil';
 import { useLocation } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ const StyledRequests = styled.div`
     background-color: white;
     border-radius: ${radius.primary};
     padding: 15px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
     max-width: 420px;
     width: 100%;
     height: fit-content;
@@ -53,6 +53,8 @@ const Requests = () => {
     const acceptRequest = async (requestId) => {
         updateRelationship(requestId);
         updateRequests(requestId);
+        // reload page to update friends list
+        window.location.reload();
     }
 
     const declineRequest = async (requestId) => {

@@ -1,6 +1,5 @@
 import axios from 'axios'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { handleLike } from 'utils/likeUtil'
 import Button from 'components/Button/Button'
@@ -12,6 +11,7 @@ import optionIcon from 'static/images/option.svg'
 import LikesList from 'components/LikesList/LikesList'
 import DeleteDialog from 'components/DeleteDialog/DeleteDialog'
 import { getFormattedDate } from 'utils/dateUtil'
+import { boxShadow, radius } from 'style'
 
 const StyledComment = styled.div`
     display: flex;
@@ -20,7 +20,7 @@ const StyledComment = styled.div`
 `
 const Container = styled.div`
     background-color: #eef0f5;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     padding: 10px;
     margin-left: 10px;
 `
@@ -45,7 +45,7 @@ const CommentInput = styled.form`
     
     > textarea {
         box-sizing: border-box;
-        border-radius: 10px;
+        border-radius: ${radius.primary};
         width: 100%;
         padding: 5px;
     }
@@ -84,9 +84,9 @@ const OptionMenu = styled.ul`
     position: absolute;
     right: 0;
     margin-top: 30px;
-    box-shadow: 0 1px 6px 0 #0000006c;
+    box-shadow: ${boxShadow.optionMenu};
     padding: 8px;
-    border-radius: 10px;
+    border-radius: ${radius.primary};
     z-index: 1;
     
     > li {
@@ -117,7 +117,7 @@ const LikesCounter = styled.div`
     column-gap: 5px;
     border-radius: 10px;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px 0 #0000006c;
+    box-shadow: ${boxShadow.likeCounter};
     padding: 2px 4px 2px 2px;
     
     > img {
@@ -156,7 +156,7 @@ const ReplyInput = styled.div`
         > textarea {
             background-color: #eef0f5;
             box-sizing: border-box;            
-            border-radius: 10px;
+            border-radius: ${radius.primary};
             width: 100%;
             padding: 10px;
         }

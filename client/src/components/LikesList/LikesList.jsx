@@ -1,12 +1,13 @@
 import Button from "components/Button/Button"
 import Overlay from "components/Overlay/Overlay"
 import UserLink from "components/UserLink/UserLink"
+import { radius } from "style"
 import styled from "styled-components"
 
 const List = styled.div`
     box-sizing: border-box;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: ${radius.primary};
     padding: 20px;
     max-height: 500px;
     display: flex;

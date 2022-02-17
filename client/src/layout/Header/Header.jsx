@@ -1,10 +1,9 @@
-import React, { useRef } from 'react'
+import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
-import { useState } from 'react';
 import logo from 'static/images/headerlogo.png'
 import tempImg from 'static/images/temp.jpg'
-import { breakpoint } from 'style'
+import { boxShadow, breakpoint, radius } from 'style'
 import menuIcon from 'static/images/menu.svg'
 import closeIcon from 'static/images/close1.svg'
 import Navbar from 'layout/Sidebar/Navbar/Navbar';
@@ -12,7 +11,7 @@ import UserSearch from 'components/UserSearchResults/UserSearchResults';
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
+    box-shadow: ${boxShadow.primary};
     display: flex;
     justify-content: center;
     height: 60px;
@@ -71,8 +70,8 @@ const MobileSidebar = styled.div`
     background-color: #ffffff;
     width: 260px;
     padding-top: 15px;
-    box-shadow: 0px 0px 20px -3px rgba(0,0,0,0.1);
-    border-radius: 0 0 10px 0;
+    box-shadow: ${boxShadow.primary};
+    border-radius: 0 0 ${radius.primary} 0;
     z-index: 1;
 	animation: slide 0.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
 

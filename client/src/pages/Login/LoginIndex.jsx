@@ -1,11 +1,10 @@
-import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react'
 import loginImg from 'static/images/loginImg.png'
 import logoImg from 'static/images/logo.png'
 import LoginForm from './LoginForm/LoginForm'
 import SignUpForm from './SignUpForm/SignUpForm'
-import { boxShadow, breakpoint } from 'style'
+import { boxShadow, breakpoint, radius } from 'style'
 
 const StyledLogin = styled.div`
     display: flex;
@@ -16,8 +15,8 @@ const LoginCard = styled.div`
     display: flex;
     width: 1400px;
     margin: 20px 100px;
-    border-radius: 20px;
-    ${boxShadow}
+    border-radius: ${radius.secondary};
+    box-shadow: ${boxShadow};
 
     @media (max-width: ${breakpoint.primary}) {
         margin: 0;
@@ -32,7 +31,7 @@ const ImgContainer = styled.figure`
     margin: 0;
     
     > img {
-        border-radius: 0 20px 20px 0;
+        border-radius: 0 ${radius.secondary} ${radius.secondary} 0;
         max-width: 100%;
         height: auto;
     }
