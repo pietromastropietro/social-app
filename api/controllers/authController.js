@@ -1,13 +1,11 @@
 const jwt = require('jsonwebtoken');
-const db = require('../db/db');
+const db = require('../utils/db');
 const bcrypt = require('bcrypt');
 
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
-        // todo: validate user input
-
+        
         // fetch user by email from db
         const query = 'SELECT * FROM users WHERE email = $1';
         const user = (await db.query(query, [email]))[0];

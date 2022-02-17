@@ -1,4 +1,4 @@
-const db = require('../db/db');
+const db = require('../utils/db');
 const bcrypt = require('bcrypt');
 
 const getUsers = async () => {
