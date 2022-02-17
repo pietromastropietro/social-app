@@ -4,7 +4,7 @@ const getPosts = async (userId) => {
     try {
         // Get all user's posts and all user friends ones
         const query = `
-        SELECT posts.*, users.full_name FROM posts
+        SELECT posts.*, users.full_name, users.profile_img_url FROM posts
         JOIN users ON posts.user_id = users.id
         WHERE posts.user_id IN (
             VALUES(CAST($1 AS BIGINT))
@@ -25,7 +25,7 @@ const getPosts = async (userId) => {
 
 const getUserPosts = async (userId) => {
     const query =
-        `SELECT posts.*, users.full_name
+        `SELECT posts.*, users.full_name, users.profile_img_url
     FROM posts 
     JOIN users ON posts.user_id = users.id
     WHERE user_id = $1
@@ -42,7 +42,7 @@ const getUserPosts = async (userId) => {
 
 const getPost = async (postId) => {
     const query =
-        `SELECT posts.*, users.full_name
+        `SELECT posts.*, users.full_name, users.profile_img_url
     FROM posts 
     JOIN users ON posts.user_id = users.id
     WHERE posts.id = $1`;
@@ -80,7 +80,7 @@ const createPost = async ({ userId, postData }) => {
 
         // fetch newly created post and return it
 
-        query = `SELECT posts.*, users.full_name
+        query = `SELECT posts.*, users.full_name, users.profile_img_url
         FROM posts
         JOIN users ON posts.user_id = users.id
         WHERE posts.user_id = $1

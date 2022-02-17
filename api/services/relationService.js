@@ -24,7 +24,7 @@ const getRelation = async (usersIds) => {
 const getFriendsRequests = async (userId) => {
     try {
         const query =
-            `SELECT relations.*, users.full_name
+            `SELECT relations.*, users.full_name, users.profile_img_url
         FROM relations
         JOIN users ON users.id = relations.user1_id
         WHERE user2_id = $1 AND status = 0`;

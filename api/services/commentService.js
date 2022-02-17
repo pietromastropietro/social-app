@@ -13,7 +13,7 @@ const getComments = async () => {
 const getPostComments = async (postId) => {
     try {
         const query =
-            `SELECT comments.*, users.full_name
+            `SELECT comments.*, users.full_name, users.profile_img_url
         FROM comments 
         JOIN users ON comments.user_id = users.id 
         WHERE post_id = $1
