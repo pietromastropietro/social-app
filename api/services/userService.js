@@ -1,4 +1,5 @@
 const db = require('../db/db');
+const bcrypt = require('bcrypt');
 
 const getUsers = async () => {
     try {
@@ -12,8 +13,8 @@ const getUsers = async () => {
 
 const getUsersByName = async (userName) => {
     try {
-        const query = 
-        `SELECT * FROM users WHERE users.full_name ILIKE '%' || $1 || '%'`
+        const query =
+            `SELECT * FROM users WHERE users.full_name ILIKE '%' || $1 || '%'`
 
         const users = await db.query(query, [userName]);
 
@@ -75,36 +76,48 @@ const getSuggestedUsers = async (userId) => {
     }
 };
 
-const updateUser = async (userId, userData) => {
+const updateUser = async (userId, user) => {
     try {
-        // Check if new user email is available
-        let query = 'SELECT * FROM users WHERE id != $1 AND email = $2';
-        const fetchedUser = await db.query(query, [userId, userData.email]);
-        
-        if (fetchedUser.length) {
-            // email is already in use, return
+        // Fetch user from db
+        let fetchedUser = await getUser(userId);
+
+        // If user chose to change his old password, check if it matches with the one in db
+        if (user.oldPassword) {
+            const passwordMatch = await bcrypt.compare(user.oldPassword, fetchedUser.password_hash);
+
+            if (!passwordMatch) {
+                return "Passwords don't match";
+            } else {
+                // encrypt new password
+                fetchedUser.password_hash = await bcrypt.hash(user.newPassword, 10);
+            }
+        }
+
+        // Delete now useless fields
+        delete user.oldPassword;
+        delete user.newPassword;
+
+        // If user chose to change his old email, check if new one is available
+        let query = 'SELECT email FROM users WHERE id != $1 AND email = $2';
+
+        const fetchedEmail = (await db.query(query, [userId, user.email]))[0];
+
+        if (fetchedEmail) {
+            // Email is already in use, return
             return "Email not available";
         }
 
         query =
-            `UPDATE users 
-        SET full_name = $2, dob = $3, email = $4, password_hash = $5, bio = $6
+        `UPDATE users 
+        SET full_name = $2, dob = $3, email = $4, password_hash = $5, bio = $6, profile_img_url = $7, registered_at = $8
         WHERE id = $1`
-
-        // retrieve user data from db
-        let newUserData = await getUser(userId);
-
-        // temp
-        delete newUserData.registered_at;
-        delete newUserData.profile_img_url;
         
-        // iterate over 'userData's properties and update 'newUserData's corresponding ones
-        for (const property in userData) {
-            newUserData[property] = userData[property];
+        // Iterate over 'user's properties and update 'fetchedUser's corresponding ones
+        for (const property in user) {
+            fetchedUser[property] = user[property];
         }
-
-        // convert to array
-        const params = Object.values(newUserData);
+        
+        const params = Object.values(fetchedUser);
 
         await db.query(query, params);
 
