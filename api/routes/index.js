@@ -36,7 +36,7 @@ router.delete('/users/:id', userController.deleteUser);
 /* POST ROUTES */
 
 // get all posts
-router.get('/posts', postController.getPosts);
+router.get('/posts/:id', postController.getPosts);
 
 // get all user's posts 
 router.get('/posts/user/:id', postController.getUserPosts);

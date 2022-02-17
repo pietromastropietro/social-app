@@ -14,7 +14,7 @@ const getUsers = async () => {
 const getUsersByName = async (userName) => {
     try {
         const query =
-            `SELECT * FROM users WHERE users.full_name ILIKE '%' || $1 || '%'`
+            `SELECT * FROM users WHERE users.full_name ILIKE '%' || $1 || '%' LIMIT 10`
 
         const users = await db.query(query, [userName]);
 
@@ -123,6 +123,7 @@ const updateUser = async (userId, user) => {
 
         return "User updated";
     } catch (err) {
+        console.log("err: " + err.message);
         throw new Error(err.message)
     }
 };

@@ -1,14 +1,21 @@
 const db = require('../utils/db');
 
-const getPosts = async () => {
-    const query =
-        `SELECT posts.*, users.full_name
-    FROM posts 
-    JOIN users ON posts.user_id = users.id
-    ORDER BY created_at DESC`;
-
+const getPosts = async (userId) => {
     try {
-        const posts = await db.query(query);
+        // Get all user's posts and all user friends ones
+        const query = `
+        SELECT posts.*, users.full_name FROM posts
+        JOIN users ON posts.user_id = users.id
+        WHERE posts.user_id IN (
+            VALUES(CAST($1 AS BIGINT))
+            UNION
+            SELECT user1_id FROM relations WHERE user2_id = $1 and status = 1
+            UNION
+            SELECT user2_id FROM relations WHERE user1_id = $1 and status = 1
+        )
+        ORDER BY created_at DESC`
+
+        const posts = await db.query(query, [userId]);
 
         return posts;
     } catch (err) {
@@ -72,14 +79,16 @@ const createPost = async ({ userId, postData }) => {
         await db.query(query, params);
 
         // fetch newly created post and return it
-        
-        query = `SELECT * FROM posts 
-        WHERE posts.user_id = $1 
+
+        query = `SELECT posts.*, users.full_name
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+        WHERE posts.user_id = $1
         AND posts.text = $2 
         AND posts.created_at = $3`
 
         const newPost = await db.query(query, [post.user_id, post.text, post.created_at]);
-        
+
         return newPost[0];
     } catch (err) {
         throw new Error(err.message)
