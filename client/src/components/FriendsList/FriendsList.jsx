@@ -7,23 +7,24 @@ import { useState, useEffect } from 'react';
 const StyledFriendsList = styled.div`
     box-sizing:border-box;
     background-color: ${color.primary};
-    border-radius: ${radius.secondary};
-    padding: 15px;
+    border-radius: ${radius.primary};
+    padding: 5px;
     box-shadow: ${boxShadow.primary};
     height: fit-content;
     max-width: 420px;
     width: 100%;
 
     > h3 {
+        padding: 10px 0 0 10px;
         font-size: 18px;
         font-weight: 600;
-        margin: 5px 0 20px 0;
+        margin: 0 0 20px 0;
     }
 
     > ul {
         display: flex;
         flex-direction: column;
-        row-gap: 15px;
+        row-gap: 10px;
     }
 `
 const FriendsList = () => {
@@ -60,10 +61,9 @@ const FriendsList = () => {
                 :
                 <ul>
                     {friends.map(friend =>
-                        <UserLink
-                            key={friend.id}
-                            user={friend}
-                        />
+                        <li key={friend.id}>
+                            <UserLink user={friend} />
+                        </li>
                     )}
                 </ul>
             }

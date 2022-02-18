@@ -29,7 +29,7 @@ const Results = styled.div`
     box-sizing: border-box;
     background-color: #fff;
     border-radius: ${radius.primary};
-    padding: 20px;
+    padding: 10px;
     max-height: 500px;
     display: flex;
     flex-direction: column;
@@ -42,13 +42,10 @@ const Results = styled.div`
         row-gap: 10px;
         margin-bottom: 20px;
         max-width: 500px;
-        
-        > li {
-            margin-right: 20px;
-        }
     }
 
     p {
+        padding: 10px 0 0 5px;
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 10px;
@@ -108,10 +105,8 @@ const UserSearch = () => {
                                 <p>Results</p>
                                 <ul>
                                     {users.map(user =>
-                                        <li key={user.id}>
-                                            <div onClick={closeResults}>
-                                                <UserLink user={user} />
-                                            </div>
+                                        <li key={user.id} onClick={closeResults}>
+                                            <UserLink user={user} />
                                         </li>
                                     )}
                                 </ul>

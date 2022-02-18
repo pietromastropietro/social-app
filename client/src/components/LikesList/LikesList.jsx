@@ -8,13 +8,14 @@ const List = styled.div`
     box-sizing: border-box;
     background-color: #fff;
     border-radius: ${radius.primary};
-    padding: 20px;
+    padding: 10px;
     max-height: 500px;
     display: flex;
     flex-direction: column;
     margin: 0 10px;
 
     p {
+        padding: 10px 0 0 5px;
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 10px;
@@ -37,7 +38,9 @@ const LikesList = ({ likes, name, setLikesVisibility }) => {
                 <p>Who liked this {name}?</p>
                 <ul>
                     {likes.map(like =>
-                        <UserLink user={like} key={like.id} />
+                        <li key={like.id}>
+                            <UserLink user={like} />
+                        </li>
                     )}
                 </ul>
                 <Button primary onClick={() => setLikesVisibility(false)}>Close</Button>

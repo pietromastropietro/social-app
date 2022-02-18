@@ -8,19 +8,20 @@ const Container = styled.div`
     box-sizing:border-box;
     background-color: ${color.primary};
     border-radius: ${radius.primary};
-    padding: 15px;
+    padding: 5px;
     box-shadow: ${boxShadow.primary};
 
     > p {
+        padding: 10px 0 0 10px;
         font-size: 18px;
         font-weight: 600;
-        margin: 5px 0 20px 0;
+        margin-bottom: 20px;
     }
 
     > ul {
         display: flex;
         flex-direction: column;
-        row-gap: 15px;
+        row-gap: 10px;
     }
 `
 
@@ -55,11 +56,10 @@ const Suggested = () => {
             <p>Suggested for you</p>
             <ul>
                 {suggested.map(person =>
-                    <UserLink
-                        key={person.id}
-                        user={person}
-                    />)
-                }
+                    <li key={person.id}>
+                        <UserLink user={person} />
+                    </li>
+                )}
             </ul>
         </Container>
     )

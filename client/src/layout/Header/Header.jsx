@@ -2,12 +2,12 @@ import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Link } from "react-router-dom";
 import logo from 'static/images/headerlogo.png'
-import tempImg from 'static/images/temp.jpg'
 import { boxShadow, breakpoint, radius } from 'style'
 import menuIcon from 'static/images/menu.svg'
 import closeIcon from 'static/images/close1.svg'
 import Navbar from 'layout/Sidebar/Navbar/Navbar';
 import UserSearch from 'components/UserSearchResults/UserSearchResults';
+import UserLink from 'components/UserLink/UserLink';
 
 const StyledHeader = styled.header`
     background-color: #ffffff;
@@ -105,32 +105,9 @@ const SidebarHeader = styled.div`
         }
     }
 `
-const UserProfileLink = styled(Link)`
-    display: flex;
-    align-items: center;
-    column-gap: 10px;
-    cursor: pointer;
-    
-    > img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-    
-    > p {
-        text-transform: capitalize;
-        font-size: 20px;
-        font-weight: 600;
-
-        @media (max-width: ${breakpoint.primary}) {
-            display: none;
-        }
-    }
-`
 
 const Header = () => {
     let user = JSON.parse(localStorage.getItem('user')) || undefined;
-    let profilePath = `${user.full_name.split(' ')[0]}-${user.id}`;
 
     const [mobileSidebarVisibility, setMobileSidebarVisibility] = useState(false);
 
@@ -175,10 +152,7 @@ const Header = () => {
 
                 <UserSearch />
 
-                <UserProfileLink to={`users/${profilePath}`}>
-                    <img src={tempImg} />
-                    <p>{user.full_name}</p>
-                </UserProfileLink>
+                <UserLink headerlink="true" user={user} />
             </div>
         </StyledHeader>
     )

@@ -1,33 +1,37 @@
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import { radius } from 'style'
+import styled, { css } from 'styled-components'
 import UserProfileImage from '../UserProfileImage'
 
-const StyledUserLink = styled.li`
+const StyledUserLink = styled(Link)`
     display: flex;
     align-items: center;
     column-gap: 10px;
-`
-const ProfileLink = styled(Link)`
-    color: inherit;
-    text-decoration: none;
+    padding: 5px;
     text-transform: capitalize;
     word-break: break-all;
+    transition: .2s;
+    cursor: pointer;
 
     &:hover {
-        text-decoration: underline;
+        background-color: #e4e4e4;
+        border-radius: ${radius.primary};
     }
+
+    ${ props => props.headerlink && css`
+        font-weight: 600;
+        font-size: 20px;
+    `}
 `
 
-const UserLink = ({ user }) => {
+const UserLink = (props) => {
+    const { user } = props;
     const path = `${user.full_name.split(' ')[0]}-${user.id}`
 
     return (
-        <StyledUserLink>
-            <UserProfileImage />
-
-            <ProfileLink to={`/users/${path}`}>
-                {user.full_name}
-            </ProfileLink>
+        <StyledUserLink to={`/users/${path}`} {...props}>
+            <UserProfileImage src={user.profile_img_url} />
+            {user.full_name}
         </StyledUserLink>
     )
 }
