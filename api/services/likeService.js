@@ -3,7 +3,7 @@ const db = require('../utils/db');
 const getPostLikes = async (postId) => {
     try {
         const query = 
-        `SELECT likes.*, users.full_name
+        `SELECT likes.*, users.full_name, users.profile_img_url
         FROM likes
         JOIN users on likes.user_id = users.id
         WHERE post_id = $1
@@ -20,7 +20,7 @@ const getPostLikes = async (postId) => {
 const getCommentLikes = async (commentId) => {
     try {
         const query = 
-        `SELECT likes.*, users.full_name
+        `SELECT likes.*, users.full_name, users.profile_img_url
         FROM likes
         JOIN users on likes.user_id = users.id
         WHERE comment_id = $1

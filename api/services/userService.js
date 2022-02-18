@@ -43,7 +43,8 @@ const getUser = async (userId) => {
 const getUserFriends = async (userId) => {
     try {
         const query =
-            `SELECT users.id, users.full_name FROM users
+            `SELECT users.id, users.full_name, users.profile_img_url 
+            FROM users
         WHERE users.id IN (
             (SELECT user1_id FROM relations WHERE user2_id = $1 and status = 1)
             UNION
