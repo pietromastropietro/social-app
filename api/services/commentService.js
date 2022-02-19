@@ -2,7 +2,7 @@ const db = require('../utils/db');
 
 const getComments = async () => {
     try {
-        const comments = await db.query('SELECT * from comments');
+        const comments = await db.query('SELECT * FROM comments');
 
         return comments;
     } catch (err) {
@@ -80,10 +80,10 @@ const createComment = async (commentData) => {
 const updateComment = async (commentId, commentData) => {
     const query =
         `UPDATE comments 
-    SET text = $2
+    SET text = $2, updated_at = $3
     WHERE id = $1`;
 
-    const params = [commentId, commentData.text];
+    const params = [commentId, commentData.text, commentData.updated_at];
 
     try {
         return await db.query(query, params);

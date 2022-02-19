@@ -110,7 +110,7 @@ const updateUser = async (userId, user) => {
 
         query =
         `UPDATE users 
-        SET full_name = $2, dob = $3, email = $4, password_hash = $5, bio = $6, profile_img_url = $7, registered_at = $8
+        SET full_name = $2, dob = $3, email = $4, password_hash = $5, bio = $6,  registered_at = $7, profile_img_url = $8
         WHERE id = $1`
         
         // Iterate over 'user's properties and update 'fetchedUser's corresponding ones

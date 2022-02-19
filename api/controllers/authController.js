@@ -43,6 +43,7 @@ const register = async (req, res, next) => {
             dob: req.body.dob,
             email: req.body.email,
             password_hash: undefined,
+            profile_img_url: req.body.profile_img_url,
             registered_at: new Date()
         }
 
@@ -59,8 +60,8 @@ const register = async (req, res, next) => {
 
         // create new user
         query =
-            `INSERT INTO users (full_name, bio, dob, email, password_hash, registered_at) 
-        VALUES ($1, $2, $3, $4, $5, $6)`;
+            `INSERT INTO users (full_name, bio, dob, email, password_hash, profile_img_url, registered_at) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`;
 
         const params = Object.values(user);
 
