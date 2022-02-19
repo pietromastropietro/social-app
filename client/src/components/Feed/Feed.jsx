@@ -7,9 +7,6 @@ import { radius, boxShadow } from 'style'
 import { useParams } from 'react-router-dom'
 import UserProfileImage from 'components/UserProfileImage'
 
-// temp for testing
-import { populateUsers, populatePosts, populateRels } from 'popdb'
-
 const StyledFeed = styled.div`
 `
 const NewPostInputContainer = styled.div`
@@ -72,10 +69,6 @@ const Feed = ({ userId }) => {
     // fetch posts on component mount and on user profile change
     useEffect(() => {
         getPosts();
-        // temp for testing
-        // populateUsers();
-        // populatePosts();
-        // populateRels();
     }, [userId]);
 
     const createPost = async (post) => {

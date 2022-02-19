@@ -71,6 +71,11 @@ const PasswordVisibilityCheckbox = styled.div`
     font-size: 14px;
     margin-top: 5px;
 `
+const PasswordInfoMsg = styled.div`
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+`
 const BtnFieldset = styled.fieldset`
     display: flex;
     column-gap: 10px;
@@ -96,7 +101,8 @@ const SignUpForm = ({ setLogin }) => {
         dob: '',
         profile_img_url: '',
         email: '',
-        password: ''
+        password: '',
+        passwordConfirm: ''
     });
 
     const [userImage, setUserImage] = useState();
@@ -106,6 +112,8 @@ const SignUpForm = ({ setLogin }) => {
         full_name: true,
         email: true,
         password: true,
+        passwordConfirm: true,
+        passwordEquality: true
     });
 
     // state to check email availability
@@ -154,10 +162,18 @@ const SignUpForm = ({ setLogin }) => {
     const validateOnBlur = (e) => {
         const { name, value } = e.target;
 
-        setFormValidity({
-            ...formValidity,
-            [name]: regex[name].test(value)
-        });
+        if (name === "password" || name === "passwordConfirm") {
+            setFormValidity({
+                ...formValidity,
+                [name]: regex.password.test(value),
+                passwordEquality: (value === user.passwordConfirm && value === user.password)
+            });
+        } else {
+            setFormValidity({
+                ...formValidity,
+                [name]: regex[name].test(value)
+            });
+        }
 
         // reset email availability to hide error message
         if (!emailAvailable) {
@@ -179,13 +195,13 @@ const SignUpForm = ({ setLogin }) => {
         try {
             if (userImage) {
                 // User chose a profile image, upload it and save its url
-                
+
                 // Upload profile image to AWS S3 bucket and get its url
                 // const imgUrl = await handleImageUpload(userImage);
-                
+
                 // temp for testing
                 const imgUrl = ''
-                
+
                 if (!imgUrl) {
                     return alert("Problems uploading image"); // temp
                 } else {
@@ -252,14 +268,14 @@ const SignUpForm = ({ setLogin }) => {
                 <Input type="email" name="email" onChange={handleInput} onBlur={validateOnBlur} value={user.email} required />
 
                 <InputLabels>
-                    <label htmlFor="password">Password *</label>
-                    <ErrorMsg>{formValidity.password || errorMessages.password}</ErrorMsg>
+                    <label htmlFor="passwordConfirm">Password *</label>
+                    <ErrorMsg>{formValidity.passwordConfirm || errorMessages.password}</ErrorMsg>
                 </InputLabels>
-                <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
-                
+                <Input type={inputType} name="passwordConfirm" onChange={handleInput} onBlur={validateOnBlur} value={user.passwordConfirm} autoComplete="off" required />
+
                 <InputLabels>
                     <label htmlFor="password">Confirm password *</label>
-                    <ErrorMsg>{formValidity.password || errorMessages.password}</ErrorMsg>
+                    <ErrorMsg>{formValidity.passwordEquality || errorMessages.passwordEquality}</ErrorMsg>
                 </InputLabels>
                 <Input type={inputType} name="password" onChange={handleInput} onBlur={validateOnBlur} value={user.password} autoComplete="off" required />
 
@@ -268,7 +284,7 @@ const SignUpForm = ({ setLogin }) => {
                     <label htmlFor="showPassword">Show password</label>
                 </PasswordVisibilityCheckbox>
 
-                <p>All fields are necessary. Password must be at least 8 characters (including at least 1 uppercase letter, 1 symbol and 1 number)</p>
+                <PasswordInfoMsg>Password must be at least 8 characters (including at least 1 uppercase letter, 1 symbol and 1 number).</PasswordInfoMsg>
 
                 <BtnFieldset>
                     <Button primaryOutlined onClick={() => setLogin(true)}>{`< Go back`}</Button>

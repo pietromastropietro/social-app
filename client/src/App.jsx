@@ -12,6 +12,9 @@ import Requests from "components/Requests/Requests";
 import FriendsList from "components/FriendsList/FriendsList";
 import { breakpoint } from 'style'
 
+// temp for testing
+import { populateUsers, populatePosts, populateRels } from 'popdb'
+
 const MainContainer = styled.div`
     box-sizing: border-box;
     align-self: center;
@@ -41,6 +44,10 @@ const App = () => {
         if (!token) {
             navigate('login', { replace: true });
         }
+        // temp for testing
+        // populateUsers();
+        // populatePosts();
+        // populateRels();
     }, [])
 
     return (

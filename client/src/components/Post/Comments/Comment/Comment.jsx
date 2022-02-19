@@ -126,7 +126,7 @@ const LikesCounter = styled.div`
     }
 `
 const CommentText = styled.p`
-    word-break: break-all;
+    word-break: break-word;
     margin-top: 3px;
 `
 const ReplyContainer = styled.div`

@@ -46,7 +46,7 @@ const PostMain = styled.div`
     display: flex;
     flex-direction: column;
     row-gap: 10px;
-    word-break: break-all;
+    word-break: break-word;
 `
 const PostImage = styled.img`
     align-self: center;

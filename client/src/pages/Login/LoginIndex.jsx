@@ -14,7 +14,7 @@ const LoginCard = styled.div`
     background-color: #ffffff;
     display: flex;
     width: 1400px;
-    margin: 20px 100px;
+    margin: 20px;
     border-radius: ${radius.secondary};
     box-shadow: ${boxShadow};
 
