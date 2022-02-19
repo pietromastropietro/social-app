@@ -21,6 +21,10 @@ const StyledFriendsList = styled.div`
         margin: 0 0 20px 0;
     }
 
+    > p {
+        padding: 0 0 10px 10px;
+    }
+
     > ul {
         display: flex;
         flex-direction: column;

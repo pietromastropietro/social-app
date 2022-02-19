@@ -32,8 +32,9 @@ export const handleLike = async (user, contentId, likes, contentType) => {
 
         let newLike = res.data;
 
-        // add current user's full name
+        // add current user's full name and profile image url
         newLike.full_name = user.full_name;
+        newLike.profile_img_url = user.profile_img_url;
         
         // add new like and return updated array
         return [...likes, newLike]

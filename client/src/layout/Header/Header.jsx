@@ -6,7 +6,7 @@ import { boxShadow, breakpoint, radius } from 'style'
 import menuIcon from 'static/images/menu.svg'
 import closeIcon from 'static/images/close1.svg'
 import Navbar from 'layout/Sidebar/Navbar/Navbar';
-import UserSearch from 'components/UserSearchResults/UserSearchResults';
+import UserSearch from 'components/UserSearch/UserSearch';
 import UserLink from 'components/UserLink/UserLink';
 
 const StyledHeader = styled.header`
@@ -22,15 +22,16 @@ const StyledHeader = styled.header`
     > div {
         width: 100%;
         max-width: 1350px;
-        display: flex;
-        justify-content: space-between;
-        align-items:center;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: center;
         margin: 0 15px;
         column-gap: 20px;
     }
 `
 const LogoLink = styled(Link)`
     display: flex;
+    width: fit-content;
     cursor: pointer;
 
     > img {
@@ -44,6 +45,7 @@ const LogoLink = styled(Link)`
 const MobileSidebarBtn = styled.div`
     display: flex;
     align-items: center;
+    width: fit-content;
     padding: 12px;
     border-radius: 10px;
     transition: .2s;

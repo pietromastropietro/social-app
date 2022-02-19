@@ -131,8 +131,9 @@ const Comments = ({ postId, commentInputMode, setCommentInputMode }) => {
             if (res.data.message === 'Comment created') {
                 const newComment = res.data.comment;
 
-                // add user's full name to new comment
+                // add user's full name and profile image url to new comment
                 newComment.full_name = user.full_name;
+                newComment.profile_img_url = user.profile_img_url
 
                 /* Check if it's a parent comment or a comment's reply
                 (comment's replies have a parent_id field with the id of their parent comment). */

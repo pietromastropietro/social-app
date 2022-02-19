@@ -26,7 +26,7 @@ const BtnFieldset = styled.fieldset`
 const PreviewImage = styled.img`
     align-self: center;
     max-width: 100%;
-    heigth: auto;
+    height: auto;
     border-radius: ${radius.primary};
 `
 const ImageInputLabel = styled.label`

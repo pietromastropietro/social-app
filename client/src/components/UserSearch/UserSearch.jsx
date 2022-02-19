@@ -7,6 +7,7 @@ import UserLink from 'components/UserLink/UserLink'
 import { radius } from 'style';
 
 const StyledUserSearch = styled.div`
+    justify-self: center;
     position: relative;
     width: 100%;
     max-width: 350px;
@@ -19,6 +20,7 @@ const Searchbar = styled.form`
     padding: 4px 4px 4px 20px;
     border-radius: ${radius.input};
     background-color: #eef0f5;
+    min-width: 170px;
 
     input {
         background-color: transparent;

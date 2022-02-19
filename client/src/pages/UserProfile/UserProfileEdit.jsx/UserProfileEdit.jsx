@@ -6,9 +6,8 @@ import { useState, useEffect } from 'react'
 import { regex } from 'utils/constants/regex';
 import { errorMessages } from 'utils/constants/errorMessages'
 import { getDateForInputElement, getMaxDob } from 'utils/dateUtil';
-import defaultUserImg from 'static/images/user.svg'
-import tempImg from 'static/images/temp.jpg'
 import { boxShadow, radius } from 'style';
+import UserProfileImage from 'components/UserProfileImage';
 
 const Form = styled.form`
     box-sizing:border-box;
@@ -35,22 +34,17 @@ const ImageFieldset = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content:center;
-    row-gap: 10px;
-`
-const PreviewImage = styled.img`
-    width: 130px;
-    height: 130px;
-    object-fit: cover;
-    border-radius: 50%;
 `
 const ImageInputLabel = styled.label`
     background-color: #23b7f1;
     color: white;
     font-size: 14px;
     font-weight: 600;
-    text-align: center;
+    display: grid;
+    place-content: center;
     width: 150px;
-    padding: 10px;
+    height: 40px;
+    margin-top: 10px;
     border-radius: ${radius.primary};
     cursor: pointer;
     transition: .2s;
@@ -318,7 +312,7 @@ const UserProfileEdit = ({ userId }) => {
                 {!userImage ?
                     !user.profile_img_url ?
                         <>
-                            <PreviewImage src={defaultUserImg} />
+                            <UserProfileImage big />
 
                             <ImageInputLabel htmlFor='userImage'>
                                 Add profile image
@@ -327,15 +321,12 @@ const UserProfileEdit = ({ userId }) => {
                         </>
                         :
                         <>
-                            {/* <PreviewImage src={user.profile_img_url} /> */}
-
-                            {/* temp for testing */}
-                            <PreviewImage src={tempImg} />
+                            <UserProfileImage big src={user.profile_img_url} />
                             <Button primary width='140px' type='button' onClick={handleImageInput}>Remove image</Button>
                         </>
                     :
                     <>
-                        <PreviewImage src={URL.createObjectURL(userImage)} />
+                        <UserProfileImage big src={URL.createObjectURL(userImage)} />
                         <Button primary width='140px' type='button' onClick={handleImageInput}>Remove image</Button>
                     </>
                 }

@@ -89,9 +89,6 @@ const Feed = ({ userId }) => {
             });
 
             if (res.data.message === 'Post created') {
-                console.log("new post: " + JSON.stringify(posts,null,2));
-                console.log("new post: " + JSON.stringify(res.data.post,null,2));
-
                 // copy posts state array, add new post at the beginning and update the state array
                 setPosts(oldPosts => [res.data.post, ...oldPosts])
             }

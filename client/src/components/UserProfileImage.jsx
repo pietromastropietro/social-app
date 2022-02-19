@@ -11,6 +11,11 @@ const StyledUserProfileImage = styled.img`
         width: 150px;
         height: 150px;
     `}
+
+    ${props => props.medium && css`
+        width: 90px;
+        height: 90px;
+    `}
 `
 
 const UserProfileImage = (props) => {

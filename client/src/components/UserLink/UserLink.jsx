@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { radius } from 'style'
+import { breakpoint, radius } from 'style'
 import styled, { css } from 'styled-components'
 import UserProfileImage from '../UserProfileImage'
 
@@ -21,6 +21,13 @@ const StyledUserLink = styled(Link)`
     ${ props => props.headerlink && css`
         font-weight: 600;
         font-size: 20px;
+        justify-self: flex-end;
+
+        > p {
+            @media (max-width: ${breakpoint.primary}) {
+                display: none;
+            }
+        }
     `}
 `
 
@@ -31,7 +38,7 @@ const UserLink = (props) => {
     return (
         <StyledUserLink to={`/users/${path}`} {...props}>
             <UserProfileImage src={user.profile_img_url} />
-            {user.full_name}
+            <p>{user.full_name}</p>
         </StyledUserLink>
     )
 }

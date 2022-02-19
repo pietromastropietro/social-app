@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import UserLink from '../UserLink/UserLink';
 
-const Container = styled.div`
+const StyledSuggested = styled.div`
     box-sizing:border-box;
     background-color: ${color.primary};
     border-radius: ${radius.primary};
@@ -51,8 +51,13 @@ const Suggested = () => {
         getSuggested();
     }, [])
 
+    // if there are no users to suggest, don't show component
+    if (!suggested.length) {
+        return null;
+    }
+
     return (
-        <Container>
+        <StyledSuggested>
             <p>Suggested for you</p>
             <ul>
                 {suggested.map(person =>
@@ -61,7 +66,7 @@ const Suggested = () => {
                     </li>
                 )}
             </ul>
-        </Container>
+        </StyledSuggested>
     )
 }
 
