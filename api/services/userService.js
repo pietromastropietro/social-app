@@ -118,13 +118,21 @@ const updateUser = async (userId, user) => {
             fetchedUser[property] = user[property];
         }
         
-        const params = Object.values(fetchedUser);
-
-        await db.query(query, params);
+        const finalUserParams = [
+            fetchedUser.id,
+            fetchedUser.full_name,
+            fetchedUser.dob,
+            fetchedUser.email,
+            fetchedUser.password_hash,
+            fetchedUser.bio,
+            fetchedUser.registered_at,
+            fetchedUser.profile_img_url
+        ];
+        
+        await db.query(query, finalUserParams);
 
         return "User updated";
     } catch (err) {
-        console.log("err: " + err.message);
         throw new Error(err.message)
     }
 };

@@ -105,9 +105,4 @@ router.put('/relations/:id', relationController.updateRelation);
 // delete relation
 router.delete('/relations/:id', relationController.deleteRelation);
 
-/* IMAGE ROUTE */
-
-// get a pre-signed url to upload images to AWS S3 bucket, and the url to the uploaded image
-router.get('/aws-url', imageController.getAwsUrl)
-
 module.exports = router;
