@@ -8,6 +8,7 @@ import { errorMessages } from 'utils/constants/errorMessages'
 import { getDateForInputElement, getMaxDob } from 'utils/dateUtil';
 import { boxShadow, radius } from 'style';
 import UserProfileImage from 'components/UserProfileImage';
+import { handleImageUpload } from 'services/imageUploadHandler';
 
 const Form = styled.form`
     box-sizing:border-box;
@@ -28,6 +29,9 @@ const Form = styled.form`
         margin-top: 10px;
         align-self: center;
     }
+`
+const GoBackBtn = styled.div`
+    align-self: flex-start; 
 `
 const ImageFieldset = styled.div`
     display: flex;
@@ -74,7 +78,7 @@ const PasswordVisibilityCheckbox = styled.div`
     font-size: 14px;
     margin-top: 5px;
 `
-const UserProfileEdit = ({ userId }) => {
+const UserProfileEdit = ({ userId, setProfileEditMode }) => {
     const [user, setUser] = useState({
         full_name: '',
         dob: '',
@@ -258,10 +262,7 @@ const UserProfileEdit = ({ userId }) => {
                 // user changed his profile image, upload it and save its url
 
                 // Upload image to AWS S3 bucket and get its url
-                // const imgUrl = await handleImageUpload(userImage);
-
-                // temp
-                const imgUrl = ''
+                const imgUrl = await handleImageUpload(userImage);
 
                 if (!imgUrl) {
                     return alert("Problems uploading image"); // temp
@@ -308,6 +309,16 @@ const UserProfileEdit = ({ userId }) => {
 
     return (
         <Form onSubmit={checkFormValidity}>
+            <GoBackBtn>
+                <Button
+                    width='100px'
+                    primaryOutlined
+                    onClick={() => setProfileEditMode(false)}
+                >
+                    {`< Go Back`}
+                </Button>
+            </GoBackBtn>
+
             <ImageFieldset>
                 {!userImage ?
                     !user.profile_img_url ?

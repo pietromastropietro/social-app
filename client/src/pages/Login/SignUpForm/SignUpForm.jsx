@@ -10,6 +10,7 @@ import logoImg from 'static/images/logo.png'
 import { breakpoint, radius } from 'style';
 import Overlay from 'components/Overlay/Overlay';
 import UserProfileImage from 'components/UserProfileImage';
+import { handleImageUpload } from 'services/imageUploadHandler';
 
 const Logo = styled.img`
     margin-bottom: 20px;
@@ -197,11 +198,8 @@ const SignUpForm = ({ setLogin }) => {
                 // User chose a profile image, upload it and save its url
 
                 // Upload profile image to AWS S3 bucket and get its url
-                // const imgUrl = await handleImageUpload(userImage);
-
-                // temp for testing
-                const imgUrl = ''
-
+                const imgUrl = await handleImageUpload(userImage);
+            
                 if (!imgUrl) {
                     return alert("Problems uploading image"); // temp
                 } else {

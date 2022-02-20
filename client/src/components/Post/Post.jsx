@@ -253,10 +253,7 @@ const Post = ({ postContent, deletePost, updatePost }) => {
                     :
                     <>
                         <p>{post.text}</p>
-                        <PostImage src={post.image_url} alt='' />
-
-                        {/* temp for testing */}
-                        {/* <PostImage src={tempImg} alt='post image' /> */}
+                        <PostImage src={post.image_url} />
                     </>
                 }
             </PostMain>

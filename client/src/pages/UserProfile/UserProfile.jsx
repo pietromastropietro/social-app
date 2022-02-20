@@ -42,8 +42,6 @@ const Bio = styled.p`
     border-radius: ${radius.primary};
     word-break: break-all;
 `
-const ProfileBody = styled.div`
-`
 const NoFriendsMsg = styled.p`
     background-color: #fff;
     font-weight: 600;
@@ -147,30 +145,33 @@ const UserProfile = () => {
         // logged-in user profile
         return (
             <StyledProfile>
-                <ProfileHeader>
-                    <UserProfileImage big src={user.profile_img_url} />
+                {!profileEditMode ?
+                    <>
+                        <ProfileHeader>
+                            <UserProfileImage big src={user.profile_img_url} />
 
-                    <UserName>
-                        {user.full_name}
-                    </UserName>
+                            <UserName>
+                                {user.full_name}
+                            </UserName>
 
-                    <Button width='135px' primaryOutlined onClick={() => setProfileEditMode(!profileEditMode)}>
-                        {profileEditMode ? "Close profile Edit" : "Edit profile"}
-                    </Button>
+                            <Button width='135px' primaryOutlined onClick={() => setProfileEditMode(true)}>
+                                Edit profile
+                            </Button>
 
-                    {user.bio ?
-                        <Bio>{user.bio}</Bio>
-                        : undefined
-                    }
-                </ProfileHeader>
+                            {user.bio ?
+                                <Bio>{user.bio}</Bio>
+                                : undefined
+                            }
+                        </ProfileHeader>
 
-                <ProfileBody>
-                    {profileEditMode ?
-                        <UserProfileEdit userId={user.id} />
-                        :
                         <Feed userId={user.id} />
-                    }
-                </ProfileBody>
+                    </>
+                    :
+                    <UserProfileEdit
+                        userId={user.id}
+                        setProfileEditMode={setProfileEditMode}
+                    />
+                }
             </StyledProfile>
         )
     } else {
@@ -233,15 +234,13 @@ const UserProfile = () => {
                     }
                 </ProfileHeader>
 
-                <ProfileBody>
-                    {relationship.status != 'Friends' ?
-                        <NoFriendsMsg>
-                            You must be friend with <span>{visitedUserProfileInfo?.full_name}</span> to see the posts
-                        </NoFriendsMsg>
-                        :
-                        <Feed userId={userIdParam} />
-                    }
-                </ProfileBody>
+                {relationship.status != 'Friends' ?
+                    <NoFriendsMsg>
+                        You must be friend with <span>{visitedUserProfileInfo?.full_name}</span> to see the posts
+                    </NoFriendsMsg>
+                    :
+                    <Feed userId={userIdParam} />
+                }
             </StyledProfile >
         )
     }

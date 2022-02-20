@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Button from 'components/Button/Button'
 import { useState } from 'react'
 import { radius } from 'style'
+import { handleImageUpload } from 'services/imageUploadHandler'
 
 const PostForm = styled.form`
     display: flex;
@@ -84,10 +85,7 @@ const PostInput = ({ originalPost, handlePost }) => {
 
         if (postImage) {
             // Upload image to AWS S3 bucket and get its url
-            // const imgUrl = await handleImageUpload(postImage);
-
-            // temp for testing
-            const imgUrl = ''
+            const imgUrl = await handleImageUpload(postImage);
 
             if (!imgUrl) {
                 return alert("Problems uploading image"); // temp
@@ -108,7 +106,6 @@ const PostInput = ({ originalPost, handlePost }) => {
                     undefined
                     :
                     <PreviewImage src={post.image_url} />
-                // <PreviewImage src={tempImg} /> // temp for testing
                 :
                 <PreviewImage src={URL.createObjectURL(postImage)} />
             }
