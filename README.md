@@ -8,15 +8,14 @@
 
 <div align="center">
 
-### sociaALLy brings ALL your friends sociALLy together
+### sociaALLy brings all your friends together
 
 </div>
 
 <div align="center">
-  <!-- 
-  <a href="">Visit the App</a>
-  ·  
-  -->
+  
+  <a href="https://sociallyapp.netlify.app/">Visit the App</a>
+  · 
   <a href="https://github.com/pietromastropietro/socially/tree/main/client">View Client</a>
   ·
   <a href="https://github.com/pietromastropietro/socially/tree/main/api">View API</a>
@@ -44,10 +43,6 @@
 ---
 
 ## About
-
-**IMPORTANT NOTE:** sociALLy is currently under active development and will be complete and live soon.
-<!-- You can check the [Roadmap](https://github.com/pietromastropietro/sociALLy#roadmap) to track development status. -->
-
 
 sociALLy is a social networking web app built with React and Express.
 
